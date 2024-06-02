@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-yp@yq=yq8^s3uu^nrgq47_jgtckb4i4^rps66)8bi0%_3&#5yc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*'] # For local 
 
 
 # Application definition
@@ -65,7 +65,7 @@ ROOT_URLCONF = 'uhpDataBase.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR,"templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,6 +119,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -135,8 +139,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')] # for deploy use staticfiles
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') # for deploy use static
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # for deploy use staticfiles
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # for deploy use static
 
 
 AUTO_LOGOUT = {'IDLE_TIME': 1200, 'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
@@ -146,3 +150,7 @@ AUTO_LOGOUT = {'IDLE_TIME': 1200, 'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DYNAMIC_DATATB={
+    'workplans':"app.models.Operworkplan",
+}

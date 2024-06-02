@@ -906,7 +906,7 @@ def general_info(request, *args, **kwargs):
     return render(request, 'pages/forms/general_info.html',context)
 
 # CREATE VIEWS FOR COUNTRY-------------------------
-@permission_required('myUHP.view_country',raise_exception=True)
+@permission_required('Myuhp.view_country',raise_exception=True)
 def countryList(request):
     if request.method == 'POST':
         form = CountryForm(request.POST)
@@ -923,7 +923,7 @@ def countryList(request):
     return render(request, 'pages/forms/general_info.html', context)
 
 # Method to update Country name
-@permission_required('myUHP.change_country',raise_exception=True)
+@permission_required('Myuhp.change_country',raise_exception=True)
 def edit_country(request, pk):
     country=Country.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -941,7 +941,7 @@ def edit_country(request, pk):
         } )
 
 # Methof to delete country name
-@permission_required('myUHP.delete_country',raise_exception=True)
+@permission_required('Myuhp.delete_country',raise_exception=True)
 def delete_country(request,pk):
     country=Country.objects.get(id=pk)
     country.delete()
@@ -949,7 +949,7 @@ def delete_country(request,pk):
     return redirect('general_info')
 
 # CREATE VIEWS FOR STATUT------------------------------
-@permission_required('myUHP.view_statutworkplan',raise_exception=True)
+@permission_required('Myuhp.view_statutworkplan',raise_exception=True)
 def statutList(request):
     if request.method == 'POST':
         form = StatutForm(request.POST)
@@ -968,7 +968,7 @@ def statutList(request):
   
   # Method to update statut rubrique
 
-@permission_required('myUHP.change_statutworkplan',raise_exception=True)
+@permission_required('Myuhp.change_statutworkplan',raise_exception=True)
 def edit_statut(request, pk):
     statutworkplan=Statutworkplan.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -986,7 +986,7 @@ def edit_statut(request, pk):
         } )
 
 # Methof to delete statut name
-@permission_required('myUHP.delete_statutworkplan',raise_exception=True)
+@permission_required('Myuhp.delete_statutworkplan',raise_exception=True)
 def delete_statut(request,pk):
     statutworkplan=Statutworkplan.objects.get(id=pk)
     statutworkplan.delete()
@@ -994,7 +994,7 @@ def delete_statut(request,pk):
     return redirect('general_info')
 
 # CREATE VIEWS FOR UNITS-------------------------
-@permission_required('myUHP.add_units',raise_exception=True)
+@permission_required('Myuhp.add_units',raise_exception=True)
 def add_units(request):
     if request.method == 'POST':
         form_unit = UnitsForm(request.POST)
@@ -1011,7 +1011,7 @@ def add_units(request):
     return render(request, 'pages/forms/general_info.html', context)
 
 # Edit unit
-@permission_required('myUHP.change_units',raise_exception=True)
+@permission_required('Myuhp.change_units',raise_exception=True)
 def edit_unit(request, pk):
     unit=Units.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -1029,7 +1029,7 @@ def edit_unit(request, pk):
         } )
 
 # Methof to delete Unit name
-@permission_required('myUHP.delete_units',raise_exception=True)
+@permission_required('Myuhp.delete_units',raise_exception=True)
 def delete_unit(request,pk):
     unit=Units.objects.get(id=pk)
     unit.delete()
@@ -1038,7 +1038,7 @@ def delete_unit(request,pk):
 
 # CREATE VIEWS FOR OUTPUT-----------------------------------------
 # Methof to add new output
-@permission_required('myUHP.view_outputworkplan',raise_exception=True)
+@permission_required('Myuhp.view_outputworkplan',raise_exception=True)
 def add_output(request):
     if request.method == 'POST':
         form = OutputForm(request.POST)
@@ -1055,7 +1055,7 @@ def add_output(request):
     return render(request, 'pages/forms/outputs/output_add.html', context)
 
 # Method to update output
-@permission_required('myUHP.change_outputworkplan',raise_exception=True)
+@permission_required('Myuhp.change_outputworkplan',raise_exception=True)
 def edit_output(request, pk):
     output = Outputworkplan.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -1072,7 +1072,7 @@ def edit_output(request, pk):
             'output': output
         } )
 # Methof to delete output
-@permission_required('myUHP.delete_outputworkplan',raise_exception=True)
+@permission_required('Myuhp.delete_outputworkplan',raise_exception=True)
 def delete_output(request,pk):
     output=Outputworkplan.objects.get(id=pk)
     output.delete()
@@ -1081,7 +1081,7 @@ def delete_output(request,pk):
 
 # CREATE VIEWS FOR KPI------------------------------------
 # Method to add new kpi
-@permission_required('myUHP.add_kpi',raise_exception=True)
+@permission_required('Myuhp.add_kpi',raise_exception=True)
 def add_kpi(request):
     if request.method == 'POST':
         form = KpiForm(request.POST)
@@ -1098,7 +1098,7 @@ def add_kpi(request):
     return render(request, 'pages/forms/kpi/kpi_add.html', context)
 
 # Method to update kpi
-@permission_required('myUHP.change_kpi',raise_exception=True)
+@permission_required('Myuhp.change_kpi',raise_exception=True)
 def edit_kpi(request, pk):
     kpi=Kpi.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -1116,7 +1116,7 @@ def edit_kpi(request, pk):
         } )
 
 # Method to delete kpi
-@permission_required('myUHP.delete_kpi',raise_exception=True)
+@permission_required('Myuhp.delete_kpi',raise_exception=True)
 def delete_kpi(request,pk):
     Kpi=Kpi.objects.get(id=pk)
     Kpi.delete()
@@ -1130,18 +1130,19 @@ def load_kpi(request):
     data={'options_kpi': options_kpi,'options_kpi1':options_kpi1}
     return render(request,'pages/forms/droplists/kpi_options.html', data )
 
-#@permission_required('myUHP.delete_KpiAchieve', raise_exception=False)
-@permission_required('myUHP.view_kpi achieve',raise_exception=True)
+#@permission_required('Myuhp.delete_KpiAchieve', raise_exception=False)
+@permission_required('Myuhp.view_kpi achieve',raise_exception=True)
 def kpi_achieve_index(request):
     context={}
     form_unit = SelectUnitForm(request.GET or None)
-   
+    by_unit =  request.GET.get('by_unit')
+    end_date =  request.GET.get('end')
     form = KpiAchieveForm()
     kpiAchieves = KpiAchieve.objects.all().order_by("kpi")
     
     if request.method=='GET':
-        by_unit =  request.GET.get('by_unit')
-        end_date =  request.GET.get('end')
+      #  by_unit =  request.GET.get('by_unit')
+        
         st=request.GET.get('report_date')
         if st!=None:
             kpiAchieves= KpiAchieve.objects.filter(report_date__icontains=st).order_by("kpi")
@@ -1197,7 +1198,7 @@ def kpi_achieve_index(request):
     return render(request, 'pages/forms/kpi/kpi_achieve_index.html', context)
 
 # Method for list all KPI submitted
-@permission_required('myUHP.change_kpi achieve',raise_exception=True)
+@permission_required('Myuhp.change_kpi achieve',raise_exception=True)
 def kpi_report(request):
     kpis = Kpi.objects.all().order_by("kpi_code") 
     if request.method=='GET':
@@ -1260,7 +1261,7 @@ def single_kpi_page(request, pk):
 # CREATE VIEWS FOR TOP TASK fROM GSM WORKPLAN-------------------------------------
 
 # Method for add new Top task
-#@permission_required('myUHP.add_gsm workplan',raise_exception=True)
+#@permission_required('Myuhp.add_gsm workplan',raise_exception=True)
 def add_toptask(request):
     options_kpi = Kpi.objects.all()
     
@@ -1280,7 +1281,7 @@ def add_toptask(request):
     return render(request, 'pages/forms/toptask/toptask_add.html', context)
 
 # Method for update Top task 
-#@permission_required('myUHP.change_gsm workplan',raise_exception=True)
+#@permission_required('Myuhp.change_gsm workplan',raise_exception=True)
 def edit_toptask(request, pk):
     topTasks=Toptask.objects.get(pk=pk)
    
@@ -1299,7 +1300,7 @@ def edit_toptask(request, pk):
         } )
         
 # Method for delete lowest task
-#@permission_required('myUHP.delete_gsm workplan',raise_exception=True)
+#@permission_required('Myuhp.delete_gsm workplan',raise_exception=True)
 def delete_toptask(request,pk):
     topTasks=Toptask.objects.get(id=pk)
     topTasks.delete()
@@ -1310,7 +1311,7 @@ def delete_toptask(request,pk):
 # CREATE VIEWS FOR LOWEST TASK fROM GSM WORKPLAN-------------------------------------
 
 # Method for add new lowest task
-@permission_required('myUHP.add_gsm workplan',raise_exception=True)
+@permission_required('Myuhp.add_gsm workplan',raise_exception=True)
 def add_lowest(request):
     options_kpi = Kpi.objects.all()
     if request.method == 'POST':
@@ -1329,7 +1330,7 @@ def add_lowest(request):
     return render(request, 'pages/forms/gsm/lowest_add.html', context)
 
 # Method for update lowest task 
-@permission_required('myUHP.change_gsm workplan',raise_exception=True)
+@permission_required('Myuhp.change_gsm workplan',raise_exception=True)
 def edit_lowest(request, pk):
     gsmWp=GsmWorkplan.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -1347,7 +1348,7 @@ def edit_lowest(request, pk):
     } )
     
 # Method for delete lowest task
-@permission_required('myUHP.delete_gsm workplan',raise_exception=True)
+@permission_required('Myuhp.delete_gsm workplan',raise_exception=True)
 def delete_lowest(request,pk):
     gsmWp=GsmWorkplan.objects.get(id=pk)
     gsmWp.delete()
@@ -1356,7 +1357,7 @@ def delete_lowest(request,pk):
 
 # CREATE VIEWS FOR SUB ACTIVITY fROM OPERATIONNAL WORKPLAN------------------------------------
 # Method for load sub activity
-@permission_required('myUHP.view_operworkplan',raise_exception=True)
+@permission_required('Myuhp.view_operworkplan',raise_exception=True)
 def sub_activity_view(request):
     form_unit = SelectUnitForm(request.GET or None)
     by_unit =  request.GET.get('by_unit')
@@ -1417,7 +1418,7 @@ class workplansView(ListView):
         return context
 
 # Method for add new sub activity
-@permission_required('myUHP.add_operworkplan', raise_exception=True)
+@permission_required('Myuhp.add_operworkplan', raise_exception=True)
 def add_new_workplan_view(request):
     if request.method == "POST":
         form = WorkplanForm(request.POST)
@@ -1439,7 +1440,7 @@ def add_new_workplan_view(request):
     return render(request, 'pages/forms/workplans/add_workplan_modal.html', context)
 
 # Method-1 for edit sub activity
-@permission_required('myUHP.change_operworkplan', raise_exception=True)
+@permission_required('Myuhp.change_operworkplan', raise_exception=True)
 def edit_workplan_view(request, pk):
     countries=Country.objects.get(pk=pk)
     operworkplan = Operworkplan.objects.get(pk=pk)
@@ -1478,7 +1479,7 @@ def edit_op_wp(request, pk):
     return render(request, 'pages/forms/workplans/workplans.html', {'form': form})
 
 # Method for delete sub activity
-@permission_required('myUHP.delete_operworkplan', raise_exception=True)
+@permission_required('Myuhp.delete_operworkplan', raise_exception=True)
 def delete_workplan_view(request,pk):
     data=Operworkplan.objects.filter(id=pk)
     data.delete()
@@ -1520,7 +1521,7 @@ def fiche_workplan(request):
 
 # Method for list all UNIT that submitted sub activity
 #@user_passes_test(is_visitors)
-@permission_required('myUHP.view_operworkplan', raise_exception=True)
+@permission_required('Myuhp.view_operworkplan', raise_exception=True)
 def sub_activity_report(request, *args, **kwargs):
     
   # units = Units.objects.filter(unit_code__istartswith='VID').prefetch_related('units_kpi','units_gsmWorkplan')
@@ -1575,7 +1576,7 @@ def single_sub_activity_page(request,unit_code):
 # CREATE VIEW FOR INDIVIDUAL ANNUAL REPORT-----------------------------
 
 # Method for list all Individual annual report submitted
-@permission_required('myUHP.view_individual report', raise_exception=True)
+@permission_required('Myuhp.view_individual report', raise_exception=True)
 def individual_report(request):
     individualReports = IndividualReport.objects.all().order_by("staff_name") 
     page = request.GET.get('page')
@@ -1597,7 +1598,7 @@ def individual_report(request):
     return render(request, 'pages/forms/individual_report/index_individual_report.html', data)
 
 # Method for add Individual annual report
-@permission_required('myUHP.add_individual report', raise_exception=True)
+@permission_required('Myuhp.add_individual report', raise_exception=True)
 def add_indivReport(request):
      if request.method == 'POST':
         form = IndivReportForm(request.POST)
@@ -1624,7 +1625,7 @@ def single_report_page(request, name):
     return render(request,'pages/forms/individual_report/single_report_page.html',data)
 
 # Method for edit Individual annual report
-@permission_required('myUHP.change_individual report', raise_exception=True)
+@permission_required('Myuhp.change_individual report', raise_exception=True)
 def edit_indivReport(request, pk): 
     individualReport = IndividualReport.objects.get(id=pk)
     form = IndivReportForm(instance=individualReport)   
@@ -1649,7 +1650,7 @@ def events_cluster(request):
               
 # Method to add new data into the SuverDataset
 #@lockdown
-@permission_required('myUHP.add_survey project', raise_exception=True)
+@permission_required('Myuhp.add_survey project', raise_exception=True)
 def survey_add_project(request):
     context={}
     form = SurveyProjectForm()
@@ -1707,7 +1708,7 @@ def survey_add_project(request):
 
 # Method for import and export Table SurveyDataset
 @lockdown()
-@permission_required('myUHP.add_survey dataset', raise_exception=True)
+@permission_required('Myuhp.add_survey dataset', raise_exception=True)
 def simple_upload(request):
     if request.method =='POST':
         survey_resource = SurveyResource()
@@ -1734,16 +1735,16 @@ def simple_upload(request):
     return render(request, 'pages/survey/upload.html')
               
 # Method to add new data into the SuverDataset
-@permission_required('myUHP.add_survey dataset',raise_exception=True)
+@permission_required('Myuhp.add_survey dataset',raise_exception=True)
 def survey_add_data(request):
     context={}
     form_survey_title = SelectSurveyForm(request.GET or None)
+    by_survey =  request.GET.get('by_survey')
+    end_day =  request.GET.get('end')
  
     form = SurveyDatasetForm()
     surveyDatasets = SurveyDataset.objects.all().order_by("-surveyProject__end_date")
     if request.method=='GET':
-        by_survey =  request.GET.get('by_survey')
-        end_day =  request.GET.get('end')
         st=request.GET.get('quest_code')
         if st!=None:
             surveyDatasets= SurveyDataset.objects.filter(quest_code__icontains=st).order_by("-surveyProject__end_date")
@@ -1802,7 +1803,7 @@ def survey_add_data(request):
     return render(request, 'pages/survey/survey_dataset.html', context)
 
 # Method for list all Survey dataset submitted
-@permission_required('myUHP.view_survey dataset',raise_exception=True)
+@permission_required('Myuhp.view_survey dataset',raise_exception=True)
 def survey_report(request):
     surveyProjects = SurveyProject.objects.all().order_by("title_surv") 
     if request.method=='GET':
@@ -1870,7 +1871,7 @@ def single_survey_page(request, pk):
     
 # Method for upload document or image
 @lockdown()
-@permission_required('myUHP.add_doc save',raise_exception=True)
+@permission_required('Myuhp.add_doc save',raise_exception=True)
 def docSave_upload(request):
     form =None
     if request.method == "POST":
@@ -2271,7 +2272,7 @@ def CHE_pdf_activities(request):
 
 # Method for upload pdf document or report in pdf format
 @lockdown()
-@permission_required('myUHP.add_report save',raise_exception=True)
+@permission_required('Myuhp.add_report save',raise_exception=True)
 def report_upload(request):
     form =None
     if request.method == "POST":
@@ -2698,7 +2699,7 @@ def TNR_pdf_activities(request):
 
 # Method to add Meeting project
 
-@permission_required('myUHP.add_meeting project', raise_exception=True)
+@permission_required('Myuhp.add_meeting project', raise_exception=True)
 def meeting_add_project(request):
     context={}
     form = MeetingProjectForm()
@@ -2754,7 +2755,7 @@ def meeting_add_project(request):
     return render(request, 'pages/meeting/meeting_project.html', context)
              
 # Method to add Meeting Discussion 
-@permission_required('myUHP.add_survey dataset',raise_exception=True)
+@permission_required('Myuhp.add_survey dataset',raise_exception=True)
 def meeting_add_data(request):
     context={}
     form_meeting = SelectMeetingForm(request.GET or None)
@@ -2862,7 +2863,7 @@ def export_meeting_to_excel(request):
     return response
 
  ## METHOD TO DISPLAY ALL MEETING REPORT SUBMITTED
-@permission_required('myUHP.view_meeting project',raise_exception=True)
+@permission_required('Myuhp.view_meeting project',raise_exception=True)
 def meeting_report(request):
     meetingProjects = MeetingProject.objects.all().order_by("date_meeting") 
     if request.method=='GET':
@@ -3131,7 +3132,7 @@ def pdf(request):
 
 # METHOD TO CREATE BRIEFING PROJECT
 
-@permission_required('myUHP.add_briefing project', raise_exception=True)
+@permission_required('Myuhp.add_briefing project', raise_exception=True)
 def briefing_add_project(request):
     context={}
     form = BriefingProjectForm()
@@ -3188,7 +3189,7 @@ def briefing_add_project(request):
 
 
 # METHOD TO CREATE BACKGROUND FOR BRIEFING
-@permission_required('myUHP.add_briefing background',raise_exception=True)
+@permission_required('Myuhp.add_briefing background',raise_exception=True)
 def briefing_add_data(request):
     context={}
     form = BriefingBackgroundForm()
@@ -3286,7 +3287,7 @@ def export_briefingNote_to_excel(request):
     return response
 
 ## METHOD TO DISPLAY ALL BRIEFING NOTES SUBMITTED
-@permission_required('myUHP.view_brefing project',raise_exception=True)
+@permission_required('Myuhp.view_brefing project',raise_exception=True)
 def briefing_report(request):
     briefingProjects = BriefingProject.objects.all().order_by("reporting_date") 
     if request.method=='GET':
@@ -3553,7 +3554,7 @@ def briefing_doc_report(request, pk):
 
 
 # METHOD TO CREATE RISK REGISTER 
-@permission_required('myUHP.add_risk identification', raise_exception=True)
+@permission_required('Myuhp.add_risk identification', raise_exception=True)
 def risk_identification_add(request):
     context={}
     form_unit = SelectUnitForm(request.GET or None)
@@ -3681,7 +3682,7 @@ def export_risk_to_excel(request):
     return response
 
 
-@permission_required('myUHP.view_risk identification',raise_exception=True)
+@permission_required('Myuhp.view_risk identification',raise_exception=True)
 def risk_report(request):
     units = Units.objects.all().order_by("unit_code") 
     if request.method=='GET':
@@ -3953,7 +3954,7 @@ def riskRegister_doc_report(request, pk):
      
 
 # METHOD TO CREATE SUB ACTIVITIES IN THE SYSTEM
-@permission_required('myUHP.add_operworkplan', raise_exception=True)
+@permission_required('Myuhp.add_operworkplan', raise_exception=True)
 def wpkl_subActivities_add(request):
     context={}
     form_unit = SelectUnitForm(request.GET or None)
