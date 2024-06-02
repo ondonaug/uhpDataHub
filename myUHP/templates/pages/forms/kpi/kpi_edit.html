@@ -1,0 +1,64 @@
+{% extends "pages/forms/kpi/kpi_add.html" %}
+
+<!-- Modal id-->
+{% block modal-id %} id="editKpiModal{{kpi.pk}}" {% endblock modal-id %}
+
+<!-- Modal Title-->
+{% block modal-title %} <i class="fa fa-edit"></i>&nbsp;&nbsp;Edit KPI for <code><b>{{kpi.unit}}</b><br><br></code>under expected result <b>{{kpi.expected_result}}</b><br>Code of KPI updating:<code><b>{{kpi.kpi_code}}</b></code>{% endblock modal-title %}
+
+ <!-- Form Action-->
+{% block Action %} action="/edit_kpi/{{kpi.pk}}" {% endblock Action %}
+
+<!-- Button action-->
+{% block btn-action %} <i class="fa fa-server"></i>&nbsp;&nbsp;Save Changes {% endblock btn-action %}
+
+<!-- ALL INPUTS-->
+
+<!-- Block ID -->
+
+{% block value-id %}{% endblock value-id %}
+
+
+{% block value-input %}
+
+<input type="text" name="unit" value="{{kpi.unit.id}}" class="form-control" style="display: none;">
+<input type="text" name="expected_result" value="{{kpi.expected_result}}" class="form-control" style="display: none;">
+
+<div class="form-group col-md-12 mb-0">
+  <label>KPI Code</label>
+  <input type="text" name="kpi_code" value="{{kpi.kpi_code}}" class="form-control">   
+</div>
+<div class="form-group col-md-12 mb-0">
+  <label>Regional KPI description</label>
+  <textarea name="kpi_description" class="form-control" rows="3">{{kpi.kpi_description}}</textarea>     
+</div>
+<div class="form-group col-md-12 mb-0">
+  <label>Country KPI description</label>
+  <textarea name="kpi_country_level" class="form-control" rows="3">{{kpi.kpi_country_level}}</textarea> 
+</div>
+<div class="form-group col-md-12 mb-0">
+  <label>Data description</label>
+  <textarea name="data_description" class="form-control" rows="3">{{kpi.data_description}}</textarea> 
+ </div>
+<div class="form-group col-md-12 mb-0">
+  <label>Data source</label>
+  <textarea name="data_source" class="form-control" rows="3">{{kpi.data_source}}</textarea>      
+</div>
+<div class="form-group col-md-12 mb-0">
+  <label>Collection method of indicator</label>
+  <textarea name="collection_methods" class="form-control" rows="3">{{kpi.collection_methods}}</textarea>   
+</div>
+<div class="form-row">
+  <div class="form-group col-md-6 mb-0">
+    <label>Frequency of result</label>
+    <input type="text" name="data_frequency" value="{{kpi.data_frequency}}" class="form-control">
+  </div>
+  <div class="form-group col-md-6 mb-0">
+    <label>Linked KPI</label>
+    <input type="text" name="kpi_link" value="{{kpi.kpi_link}}" class="form-control">
+  </div>
+</div>
+{% endblock value-input %}
+
+
+

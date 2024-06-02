@@ -1,0 +1,236 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Template Name: BusinessToday
+Author: <a href="http://www.os-templates.com/">OS Templates</a>
+Author URI: http://www.os-templates.com/
+Licence: Free to use under our free template licence terms
+Licence URI: http://www.os-templates.com/template-terms
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>UHP Cluster</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link rel="stylesheet" href="{% static 'layout/styles/layout.css' %}" type="text/css" />
+</head>
+<body id="top">
+  {% load crispy_forms_tags %}
+<div class="wrapper col1">
+  <div id="header">
+    <div id="logo">
+      <h1 style="font-size: 2.5em;"><a href="#">{{feature1.name}}</a></h1>
+      <p><strong>{{feature1.details}}</strong></p>
+    </div>
+    <div id="newsletter">
+      <p>{{feature2.name}}</p>
+      {% for message in messages %}
+      <div class="alert alert-info {{ message.tags }}">
+        <p><strong>{{message}}</strong></p>  
+      </div>
+      {% endfor %}
+      <form action="/subscribers" method="POST">
+        {% csrf_token %}
+        <fieldset>
+          <legend>NewsLetter</legend>
+          <input type="text" id="name_subscriber" name="name_subscriber" value="Name&hellip;"  onfocus="this.value=(this.value=='Name&hellip;')? '' : this.value ;" Required/ />
+          <input type="email" id="email_subscriber" name="email_subscriber" value="Email&hellip;"  onfocus="this.value=(this.value=='Email&hellip;')? '' : this.value ;" Required//>
+          <input type="submit" name="news_go" id="news_go" value="Sign Up" />
+        </fieldset>
+      </form>
+    </div>
+    <br class="clear" />
+  </div>
+  {% block head %}{% endblock %}
+</div>
+<div class="wrapper col2">
+  <div id="topbar">
+    <div id="topnav">
+      <ul>
+        <li class="active"><a href="/">{{feature3.name}}</a></li>
+        <li><a href="/dashboard">{{feature4.name}}</a></li>
+        <li><a href="#">{{feature5.name}}</a>
+          <ul>
+            <li><a href="{% url 'views_report'%}">Monitoring</a></li>
+            <li><a href="{% url 'meeting_report'%}">Meeting</a></li>
+            <li><a href="{% url 'briefing_report'%}">Briefing note</a></li>
+            <li><a href="{% url 'risk_report'%}">Risk register</a></li>
+            <li><a href="{% url 'download_monitoring'%}">Download report</a></li>
+
+            
+          </ul>
+        </li>
+        <li><a href="#">{{feature6.name}}</a>
+          <ul>
+            <li><a href="{% url 'reporting_indicator'%}">Indicator Trends</a></li>
+            <li><a href="{% url 'render_pdf_view'%}">KPI</a></li>
+            <li><a href="/sub_activity_level?by_unit">Sub activity</a></li>
+          </ul>
+        </li>
+        <li class="last"><a href="">{{feature7.name}}</a>
+          <ul>
+            <li><a href="{% url 'render_lowestTask_view'%}">UHP cluster</a></li>
+            <li><a href="{% url 'che_lowestTask_view'%}">CHE</a></li>
+            <li><a href="{% url 'hpd_lowestTask_view'%}">HPD</a></li>
+            <li><a href="{% url 'nut_lowestTask_view'%}">NUT</a></li>
+            <li><a href="{% url 'tnr_lowestTask_view'%}">TNR</a></li>
+            <li><a href="{% url 'uhu_lowestTask_view'%}">UHU</a></li>
+            <li><a href="{% url 'vid_lowestTask_view'%}">VID</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div id="search">
+      <form action="#" method="post">
+        <fieldset>
+          <legend>{{feature8.name}}</legend>
+          <input type="text" value="Search Our Website&hellip;"  onfocus="this.value=(this.value=='Search Our Website&hellip;')? '' : this.value ;" Required//>
+          <input type="submit" name="go" id="go" value="Search" />
+        </fieldset>
+      </form>
+    </div>
+    <br class="clear" />
+  </div>
+  {% block navbar %}{% endblock %}
+</div>
+<div class="wrapper col3">
+  <div id="intro">
+    <div class="fl_left">
+      <h2>{{feature9.name}}</h2>
+      <p>{{feature9.details}}</p>
+      <p class="readmore"><a href="">{{feature9.mostinfo}} &raquo;</a></p>
+    </div>
+    <div class="fl_right"><img src="{% static 'images/demo/Wilson_03_firwell_Chatiwa.jpg'%}" alt="" style="width:380px; height:300px;" /></div>
+    <br class="clear" />
+  </div>
+</div>
+<div class="wrapper col4">
+  <div id="services">
+    <ul>
+      <li>
+        <div class="fl_left"><img src="{% static 'images/demo/image_workplan.jpeg' %}" alt="" style="width:103px; height:180px;"/></div>
+        <div class="fl_right">
+          <h2>{{feature10.name}}</h2>
+          <p>{{feature10.details}}</p>
+          <p class="readmore"><a href="/sub_activity_report">{{feature10.mostinfo}}&raquo;</a></p>
+        </div>
+      </li>
+      <li>
+        <div class="fl_left"><img src="{% static 'images/demo/image_kpi.png'%}" alt="" style="width:100px; height:180px;"  /></div>
+        <div class="fl_right">
+          <h2>{{feature11.name}}</h2>
+          <p>{{feature11.details}}</p>
+          <p class="readmore"><a href="/kpi_report">{{feature11.mostinfo}} &raquo;</a></p>
+        </div>
+      </li>
+      <li class="last">
+        <div class="fl_left"><img src="{% static 'images/demo/survey_image.jpeg'%}" alt="" style="width:103px; height:180px;" /></div>
+        <div class="fl_right">
+          <h2>{{feature12.name}}</h2>
+          <p>{{feature12.details}}</p>
+          <p class="readmore"><a href="/survey_report">{{feature12.mostinfo}} &raquo;</a></p>
+        </div>
+      </li>
+    </ul>
+    <br class="clear" />
+  </div>
+</div>
+<div class="wrapper col5">
+  <div id="container">
+    <div id="content">
+      <h2>{{feature13.name}}</h2>
+      <p>{{feature13.details}}</p>
+    </div>
+    <div id="column">
+      <div class="holder">
+        <h2>{{feature14.name}}</h2>
+        <ul id="latestnews">
+          <li> <img class="imgl" src="{% static 'images/demo/image_indvRep.jpeg'%}" alt="" style="width:100px; height:75px;"  />
+            <p><strong><a href="/risk_report">{{feature15.name}}.</a></strong></p>
+            <p>{{feature15.details}}</p>
+          </li>
+          <li class="last"> <img class="imgl" src="{% static 'images/demo/image_events.png'%}" alt="" style="width:100px; height:75px;" />
+            <p><strong><a href="/meeting_report">{{feature16.name}}</a></strong></p>
+            <p>{{feature16.details}}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <br class="clear" />
+  </div>
+</div>
+
+{% block body %}{% endblock %}
+
+<div class="wrapper col6">
+  <div id="footer">
+    <div id="login">
+      <h2>{{feature17.name}}</h2>
+      <p>{{feature17.details}}</p>
+        
+      {% for message in messages  %}
+      <div class="alert alert-{{message.tags}} alert-dismissible fade showo" role="alert">
+        <p><strong>Message:</strong>Hello {{user.username}},{{message}}</p>
+      </div>
+      {% endfor %}
+
+      <form action="/signin" method="POST">
+        {% csrf_token %}
+        <fieldset>
+          <legend>{{feature17.name}}</legend>
+          <div class="fl_left">
+            <input type="text" id="username" name="username" value="Enter email address&hellip;"  onfocus="this.value=(this.value=='Enter email address&hellip;')? '' : this.value ;" />
+            <input type="password" id="pass1" name="pass1" value="Enter password&hellip;"  onfocus="this.value=(this.value=='Enter password&hellip;')? '' : this.value ;" Required/>
+          </div>
+          <div class="fl_right">
+            <input type="submit" name="login_go" id="login_go" value="&raquo;" />
+          </div>
+        </fieldset>
+      </form>     
+      <p><a href="/signout">&raquo; {{feature18.name}}</a> | <a href="/signup">{{feature18.details}}&raquo;</a></p>      
+ 
+    </div>
+    <div class="footbox">
+      <h2>{{feature19.name}}</h2>
+      <ul>
+        <li><a href="https://data.unicef.org/resources/resource-type/datasets/">Nutrition</a></li>
+        {% comment "" %}<li><a href="#">Praesent et eros</a></li>
+        <li><a href="#">Lorem ipsum dolor</a></li>
+        <li><a href="#">Suspendisse in neque</a></li>
+        <li class="last"><a href="#">Praesent et eros</a></li>{% endcomment %}
+      </ul>
+    </div>
+    <div class="footbox">
+      <h2>{{feature20.name}}</h2>
+      <ul>
+        <li><a href="http://www.aho.afro.who.int">African Health Observatory</a></li>
+        {% comment "" %}<li><a href="#">Praesent et eros</a></li>
+        <li><a href="#">Lorem ipsum dolor</a></li>
+        <li><a href="#">Suspendisse in neque</a></li>
+        <li class="last"><a href="#">Praesent et eros</a></li>{% endcomment %}
+      </ul>
+    </div>
+    <div class="footbox">
+      <h2>{{feature21.name}}</h2>
+      <ul>
+        <li><a href="https://africa-datas.shinyapps.io/profile/">Indicator progress</a></li>
+       {% comment "" %}<li><a href="#">Praesent et eros</a></li>
+        <li><a href="#">Lorem ipsum dolor</a></li>
+        <li><a href="#">Suspendisse in neque</a></li>
+        <li class="last"><a href="#">Praesent et eros</a></li>{% endcomment %}
+      </ul>
+    </div>
+    <br class="clear" />
+  </div>
+</div>
+{% block footer %}{% endblock %}
+<div class="wrapper col7">
+  <div id="copyright">
+    <p class="fl_left">Copyright &copy; 2024 - All Rights Reserved - <a href="https://aho.afro.who.int/">WHO/AFRO</a></p>
+    <p class="fl_right">Design by <a href="" title="">AFRO/UHP Teams</a></p>
+    <br class="clear" />
+  </div>
+</div>
+
+</body>
+</html>

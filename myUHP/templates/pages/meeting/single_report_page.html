@@ -1,0 +1,161 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+        <main>
+            <div class="container">
+                <div class="row">
+
+                    <!-- blog-contents -->
+                    <section class="col-md-12">
+                        <article class="single-blog-item">
+                            <!-- title row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="page-header">
+                        <i class="fa fa-list-ol"></i> Meeting with Report submitted
+                    </h2>                            
+                </div><!-- /.col -->
+            </div>
+                            <p>{{message}}</p>
+                            <div class="row invoice-info">                         
+                            </div><!-- /.row -->
+                            <div class="alert alert-info">
+                              <h4><strong>{{meetingProject.name_meeting }}</strong></h4> 
+                            </div>
+                            <div class="alert">
+                                <h3>1. Date of meeting:<b>{{meetingProject.date_meeting }}</b></h3> 
+                                <h3>2. Objective: <b> {{meetingProject.objective_meeting }}</b></h3>
+                                <h3>3. Taking place: <b>{{meetingProject.taking_place }}</b></h3>
+                                <h3>4. Chair Name: <b>{{meetingProject.chair_name }}</b></h3>
+                                <h3>5. NoteTaker Name: <b>{{meetingProject.note_taker }}</b></h3>
+                                <h3>6. Participants list: <b>{{meetingProject.participants_list }}</b></h3>
+                                <h3>7. Discussion:</h3> 
+                                <table class="table responsible" style="width:100%">  
+                                    <thead>
+                                        <tr>
+                                            <th>Topics for discussion</th>
+                                            <th>Summary of discussion</th>
+                                            <th>Recommandations</th>
+                                            <th>Actions points</th>
+                                            <th>Responsible</th>
+                                            <th>Deadlines</th>
+                                            <th>Status</th>
+                                            <th>Feedback of discussion</th>
+                                        </tr>                                    
+                                    </thead>
+                                    {% for meetingProject in meetingProjects %}
+                                    <tbody>             
+                                        <tr>
+                                            <td>{{meetingProject.meetingProject_discussion__topic_discussion}}</td>
+                                            <td>{{meetingProject.meetingProject_discussion__summary_discussion}}</td>
+                                            <td>{{meetingProject.meetingProject_discussion__recommandation}}</td>
+                                            <td>{{meetingProject.meetingProject_discussion__actions_points}}</td>
+                                            <td>{{meetingProject.meetingProject_discussion__responsible}}</td>
+                                            <td>{{meetingProject.meetingProject_discussion__action_deadlines}}</td>
+                                            <td>{{meetingProject.meetingProject_discussion__action_status}}</td>
+                                            <td>{{meetingProject.meetingProject_discussion__feedback_discussion}}</td>
+                                        </tr>
+                                    </tbody>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <!-- Table row -->
+                        </article>
+
+
+                        <ul class="pagination justify-content-center my-5">
+                            {% if meetingProjects.has_previous %}
+                            <!-- 'First' and 'Previous' Buttons -->
+                              <li class="page-item">
+                                <a class="page-link" href="?page=1">|&lt; First</a>
+                              </li>
+                              <li class="page-item">
+                                <a class="page-link" href="?page={{ meetingProjects.previous_page_number }}">&lt; Previous</a>
+                              </li>
+                            {% endif %}
+                          
+                            <!-- Numbered Buttons -->
+                            {% for page in paginator.page_range %}
+                              {% if meetingProjects.number == page %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
+                                </li>
+                              {% elif page > meetingProjects.number|add:'-3' and page < meetingProjects.number|add:'3' %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                </li>
+                              {% endif %}
+                            {% endfor %}
+                          
+                            <!-- 'Next' and 'Last' Buttons -->
+                            {% if meetingProjects.has_next %}
+                              <li class="page-item">
+                                <a class="page-link" 
+                                  href="?page={{ meetingProjects.next_page_number }}">Next &gt;</a>
+                              </li>
+                              <li class="page-item">
+                                <a class="page-link" href="?page={{ meetingProjects.paginator.num_pages }}">Last &gt;|</a>
+                              </li>
+                            {% endif %}
+                          </ul>
+
+                          {% comment "" %}
+
+                        <div class="page-turn">
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3 text-center">
+                                    <nav>
+                                        <ul class="pagination pagination-sm">
+                                            <li class="disabled">
+                                                <a href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">Prev</span>
+                                                </a>
+                                            </li>
+                                            {% for page in paginator.page_range %}
+                                            {% if page == surveyDatasets.number %}
+                                            <li class="page-item active" aria-current="page">
+                                                <span class="page-link">{{page}}</span>
+                                            </li>                                 
+                                            {% else %}
+                                            <li><a href="?page={{page}}">{{page}}</a></li>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </ul> <!-- /.pagination -->
+                                    </nav>
+                                </div>
+                            </div>
+                        </div> <!-- /.page-turn -->
+                        {% endcomment %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a class="btn btn-success" href="{% url 'export_meeting_page' meetingProject.pk %}"><i class="fa-list-ol"></i> Export to Excel</a>
+                                
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-info" onclick="window.print();"><i class="fa fa-print"></i> Print</button>    
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <p>Back to <a href="/meeting_report">List</a></p>   
+                            </div>
+                        </div>
+                    </section>
+                    <!-- end of blog-contents -->
+                </div>
+            </div> <!-- end of /.container -->
+        </main>
+        <!-- smooth-scroll -->
+
+        <script>
+        $(function() {  
+            jQuery.scrollSpeed(100, 1000);
+        });
+        </script>
+
+
+        {% endblock %}
+        

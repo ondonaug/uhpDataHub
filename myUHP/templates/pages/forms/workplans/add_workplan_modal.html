@@ -1,0 +1,148 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+            <!-- Modal Add New Sub activity-->
+            <div class="modal fade bd-example-modal-lg" {% block modal-id %} id="addNewWorkplanModalForm" {% endblock modal-id %}  tabindex="-1" role="dialog" aria-labelledby="addNewworkplanModalFormLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                <form class="form" {% block Action %} action="/workplan/new" {% endblock Action %} method= "POST" id="add_new_workplan_form">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title" id="addNewworkplanModalFormLabel"> {% block modal-title %} <i class="fa fa-plus"></i>&nbsp;&nbsp;Add New sub-activity {% endblock modal-title %}</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                           {% csrf_token %}
+                           {% block value-id %}{% endblock value-id %}
+                           {{ form.media }}
+                          <!--{{ form.as_div }} --> 
+                          {% block value-input %}
+                          <div class="form-group col-md-12 mb-0">
+                            <label>Lowest task from GSM (please selected from this dropdown)</label>
+                            {% render_field form.gsmWorkplan placeholder=form.gsmWorkplan.label class+="form-control" %}
+                            </div>
+                            <div class="form-group col-md-12 mb-0">
+                                <label>Subcactivity</label>
+                            {% render_field form.sub_activity placeholder=form.sub_activity.label class+="form-control" %}
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>Country where support</label>
+                                    {% render_field form.country placeholder=form.country.label class+="form-control" %}
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>Travel required</label>
+                                    {% render_field form.travel_required placeholder=form.travel_required.label class+="form-control" %}
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>Nb of consultants</label>
+                                    {% render_field form.consultants placeholder=form.consultants.label class+="form-control" %}
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>Duration days (dd)</label>
+                                    {% render_field form.duration_days placeholder=form.duration_days.label class+="form-control" %}
+                                </div>
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>Travel amount ($)</label>
+                                    {% render_field form.travel_amount placeholder=form.travel_amount.label class+="form-control" %}
+                                </div>
+                                
+                               
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3 mb-0">
+                                    <label>Staff amount ($)</label>
+                                    {% render_field form.staff_amount placeholder=form.staff_amount.label class+="form-control" %}
+ 
+                                </div>
+                                    <div class="form-group col-md-3 mb-0">
+                                        <label>Procurment amount ($)</label>
+                                    {% render_field form.procurment_amount placeholder=form.procurment_amount.label class+="form-control" %} 
+                                    </div>
+                                    <div class="form-group col-md-3 mb-0">
+                                        <label>Service amount ($)</label>
+                                        {% render_field form.service_amount placeholder=form.service_amount.label class+="form-control" %} 
+                                    </div>
+                                    <div class="form-group col-md-3 mb-0">
+                                        <label>Flexible amount ($)</label>
+                                        {% render_field form.flexible_amount placeholder=form.flexible_amount.label class+="form-control" %} 
+                                    </div>
+                                    
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4 mb-0">
+                                    <label>VC amount ($)</label>
+                                    {% render_field form.vc_amount placeholder=form.vc_amount.label class+="form-control" %} 
+                                </div>
+    
+                                <div class="form-group col-md-8 mb-0">
+                                    <label>Responsible</label>
+                                     {% render_field form.responsable placeholder=form.responsable.label class+="form-control" %} 
+                                </div>    
+
+                            </div>
+                            
+                            <div class="form-group col-md-12 mb-0">
+                                <label>coworkers</label>
+                                        {% render_field form.coworkers placeholder=form.coworkers.label class+="form-control" %} 
+                            </div>
+                            <div class="form-group col-md-12 mb-0">
+                                <label>Expected result</label>
+                                        {% render_field form.expected_result placeholder=form.expected_result.label class+="form-control" %}
+                            </div>
+                            <div class="form-group col-md-12 mb-0">
+                                <label>Indicator measuring</label>
+                                        {% render_field form.indicator_measuring placeholder=form.indicator_measuring.label class+="form-control" %}
+                            </div>
+                            <div class="form-group col-md-12 mb-0">
+                                <label>Collect method</label>
+                                {% render_field form.collect_method placeholder=form.collect_method.label class+="form-control" %}
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6 mb-0">
+
+                                    <!-- Date dd/mm/yyyy -->
+                               
+                                    <label>Completion date:<code><b>(mm/dd/yyyy)</b></code></label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="date" name="completion_date" id="completionDate" class="form-control" data-inputmask="'alias': 'mm/dd/yyyy'" data-mask required/>
+                                        </div><!-- /.input group -->
+                                </div> <!-- /.form group -->
+                                <div class="form-group col-md-6 mb-0">
+                                    <label>Statut name</label>
+                                {% render_field form.statut_name placeholder=form.statut_name.label class+="form-control" %}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12 mb-0">
+                                <label>Comments</label>
+                                {% render_field form.comments placeholder=form.comments.label class+="form-control" %}
+                            </div>           
+
+
+                          {% endblock value-input %}
+                           <!--  
+                           {{form.gsmWorkplan}}-->
+                        </div>
+                        <div class="modal-footer">
+                              <button type="submit" class="btn btn-secondary">  {% block btn-action %}<i class="fa fa-plus"></i>&nbsp;&nbsp;Submit{% endblock btn-action %}</button>
+                              <!--  <button type="button" class="btn btn-secondary" onclick=onclick="addNewWorkplan()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Submit</button>-->
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
+                              <button type="reset" class="btn btn-warning btn-sm" title="Reset"><i class="fa fa-edit"></i></button>
+                        </div>
+                      </div>
+                </form>
+                </div>
+              </div>
+
+              <script>
+
+                $("#id_country").select2()
+              </script>

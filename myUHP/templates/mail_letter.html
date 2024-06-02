@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+
+
+
+
+
+<div class="container">
+    <div class="row mt-5 pt-5">
+        <div class="col-md-6 offset-md-3">
+
+            
+            <div class="box box-info">
+                <div class="box-header">
+                    <i class="fa fa-envelope"></i>
+                    <h3 class="box-title">Email Messages</h3>
+                    <!-- tools box -->
+                    <div class="pull-right box-tools">
+                        <button class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
+                    </div><!-- /. tools -->
+                </div>
+                <div class="box-body">
+                    <form action="/mail_letter" method="post">
+                        {% for message in messages  %}
+                        <div class="alert alert-success">
+                        <p><strong>{{ message }}</strong></p> 
+                        </div>
+                        {% endfor %}
+                        
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="title_mail" placeholder="Subject"/>
+                        </div>
+                        <div>
+                            <textarea name="message_mail" class="textarea" placeholder="Message" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                        </div>
+
+                        <div class="box-footer clearfix">
+                            <button type="submit" class="pull-right btn btn-default" id="sendEmail">Send <i class="fa fa-arrow-circle-right"></i></button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+{% endblock %}

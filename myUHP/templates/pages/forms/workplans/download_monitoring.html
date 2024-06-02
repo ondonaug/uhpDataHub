@@ -1,0 +1,61 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+
+       <main>
+            <div class="container">
+                <div class="row">
+                    <!-- blog-contents -->
+                            <!-- title row -->
+                <div class="col-xs-12">
+                    <h2 class="page-header">
+                        <i class="fa fa-tasks"></i> Operationnal workplan with the sub activity
+                    </h2> 
+                    <h3>
+                            {% for message in messages %}
+                            <small><code>{{ message }}</code></small>
+                            {% endfor %}
+                    </h3>                           
+                </div><!-- /.col -->
+                <div>
+                    <div> 
+                        <form method="GET" action="{% url 'download_monitoring' %}">
+                            {{form.as_p}}
+                            <button class="btn btn-primary btn-sm">Generate document <i class="fa fa-download"></i></a></button>
+                        </form> 
+
+                     <p>{{dt_fig_status_compl}}</p>
+
+                     {{month_completion__max}}
+
+                     {{dt_fig_risk_total}}
+                     <p>{{total_risks}}</p>
+                     {{dta_PercentTask}}
+                      
+            
+            
+                    </div>  
+                   <!-- <a href="/sub_activity_level" class="btn btn-primary btn-sm refresh-btn"><i class="fa fa-refresh"></i></a>--> 
+      
+            </div>  
+               
+                      
+                    <!-- end of blog-contents -->
+                </div>
+            </div> <!-- end of /.container -->
+        </main>
+
+        
+
+        
+      
+
+
+       
+       
+            {% endblock %}

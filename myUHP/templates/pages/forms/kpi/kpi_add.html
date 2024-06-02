@@ -1,0 +1,82 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+  
+  <!-- Modal -->
+  <div class="modal fade bd-example-modal-lg" {% block modal-id %} id="addKpiModal" {% endblock modal-id %} tabindex="-1" role="dialog" aria-labelledby="addKpiModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="addKpiModalLabel">{% block modal-title %} <i class="fa fa-plus"></i>&nbsp;&nbsp;Add KPI {% endblock modal-title %}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form {% block Action %} action="/add_kpi" {% endblock Action %} method="POST" class="post-form" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+
+            {% block value-id %}{% endblock value-id %}
+            {{ form.media }}
+            <div class="modal-body">
+
+              {% block value-input %}
+                <div class="form-group col-md-12 mb-0">
+                  <label>Unit</label>
+                        {% render_field form.unit placeholder=form.unit.label class+="form-control" %}
+                </div>
+                <div class="form-group col-md-12 mb-0">
+                  <label>Expected result</label>
+                        {% render_field form.expected_result placeholder=form.expected_result.label class+="form-control" %}
+                </div>
+                <div class="form-group col-md-12 mb-0">
+                  <label>KPI Code</label>
+                        {% render_field form.kpi_code placeholder=form.kpi_code.label class+="form-control" %}
+                </div>
+                <div class="form-group col-md-12 mb-0">
+                  <label>Regional KPI description</label>
+                         {% render_field form.kpi_description placeholder=form.kpi_description.label class+="form-control" %}
+                </div>
+                <div class="form-group col-md-12 mb-0">
+                  <label>Country KPI description</label>
+                         {% render_field form.kpi_country_level placeholder=form.kpi_country_level.label class+="form-control" %}
+                </div>
+                <div class="form-group col-md-12 mb-0">
+                  <label>Data description</label>
+                         {% render_field form.data_description placeholder=form.data_description.label class+="form-control" %}
+                 </div>
+                <div class="form-group col-md-12 mb-0">
+                  <label>Data source</label>
+                         {% render_field form.data_source placeholder=form.data_source.label class+="form-control" %}
+                </div>
+                <div class="form-group col-md-12 mb-0">
+                  <label>Collection method of indicator</label>
+                        {% render_field form.collection_methods placeholder=form.collection_methods.label class+="form-control" %}
+                        
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-4 mb-0">
+                    <label>Frequency of result</label>
+                    {% render_field form.data_frequency placeholder=form.data_frequency.label class+="form-control" %}
+                    
+                  </div>
+                  <div class="form-group col-md-8 mb-0">
+                    <label>Linked KPI</label>
+                    {% render_field form.kpi_link placeholder=form.kpi_link.label class+="form-control" %}
+            
+                  </div>
+              </div>
+              {% endblock value-input %}
+            </div><!-- /.modal-body -->
+            <div class="modal-footer">           
+                  <button type="submit" class="btn btn-secondary">  {% block btn-action %}<i class="fa fa-plus"></i>&nbsp;&nbsp;Submit{% endblock btn-action %}</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
+                  <button type="reset" class="btn btn-warning btn-sm" title="Reset"><i class="fa fa-edit"></i></button>
+            </div><!-- /.modal footer -->
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+ 

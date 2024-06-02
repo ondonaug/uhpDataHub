@@ -1,0 +1,146 @@
+
+{% extends "base_view.html" %}
+
+{% block content %}
+        
+            <div class="container" style="width: 180rem;">
+                <div class="row">
+
+                    <!-- blog-contents -->
+                    <section class="col-md-12">
+                        <article class="single-blog-item">
+                                <!-- title row -->
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <h2 class="page-header">
+                                            <i class="fa fa-list-ol"></i> Risk Register submitted
+                                        </h2>  
+                                                           
+                                    </div><!-- /.col -->
+                                    <div class="col-xs-4">
+                                        <ol class="page-header breadcrumb">
+                                            <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+                                            <li><a href="/risk_register">Create Risk name</a></li>
+                                            <li class="active">View Risk register by Unit</li>
+                                        </ol>      
+                                    </div>
+                                </div>
+                                        <p>{{message}}</p>
+                                <div class="row invoice-info">                         
+                                </div><!-- /.row -->
+                                <div class="alert alert-info">
+                                    <h4><strong>{{unit.unit_description }}</strong></h4> 
+                                </div>
+                                <table class="table responsible" style="width:100%">  
+                                    <thead>
+                                        <tr>
+                                            <th>Top task</th>
+                                            <th>Risk name</th>
+                                            <th>Risk cause</th>
+                                            <th>Risk impact</th>
+                                            <th>Category</th>
+                                            <th>criticality</th>
+                                            <th>Decision</th>
+                                            <th>Action</th>
+                                            <th>Budget</th>
+                                            <th>Date</th>
+                                            <th>Review plan</th>
+                                            <th>comments</th>
+                                            <th>Responsible</th>
+                                            <th>Monitoring</th>
+                                            <th>Risk criticality after action</th>
+                                        </tr>                                    
+                                    </thead>
+                                    {% for unitList in units %}
+                                    <tbody>             
+                                        <tr>
+                                            <td>{{unitList.units_risk__toptask__top_task_description}}</td>
+                                            <td>{{unitList.units_risk__risk_name}}</td>
+                                            <td>{{unitList.units_risk__risk_cause}}</td>
+                                            <td>{{unitList.units_risk__risk_impact}}</td>
+                                            <td>{{unitList.units_risk__risk_category}}</td>
+                                            <td>{{unitList.units_risk__risk_criticality}}</td>
+                                            <td>{{unitList.units_risk__response_decision}}</td>
+                                            <td>{{unitList.units_risk__risk_action}}</td>
+                                            <td>{{unitList.units_risk__budget}}</td>
+                                            <td>{{unitList.units_risk__response_date}}</td>
+                                            <td>{{unitList.units_risk__review_plan}}</td>
+                                            <td>{{unitList.units_risk__comments}}</td>
+                                            <td>{{unitList.units_risk__responsible}}</td>
+                                            <td>{{unitList.units_risk__monitoring}}</td>
+                                            <td>{{unitList.units_risk__risk_criticality_after}}</td>
+                                        </tr>
+                                    </tbody>
+                                    {% endfor %}
+                                </table><!-- Table row -->
+
+                                <ul class="pagination justify-content-center my-5">
+                                    {% if units.has_previous %}
+                                    <!-- 'First' and 'Previous' Buttons -->
+                                        <li class="page-item">
+                                        <a class="page-link" href="?page=1">|&lt; First</a>
+                                        </li>
+                                        <li class="page-item">
+                                        <a class="page-link" href="?page={{ units.previous_page_number }}">&lt; Previous</a>
+                                        </li>
+                                    {% endif %}
+                                    
+                                    <!-- Numbered Buttons -->
+                                    {% for page in paginator.page_range %}
+                                        {% if units.number == page %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
+                                        </li>
+                                        {% elif page > units.number|add:'-3' and page < units.number|add:'3' %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                        </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <!-- 'Next' and 'Last' Buttons -->
+                                    {% if units.has_next %}
+                                        <li class="page-item">
+                                        <a class="page-link" 
+                                            href="?page={{ units.next_page_number }}">Next &gt;</a>
+                                        </li>
+                                        <li class="page-item">
+                                        <a class="page-link" href="?page={{ units.paginator.num_pages }}">Last &gt;|</a>
+                                        </li>
+                                    {% endif %}
+                                    </ul>
+
+                            {% comment "" %}
+
+                            
+                            {% endcomment %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    
+                                    <a class="btn btn-success" href="{% url 'export_unit_risk' unit.pk %}"><i class="fa-list-ol"></i> Export to Excel</a>
+                                   
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-info" onclick="window.print();"><i class="fa fa-print"></i> Print</button>    
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <p>Back to <a href="/risk_report">List</a></p>   
+                                </div>
+                            </div>
+                        </article>
+                    </section>
+                    <!-- end of blog-contents -->
+                </div>
+            </div> <!-- end of /.container -->
+      
+        <!-- smooth-scroll -->
+
+        <script>
+        $(function() {  
+            jQuery.scrollSpeed(100, 1000);
+        });
+        </script>
+
+
+        {% endblock %}
+        

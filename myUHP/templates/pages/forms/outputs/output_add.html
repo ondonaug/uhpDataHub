@@ -1,0 +1,44 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+  <!-- Modal -->
+  <div class="modal fade" {% block modal-id %} id="addOutputModal" {% endblock modal-id %} tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="addModalLabel">{% block modal-title %} <i class="fa fa-plus"></i>&nbsp;&nbsp;Add Output {% endblock modal-title %}</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form {% block Action %} action="/add_output" {% endblock Action %} method="POST" class="post-form" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+
+            {% block value-id %}{% endblock value-id %}
+                <div class="modal-body">
+                  {% block value-input %}
+                    <div class="form-group col-md-12 mb-0">
+                      <label>Output code</label>
+                    {% render_field form_output.output_code placeholder=form_output.output_code.label class+="form-control" %}
+                    </div>
+                    <div class="form-group col-md-12 mb-0">
+                      <label>Output description</label>
+                    {% render_field form_output.output_description placeholder=form_output.output_description.label class+="form-control" %}  
+                    </div>   
+                  {% endblock value-input %}
+                  <!--  
+                  {{form.gsmWorkplan}}-->
+                </div>
+                <div class="modal-footer">
+                      <button type="submit" class="btn btn-secondary">  {% block btn-action %}<i class="fa fa-plus"></i>&nbsp;&nbsp;Submit{% endblock btn-action %}</button>
+                      <!--  <button type="button" class="btn btn-secondary" onclick=onclick="addNewWorkplan()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Submit</button>-->
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
+                      <button type="reset" class="btn btn-warning btn-sm" title="Reset"><i class="fa fa-edit"></i></button>
+                </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+ 

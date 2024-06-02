@@ -1,0 +1,216 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+
+       <main>
+            <div class="container">
+                <div class="row">
+                    <!-- blog-contents -->
+                            <!-- title row -->
+                <div class="col-xs-12">
+                    <h2 class="page-header">
+                        <i class="fa fa-tasks"></i> Operationnal workplan with the sub activity
+                    </h2> 
+                    <h3>
+                            {% for message in messages %}
+                            <small><code>{{ message }}</code></small>
+                            {% endfor %}
+                    </h3>                           
+                </div><!-- /.col -->
+                <div>
+                    <div> 
+                        <form method="GET" action="{% url 'sub_activity_level' %}">
+                            {{form.as_p}}
+                            <button class="btn btn-primary btn-sm">Generate document <i class="fa fa-download"></i></a></button>
+                        </form> 
+                    </div>  
+                   <!-- <a href="/sub_activity_level" class="btn btn-primary btn-sm refresh-btn"><i class="fa fa-refresh"></i></a>--> 
+                </div>  
+                {% comment "" %}
+                            {% for unit in units.all %}
+                            <div class="alert alert-info">
+                              <h4><strong>{{unit.unit_description}}</strong></h4> 
+                            </div id="allDomObjects">
+                          
+                            
+                            {% for gsm in unit.units_gsmWorkplan.all.distinct %}
+                                    <aside class="col-xs-12">                                     
+                                        <h3><b>Lowest Task: </b><em  style="color:blue">{{gsm.lowest_task_short}}</em>--{{gsm.lowest_task_description}}</h3>
+                                        {% for act in gsm.gsmWorkplan_operw.all %}
+                                        <h4><code><b>Sub activity :</b></code>{{act.sub_activity}}<b>-- Responsible:</b> {{act.responsable}}<b>-- Completion date: </b> {{act.completion_date}} <b>-- Statut: </b><code>{{act.statut_name.statut_name}}</code><b>-- Comments : </b>{{act.comments}}</h4>
+                                        {% endfor %}
+                                    </aside>
+                            {% endfor %}
+                            
+                            
+
+                        
+                                 
+                            {% endfor %}
+                              {% endcomment %}
+                          
+                            <div class="alert alert-info">
+                                <h4><strong>{{units}}</strong></h4> 
+                            </div>       
+                          
+                            <table class="table">
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Number of sub activity up to<br>{{date_completion__max}}</th>
+                                    <th>Number of sub activity on month ago <br> below {{one_month_ago}}</th>
+                                    <th>Number of sub activity with<br> completion date {{end_date}}</th>
+                                </tr>
+                                <tbody>
+                                    {% for t in dt_fig_unit %}
+                                    <tr>  
+                                        <td>{{t.statut_name}}</td>
+                                        <td>{{t.statuts_operwork__completion_date}}</td>
+                                        <td>{{t.total_planned}}</td>
+                                        <td>{{t.until_thisDay_planned}}</td>
+                                        <td>{{t.select_day_planned}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table><!-- /.table -->
+                          
+                            <br>
+                          
+                            {% comment "" %}
+                            <p>{{dt_fig_unit|escape}}</p><br>
+                            <br >
+                            <div id="chartContainer3" style="height: 370px; width: 100%;"></div>
+                            <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+                            <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                            <br>
+
+                            {{dt_pie_status|default:0}}
+
+                            <div id="chartContainer01" style="width: 100%; height: 360px;"></div>
+                            {% endcomment %}
+
+
+                            <table class="table">
+                             
+                              <tr>
+                                  <th>Output</th>
+                               
+                                  <th>Top task description</th>
+                                  <th>Lowest task description</th>
+                                  <th>Sub activity with completion: {{end_date}}</th>
+                                  <th>Responsible</th>
+                                  <th>Country</th>
+                                  <th>Completion date</th>
+                                  <th>Status</th>
+                                  <th>Comments</th>
+                                 
+                              </tr>
+                              {% for k in dataset_byUnit %}
+                            
+                              <tbody>
+                                  <tr>  
+                                      <td>{{k.statuts_operwork__gsmWorkplan__toptask__output__output_code}}</td>
+                                      <td>{{k.statuts_operwork__gsmWorkplan__toptask__top_task_description}}</td>
+                                      <td>{{k.statuts_operwork__gsmWorkplan__lowest_task_description}}</td>
+                                      <td>{{k.statuts_operwork__sub_activity}}</td>
+                                      <td>{{k.statuts_operwork__responsable}}</td>
+                                      <td>{{k.statuts_operwork__country__country_code}}</td>
+                                    <!-- <td>{% for countryList in k.statuts_operwork__country.all %}{{ countryList__country_code }} {% endfor %}</td> --> 
+                                      <td>{{k.statuts_operwork__completion_date}}</td>
+                                      <td>{{k.statut_name}}</td>
+                                      <td>{{k.statuts_operwork__comments}}</td>
+                                  </tr>
+                                
+                              </tbody>
+                             
+                                {% endfor %}
+                              
+                            </table>
+
+                           
+
+                            <table class="table">
+                              <tr>
+                                <th>UHP Units</th>
+                                <th>Number of output</th>
+                                <th>Number of KPIs in the workplan</th>
+                                <th>Number of Top task</th>
+                                <th>Number of Lowest task</th>
+                                <th>Number of sub activity</th>
+                              </tr>
+                              <tbody>
+                             
+                                    {% for t in data_NumberTask %}
+                                    <tr>  
+                                      <td>{{t.unit_code}}</td>
+                                      <td>{{t.total_output}}</td>
+                                      <td>{{t.total_kpi}}</td>
+                                      <td>{{t.total_TopTask}}</td>
+                                      <td>{{t.total_lowest}}</td>
+                                  </tr>
+                                    {% endfor %}
+                             
+                                  
+                              </tbody>
+                          </table><!-- /.table -->
+                        
+                    {% comment "" %}
+                    {{notStartedByCountries}}
+
+
+                    <br>
+                    {{df_subActByCountries}}{% endcomment %}
+                        
+
+                    
+                       
+                    <!-- end of blog-contents -->
+                </div>
+            </div> <!-- end of /.container -->
+        </main>
+
+        <script>
+            window.onload = function () {
+                var chart = new CanvasJS.Chart("chartContainer", {
+                  theme: "light2",
+                  animationEnabled: true,
+                  exportEnabled: true,
+                  title:{
+                    text:"Electricity Price"
+                  },
+                  subtitles: [{
+                    text: "USA States - 2020"
+                  }],
+                  axisY2: [{
+                    suffix: " ¢/kWh",
+                    labelAngle: 0,
+                    labelMaxWidth: 150,
+                    lineThickness: 1
+                  }],
+                  axisX: {
+                    reversed: true
+                  },
+                  data: [{
+                    type: "bar",
+                    yValueFormatString: "#.00 ¢/kWh",
+                    axisYType: "secondary",
+                    dataPoints: {{ dt_pie_status|safe }}
+                  }]
+                });
+                chart.render();
+         
+            }
+        </script>    
+
+        
+      
+
+
+       
+       
+            {% endblock %}

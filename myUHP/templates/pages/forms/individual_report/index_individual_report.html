@@ -1,0 +1,118 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+
+<!--<link href="{% static 'css/myStyle/individualReport.css' %}" rel="stylesheet" type="text/css" /> -->
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side">                
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h3>
+                <b>LIST OF STAFF THAT SUBMITTED THE INDIVIDUAL ANNUAL REPORT</b> 
+                <small>Monitoring operationnal workplan</small>
+            </h3>
+            <ol class="breadcrumb">
+                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+                <li><a href="/add_indivReport">Write report</a></li>
+                <li class="active">Summury report</li>
+            </ol>
+        </section>
+        <section class="content invoice">
+        <main>
+            <div class="container">
+                <div class="row">
+
+                    <!-- blog-contents -->
+                    <section class="col-md-8">
+                        {% for  individualReport in individualReports  %}
+                                          
+                        <article class="blog-item">
+                            <div class="row">
+                                <div class="col-md-4">
+                                   <h4> <a href="single_report_page/{{individualReport.staff_name}}">
+                                    <b>{{ individualReport.staff_name }}</b>  
+                                    </a>
+                                </h4>
+                                </div>
+                                <div class="col-md-8">
+                                    <p>
+                                        from 
+                                       <code>{{ individualReport.start_date }}</code> 
+                                        to
+                               
+                                       <code><time>{{ individualReport.end_date }}<time></code> 
+                                    </p>
+                                    <h4>
+                                        <a href="single_report_page/{{individualReport.staff_name}}">{{ individualReport.unit.unit_description }}</a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </article> <!-- /.blog-item -->
+                        {% endfor %}
+
+
+
+                        <div class="page-turn">
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3 text-center">
+                                    <nav>
+                                        <ul class="pagination pagination-sm">
+                                            <li class="disabled">
+                                                <a href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">Prev</span>
+                                                </a>
+                                            </li>
+                                            {% for page in paginator.page_range %}
+                                            {% if page == individualReports.number %}
+                                            <li class="page-item active" aria-current="page">
+                                                <span class="page-link">{{page}}</span>
+                                            </li>
+
+
+                                         
+                                            {% else %}
+                                            <li><a href="?page={{page}}">{{page}}</a></li>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </ul> <!-- /.pagination -->
+                                    </nav>
+
+                                </div>
+                            </div>
+                        </div> <!-- /.page-turn -->
+
+                    </section>
+                    <!-- end of blog-contents -->
+
+                    <!-- sidebar -->
+                    <aside class="col-md-4 col-sm-8 col-xs-8">
+                        <div class="sidebar">
+
+                            <!-- search option -->
+                            <div class="search-widget">
+                                <div class="input-group margin-bottom-sm">
+                                    <input class="form-control" type="text" placeholder="Search here">
+                                    <a href="#" class="input-group-addon">
+                                        <i class="fa fa-search fa-fw"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </aside> 
+                    <!-- end of sidebar -->
+
+                </div>
+            </div> <!-- end of /.container -->
+        </main>
+    </section>
+        </section><!-- /.content -->
+    </aside><!-- /.right-side -->
+</div>
+ 
+{% endblock %}

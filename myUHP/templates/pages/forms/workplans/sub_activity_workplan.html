@@ -1,0 +1,167 @@
+{% extends "base_view.html" %}
+{% block content %}
+    
+    {% if user.is_authenticated %}  
+   <div class="container tbl-container" style="width: 195rem;">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="text-left caption">
+                    {% for message in messages %}
+                    <small><code>{{ message }}</code></small>
+                    {% endfor %}
+                </h2>
+            </div>
+        </div>
+        <section class="content-header">
+            <h3>
+                Add, view and edit <code><b>sub activity</b></code> in <b>operational workplan</b>
+                {% for message in messages %}
+                <small><code>{{ message }}</code></small>
+                {% endfor %}
+            </h3>
+            <ol class="breadcrumb">
+                <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li><a href="/sub_activity_report"><i class="fa fa-file-text-o"></i> Workplan summury</a></li>
+                <li><a href="export_to_excel_workplan/{{by_unit}}/{{end_date}}"><i class="fa fa-download"></i> Export unit's to Excel</a></li>
+                <li><a href="{% url 'export_subactivity_excel' %}"><i class="fa fa-table"></i> Export All to Excel</a></li>
+                <li class="active">Enter sub activity</li>
+            </ol>
+        </section>
+        <hr>
+        <div class="row">
+            <div class="col-xs-12 col-sm-8"> 
+                <form method="GET">
+                    {% csrf_token %}
+                    <div class="input-group margin-bottom-sm">
+                        <div class="row">
+                            <div class="col-md-10"><input class="form-control" name="responsable" type="text" placeholder="Search here Responsible"></div>
+                            <div class="col-md-2"><button type="submit" class="btn btn-success">
+                                <i class="fa fa-search fa-fw"></i>
+                            </button></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xs-12 col-sm-4"> 
+                <form method="GET" action="{% url 'sub_activity_wkpl' %}">
+                    {{form_unit.as_p}}
+                    <button class="btn btn-success">Fiter the unit's workplan <i class="fa fa-download"></i></a></button>
+                </form> 
+          </div> 
+      </div> 
+    <div class="row tbl-fixed">
+        <table>
+            <form method="POST" action="{% url 'sub_activity_wkpl' %}">
+                {% csrf_token %}
+                    <tr>
+                        <th>Lowest task</th>
+                        <th>Sub activity</th>
+                        <th>Country</th>
+                        <th>Travel required</th>
+                        <th>Number of consultants</th>
+                        <th>Duration days</th>
+                        <th>Staff amounts</th>
+                        <th>Travel amount</th>
+                        <th>Procurment amount</th>
+                        <th>Service amount</th>
+                        <th>Flexible amount</th>
+                        <th>VC amount</th>
+                        <th>Responsible</th>
+                        <th>Coworkers</th>
+                        <th>Expected result</th>
+                        <th>Indicator measuring</th>
+                        <th>Collect method</th>
+                        <th>Completion date</th>
+                        <th>Status</th>
+                        <th>Comments</th>
+                    </tr>
+                    {% if not form.instance.id %}
+                    <tr> 
+                        {% include 'pages/forms/workplans/wkpl_subactivity_save.html' %}
+                    </tr>
+                    {% endif %}
+                {% for operworkplan in operworkplans %}
+                    <tr>
+                        {% if form.instance.id == operworkplan.id %}
+                        {% include 'pages/forms/workplans/wkpl_subactivity_save.html' %}
+                        {% else %} 
+                        <td>{{operworkplan.gsmWorkplan.lowest_task}}</td>
+                        <td>{{operworkplan.sub_activity}}</td>
+                        <td>{% for countryList in operworkplan.country.all %}{{ countryList }} {% endfor %}</td>
+                        <td>{{operworkplan.travel_required}}</td>
+                        <td>{{operworkplan.consultants}}</td>
+                        <td>{{operworkplan.duration_days}}</td>
+                        <td>{{operworkplan.staff_amount}}</td>
+                        <td>{{operworkplan.travel_amount}}</td>
+                        <td>{{operworkplan.procurment_amount}}</td>
+                        <td>{{operworkplan.service_amount}}</td>
+                        <td>{{operworkplan.flexible_amount}}</td>
+                        <td>{{operworkplan.vc_amount}}</td>
+                        <td>{{operworkplan.responsable}}</td>
+                        <td>{{operworkplan.coworkers}}</td>
+                        <td>{{operworkplan.expected_result}}</td>
+                        <td>{{operworkplan.indicator_measuring}}</td>
+                        <td>{{operworkplan.collect_method}}</td>
+                        <td>{{operworkplan.completion_date}}</td> 
+                        <td>{{operworkplan.statut_name}}</td> 
+                        <td>{{operworkplan.comments}}</td> 
+                        <td><button formnovalidate name="edit" value="{{operworkplan.id}}" class="btn btn-primary btn-sm">Edit</button></td>
+                        <td><button formnovalidate name="delete" value="{{operworkplan.id}}" class="btn btn-warning btn-sm">delete</button></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %} 
+            </form>
+          </table>
+        {% comment  %}
+        
+             <ul class="pagination justify-content-center my-5">
+            {% if operworkplans.has_previous %}
+            <!-- 'First' and 'Previous' Buttons -->
+              <li class="page-item">
+                <a class="page-link" href="?page=1">|&lt; First</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ operworkplans.previous_page_number }}">&lt; Previous</a>
+              </li>
+            {% endif %}
+          
+            <!-- Numbered Buttons -->
+            {% for page in paginator.page_range %}
+              {% if operworkplans.number == page %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
+                </li>
+              {% elif page > operworkplans.number|add:'-3' and page < operworkplans.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          
+            <!-- 'Next' and 'Last' Buttons -->
+            {% if operworkplans.has_next %}
+              <li class="page-item">
+                <a class="page-link" 
+                  href="?page={{ operworkplans.next_page_number }}">Next &gt;</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ operworkplans.paginator.num_pages }}">Last &gt;|</a>
+            </li>
+            {% endif %}
+        </ul>
+        
+        {% endcomment %}
+      </div>
+    </div>
+    {% else %}
+    <section>
+        <p style="position: center;">
+            We could not find the page you were looking for. 
+            Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
+        </p>
+    </section>   
+    {% endif %}
+
+
+
+  {% endblock content %}

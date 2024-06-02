@@ -1,0 +1,43 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+  
+  <!-- Modal -->
+  <div class="modal fade bd-example-modal-lg" {% block modal-id %} id="editCountryModal{{countrie.pk}}" {% endblock modal-id %} tabindex="-1" role="dialog" aria-labelledby="editCountryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="editCountryModalLabel">{% block modal-title %} <i class="fa fa-edit"></i>&nbsp;&nbsp;Edit country name {% endblock modal-title %}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form {% block Action %} action="/edit_country/{{countrie.pk}}" {% endblock Action %} method="POST" class="post-form" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+
+            {% block value-id %}{% endblock value-id %}
+            {{ form.media }}
+            <div class="modal-body">
+                <div class="form-group col-md-12 mb-0">
+                  <label>Country code</label>
+                  <input type="text" name="country_code" value="{{countrie.country_code}}" class="form-control">
+                </div>
+                <div class="form-group col-md-12 mb-0">
+                  <label>Country name</label>
+                  <input type="text" name="country_name" value="{{countrie.country_name}}" class="form-control">           
+                </div>            
+              </div>
+            </div><!-- /.modal-body -->
+            <div class="modal-footer">           
+                  <button type="submit" class="btn btn-secondary">  {% block btn-action %}<i class="fa fa-server"></i>&nbsp;&nbsp;Save Changes{% endblock btn-action %}</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
+                  <button type="reset" class="btn btn-warning btn-sm" title="Reset"><i class="fa fa-edit"></i></button>
+            </div><!-- /.modal footer -->
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+ 

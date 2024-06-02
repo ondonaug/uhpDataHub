@@ -1,0 +1,591 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+{% block content %}
+
+
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                        <h1>
+                            General information
+                            <small>Preview</small>
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+                            <li><a href="/general_info">Settings</a></li>
+                            <li class="active">General information</li>
+                        </ol>
+                </section>
+                <!-- Main content -->
+                <section class="content">
+
+                <!-- Form Element Output register -->
+                <div class="box box-success">
+                    <div class="box-header"></div>
+                    <!-- Modal -->
+                        <!---Include--> 
+                    <!-- start table block -->
+                        <div class="box-body table-responsive">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <h3 class="box-title">LIST OF OUTPUT FOR <b>UHP-CLUSTER</b> 
+                                        {% for message in messages %}
+                                        <small><code>{{ message }}</code></small>
+                                        {% endfor %}
+                                    </h3>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#addOutputModal"><i class="fa fa-plus"></i> <span>Add New Output</span></button>
+                                    <a href="{% url 'export_listOutput_excel' %}">Export to Excel</a>
+                                </div>
+                            </div>
+                            <table id="mytab1" class="table responsive">
+                                {% csrf_token %}
+                                <thead class="border-bottom font-weight-bold">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Code</th>
+                                        <th scope="col">Description</th>
+                                        <th colspan ="2" id="mid">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody hx-trigger="load">
+                                    {% for x in data %}
+                                    <tr>
+                                        <th scope="row">{{forloop.counter}}</th>
+                                        <td>{{x.output_code}}</td>
+                                        <td>{{x.output_description}}</td>
+                                        <td>
+                                            <a data-toggle="modal" data-target="#editOutputModal{{x.pk}}" title="edit"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                        <td>
+                                            <a data-toggle="modal" data-target="#deleteOutputModal{{x.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                                        </td>
+                                    </tr>
+                                    <!-- Include (Required here to get the pk) -->
+                                    {% include "pages/forms/outputs/output_edit.html" %}
+                                    {% include "pages/forms/outputs/output_delete.html" %}
+
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div><!-- /.box-body -->
+                    <!-- /.en table block -->
+                </div><!-- /.box -->
+                <!-- Form Element KPI and GSM  -->
+                <div class="box box-success">
+                    <div class="box-header"></div>
+                        <!-- Modal -->
+                         <!---Include--> 
+                        <!-- 1-start table KPI block -->
+                        <div class="box-body table-responsive">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <h3 class="box-title">LIST OF KPI FOR <b>UHP-CLUSTER</b> 
+                                        {% for message in messages %}
+                                        <small><code>{{ message }}</code></small>
+                                        {% endfor %}
+                                    </h3>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#addKpiModal"><i class="fa fa-plus"></i> <span>Add New KPI</span></button>
+                                    <a href="{% url 'export_listKpi_excel' %}">Export to Excel</a>
+                                </div>
+                            </div>
+                            <table id="mytab2" class="table responsive">
+                                    {% csrf_token %}
+                                <thead class="border-bottom font-weight-bold">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Unit</th>
+                                        <th scope="col">Expected result</th>
+                                        <th scope="col">Kpi code</th>
+                                        <th scope="col">Kpi Description</th>
+                                        <th scope="col">kpi country level</th>
+                                        <th scope="col">Data description</th>
+                                        <th scope="col">Data source</th>
+                                        <th scope="col">Collection methods</th>
+                                        <th scope="col">Data frequency</th>
+                                        <th scope="col">Kpi link</th>
+                                        <!--<th></th>
+                                        <th></th> -->
+                                        <th colspan ="2" id="mid">Action</th> 
+                                    </tr>
+                                </thead>
+                                <tbody hx-trigger="load">
+                                    {% for kpi in kpis %}
+                                    <tr>
+                                        <th scope="row">{{forloop.counter}}</th>
+                                        <td>{{kpi.unit}}</td>
+                                        <td>{{kpi.expected_result}}</td>
+                                        <td>{{kpi.kpi_code}}</td>
+                                        <td>{{kpi.kpi_description}}</td>
+                                        <td>{{kpi.kpi_country_level}}</td>
+                                        <td>{{kpi.data_description}}</td>
+                                        <td>{{kpi.data_source}}</td>
+                                        <td>{{kpi.collection_methods}}</td>
+                                        <td>{{kpi.data_frequency}}</td>
+                                        <td>{{kpi.kpi_link}}</td>
+                                        <td>
+                                            <a data-toggle="modal" data-target="#editKpiModal{{kpi.pk}}" title="edit"><i class="fa fa-edit"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a data-toggle="modal" data-target="#deleteKpiModal{{kpi.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                                            <!-- <a href="{% url 'delete_kpi' pk=kpi.pk %}" ><i class="fa fa-trash-o"></i>--> 
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <!-- Include (Required here to get the pk) -->
+                                    {% include "pages/forms/kpi/kpi_edit.html" %}
+                                    {% include "pages/forms/kpi/kpi_delete.html" %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div><!-- /.box-body KPI-->
+                        <!-- /.en table block -->
+                    </div><!-- /.box -->
+
+                     <!-- 2-start table block GSM WORKPLAN-TOP TASKS -->
+                     <div class="box-body table-responsive">
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <h3 class="box-title">TOP TASK FROM WORKPLAN <b>Biennium 2024-25</b> 
+                                    {% for message in messages %}
+                                    <small><code>{{ message }}</code></small>
+                                    {% endfor %}
+                                </h3>
+                            </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#addTopTaskModal"><i class="fa fa-plus"></i> <span>Add New Top task</span></button>
+                        </div>
+                    </div>
+                    <table id="mytab2a" class="table responsive">
+                        <thead class="border-bottom font-weight-bold">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th>
+                                    <span type="checkbox" id="selectAll" class="custom-checkbox">
+                                        <label for="selectAll"></label>
+                                    </span>
+                                </th>
+                                <th scope="col">Unit</th>
+                                <th scope="col">Output</th>
+                                <th scope="col">Kpi</th>
+                                <th scope="col">Top task num</th>
+                                <th scope="col">Top task short</th>
+                                <th scope="col">Top task description</th>
+                                <th colspan ="2" id="mid">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody hx-trigger="load">
+                            {% for toptask in toptasks %}
+                            <tr>
+                                <th scope="row">{{forloop.counter}}</th>
+                                <td>
+                                    <span class="custom-checkbox">
+                                        <input type="checkbox" name="option[]" value="1">
+                                        <label for="checkbox1"></label>
+                                    </span>
+                                </td>
+                                <td>{{toptask.unit}}</td>
+                                <td>{{toptask.output}}</td>
+                                <td>{{toptask.kpi}}</td>
+                                <td>{{toptask.top_task}}</td>
+                                <td>{{toptask.top_task_short}}</td>
+                                <td>{{toptask.top_task_description}}</td>
+                                <td>
+                                    <a data-toggle="modal" data-target="#editTopTaskModal{{toptask.pk}}" title="edit" class="tools"><i class="fa fa-edit"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a data-toggle="modal" data-target="#deleteTopTaskModal{{toptask.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                                    
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- Include (Form edit_lowest task here to get show modal and for delete lowest task) -->
+                            {% include "pages/forms/toptask/toptask_edit.html" %}
+                            {% include "pages/forms/toptask/toptask_delete.html" %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+
+
+
+
+                    
+                    <!-- 3-start table block GSM WORKPLAN- LOWEST TASKS-->
+                        <div class="box-body table-responsive">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <h3 class="box-title">GSM WORKPLAN <b>Biennium 2024-25</b> 
+                                        {% for message in messages %}
+                                        <small><code>{{ message }}</code></small>
+                                        {% endfor %}
+                                    </h3>
+                                </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#addTaskModal"><i class="fa fa-plus"></i> <span>Add New Lowest task</span></button>
+                            </div>
+                        </div>
+                        <table id="mytab2" class="table responsive">
+                            <thead class="border-bottom font-weight-bold">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th>
+                                        <span type="checkbox" id="selectAll" class="custom-checkbox">
+                                            <label for="selectAll"></label>
+                                        </span>
+                                    </th>
+                                    <th scope="col">unit</th>
+                                    <th scope="col">output</th>
+                                    <th scope="col">top task</th>
+                                    <th scope="col">lowest task</th>
+                                    <th scope="col">lowest task short</th>
+                                    <th scope="col">lowest task description</th>
+                                    <th colspan ="2" id="mid">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody hx-trigger="load">
+                                {% for gsmWorkplan in gsmWorkplans %}
+                                <tr>
+                                    <th scope="row">{{forloop.counter}}</th>
+                                    <td>
+                                        <span class="custom-checkbox">
+                                            <input type="checkbox" name="option[]" value="1">
+                                            <label for="checkbox1"></label>
+                                        </span>
+                                    </td>
+                                    <td>{{gsmWorkplan.toptask.unit}}</td>
+                                    <td>{{gsmWorkplan.toptask.output}}</td>
+                                    <td>{{gsmWorkplan.toptask.top_task}}</td>
+                                    <td>{{gsmWorkplan.lowest_task}}</td>
+                                    <td>{{gsmWorkplan.lowest_task_short}}</td>
+                                    <td>{{gsmWorkplan.lowest_task_description}}</td>
+                                    <td>
+                                        <a data-toggle="modal" data-target="#editTaskModal{{gsmWorkplan.pk}}" title="edit" class="tools"><i class="fa fa-edit"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a data-toggle="modal" data-target="#deleteTaskModal{{gsmWorkplan.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                                        <!-- <a href="{% url 'delete_lowest' pk=gsmWorkplan.pk %}" class="tools"><i class="fa fa-trash-o"></i> -->  
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- Include (Form edit_lowest task here to get show modal and for delete lowest task) -->
+                                {% include "pages/forms/gsm/lowest_edit.html" %}
+                                {% include "pages/forms/gsm/lowest_delete.html" %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                </div><!-- /.box-body KPI and GSM-->
+
+                    <div class="row">
+                        <!-- left column COUNTRY -->
+                        <div class="col-md-6">
+                             <!-- Form Element Country Register -->
+                            <div class="box box-danger">
+                                <div class="box-header">
+                                    <h3 class="box-title">COUNTRY REGISTER FOR THE <b>OPERATIONNAL WORKPLAN</b> 
+                                        {% for message in messages %}
+                                        <small><code>{{ message }}</code></small>
+                                        {% endfor %}
+                                    </h3>
+                                </div>
+                                <form action="/countryList" method="POST">
+                                    {% csrf_token %}
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-xs-3">
+                                                {{ countryForm.country_code|as_crispy_field }}
+                                                
+                                            </div>
+                                            <div class="col-xs-7">
+                                                {{ countryForm.country_name|as_crispy_field }}
+                                               
+                                            </div>
+                                            <div class="col-xs-2">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.box-body -->
+                                </form>
+
+                                <table id="mytab1" class="table responsive">
+                                    <thead class="border-bottom font-weight-bold">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Country code</th>
+                                            <th scope="col">Country name</th>
+                                            <th colspan ="2" id="mid">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody hx-trigger="load">
+                                        {% for countrie in countries %}
+                                        <tr>
+                                            <th scope="row">{{forloop.counter}}</th>
+                                            <td>{{countrie.country_code}}</td>
+                                            <td>{{countrie.country_name}}</td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#editCountryModal{{countrie.pk}}" title="edit"><i class="fa fa-edit"></i></a>
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="#deleteCountryModal{{countrie.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                                            </td>
+                                        </tr>
+                                        <!-- Include (Required here to get the pk) -->
+                                          <!-- Include (Form edit_country to get show modal and for update country name) -->
+                                     {% include "pages/forms/country/country_edit.html" %}
+
+
+                                                 <!-- Modal Dialog delete-->   
+                                    <div class="modal fade" id="deleteCountryModal{{countrie.pk}}" tabindex="-1" role="dialog">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <form action="">
+                                                    <div class="modal-header">                
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h4>Are you sure you wante to delete this <code>Country name?</code><br/><br/><code><b>{{countrie.country_name}}</b></code></h4>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a href="{% url 'delete_country' pk=countrie.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div> 
+         
+    
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <nav aria-label="...">
+                                    <ul class ="pagination pagination-lg" style = 'justify-content: center'>
+                                        {% for page in paginator.page_range %}
+                                        {% if page == countries.number %}
+                                        <li class="page-item active" aria-current="page">
+                                            <span class="page-link">{{page}}</span>
+                                        </li>
+                                        
+                                        {% else %}
+                                        <li class ="page-item"><a class ="page-link" href="?page={{page}}">{{page}}</a></li>
+                                        
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </ul>
+
+                                </nav>
+
+
+
+                            </div><!-- /.box -->
+                            
+                              <!-- general form elements -->
+                            
+                            
+                        
+
+
+
+
+
+                            
+                        </div><!--/.col (left) end of COUNTRY -->
+                        <!-- right column -->
+                        <div class="col-md-6">
+                            <!-- general form elements disabled -->
+                            <!-- Input addon -->
+                            <div class="box box-warning">
+                                <div class="box-header">
+                                    <h3 class="box-title">STATUT REGISTER FOR THE <b>OPERATIONNAL WORKPLAN</b> 
+                                </div>
+                                <div class="box-body">
+                                    <h4>
+                                        {% for message in messages %}
+                                        <small><code>{{ message }}</code></small>
+                                        {% endfor %}
+                                    </h4>      
+                                    <form action="/statutList" method="POST">
+                                        {% csrf_token %}
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" id="statut_name" name="statut_name" class="form-control" placeholder="Please inter the name of statut">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-info btn-flat" type="submit">submit</button>
+                                            </span>
+                                        </div><!-- /input-group -->
+
+                                    </form>
+                                    <br>
+
+                                    <table id="mytabStatut" class="table responsive">
+                                        <thead class="border-bottom font-weight-bold">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Statut name</th>
+                                                <th colspan ="2" id="mid">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody hx-trigger="load">
+                                            {% for statutworkplan in statutworkplans %}
+                                            <tr>
+                                                <th scope="row">{{forloop.counter}}</th>
+                                                <td>{{statutworkplan.statut_name}}</td>
+                                                <td>
+                                                    <a data-toggle="modal" data-target="#editStatutModal{{statutworkplan.pk}}" title="edit"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                                <td>
+                                                    <a data-toggle="modal" data-target="#deleteStatutModal{{statutworkplan.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                                                </td>
+                                            </tr>
+                                            <!-- Include (Required here to get the pk) -->
+                                              <!-- Include (Form edit_country to get show modal and for update country name) -->
+                                         {% include "pages/forms/statutWp/statut_edit.html" %}
+    
+    
+                                                     <!-- Modal Dialog delete-->   
+                                        <div class="modal fade" id="deleteStatutModal{{statutworkplan.pk}}" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <form action="">
+                                                        <div class="modal-header">                
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <h4>Are you sure you wante to delete this <code>Statut name?</code><br/><br/><code><b>{{statutworkplan.statut_name}}</b></code></h4>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a href="{% url 'delete_statut' pk=statutworkplan.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+
+                                
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">LIST OF THE UNIT FOR <b>UHP CLUSTER</b> </h3>
+                                </div><!-- /.box-header -->
+                                <!-- form start -->
+                                <form action="/add_units" method="POST">
+                                    {% csrf_token %}
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-xs-3">
+                                                <label>Unit code</label>
+                                               <input type="text" name="unit_code" class="form-control">
+                                            </div>
+                                            <div class="col-xs-7">
+                                                <label>Unit description</label>
+                                                <input type="text" name="unit_description" class="form-control">
+                                             </div>
+                                            <div class="col-xs-2">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.box-body -->
+                                </form>
+
+                                <br>
+
+                                    <table id="mytabUnit" class="table responsive">
+                                        <thead class="border-bottom font-weight-bold">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Unit code</th>
+                                                <th scope="col">Unit decription</th>
+                                                <th colspan ="2" id="mid">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody hx-trigger="load">
+                                            {% for unit in units %}
+                                            <tr>
+                                                <th scope="row">{{forloop.counter}}</th>
+                                                <td>{{unit.unit_code}}</td>
+                                                <td>{{unit.unit_description}}</td>
+                                                <td>
+                                                    <a data-toggle="modal" data-target="#editUnittModal{{unit.pk}}" title="edit"><i class="fa fa-edit"></i></a>
+                                                </td>
+                                                <td>
+                                                    <a data-toggle="modal" data-target="#deleteUnitModal{{unit.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                                                </td>
+                                            </tr>
+                                            <!-- Include (Required here to get the pk) -->
+                                              <!-- Include (Form edit_country to get show modal and for update country name) -->
+                                         {% include "pages/forms/unitCluster/unit_edit.html" %}
+    
+    
+                                                     <!-- Modal Dialog delete-->   
+                                        <div class="modal fade" id="deleteUnitModal{{unit.pk}}" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <form action="">
+                                                        <div class="modal-header">                
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <h4>Are you sure you wante to delete this <code>Unit name?</code><br/><br/><code><b>{{unit.statut_name}}</b></code></h4>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a href="{% url 'delete_unit' pk=unit.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                               
+
+
+                            </div><!-- /.box -->
+
+
+                         
+
+
+                                        <!-- Form Element Biennium Workplan -->
+                               </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div><!--/.col (right) -->
+                    </div>   <!-- /.row -->
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+         <!-- Include (Form add_lowest task here to get show modal) -->
+
+        {% include "pages/forms/outputs/output_add.html" %}
+        {% include "pages/forms/toptask/toptask_add.html" %}
+        {% include "pages/forms/gsm/lowest_add.html" %}
+       
+ 
+{% endblock  %}
+

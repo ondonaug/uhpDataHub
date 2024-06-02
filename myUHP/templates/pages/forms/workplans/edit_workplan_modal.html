@@ -1,0 +1,135 @@
+{% extends "pages/forms/workplans/add_workplan_modal.html" %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+ <!-- Modal Edit form-->
+             
+     <!-- Modal id-->
+    {% block modal-id %} id="editWorkplanModalForm{{workplan.pk}}" {% endblock modal-id %}
+       <!-- Modal Title-->
+    {% block modal-title %} <i class="fa fa-edit"></i>&nbsp;&nbsp;Edit Sub-Activity under the <code>Task description: </code><b>{{workplan.gsmWorkplan.lowest_task_description}}</b>{% endblock modal-title %}
+      <!-- Form Action-->
+      {% block Action %} action="/edit_op_wp/{{workplan.pk}}" {% endblock Action %}
+
+       <!-- Button action-->
+    {% block btn-action %} <i class="fa fa-server"></i>&nbsp;&nbsp;Save Changes {% endblock btn-action %}
+
+    <!-- ALL INPUTS-->
+
+   <!-- Block ID -->
+
+    {% block value-id %}{% endblock value-id %}
+
+
+    {% block value-input %} 
+
+  
+    <input type="text" name="gsmWorkplan" value="{{workplan.gsmWorkplan.id}}" class="form-control" style="display: none;">
+    <div class="form-group col-md-12 mb-0">
+        <label>Sub activity</label>
+        <textarea name="sub_activity" class="form-control" rows="3">{{workplan.sub_activity}}</textarea>
+    </div>
+    {% comment "" %}
+    <input type="text" name="country" value="{{workplan.country.id}}" class="form-control" style="display: none;">
+    <input type="text" name="travel_required" value="{{workplan.travel_required}}" class="form-control" style="display: none;">
+    {% endcomment %}
+    
+
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+
+            <label>Country where support</label>
+            {% render_field form.country value=form.country.label class+="form-control" style="border: 2px dashed green;" %}
+        
+
+        </div>
+        <div class="form-group col-md-5 mb-0">
+            <label>Travel required:<code>Last reporting<b> :{{workplan.travel_required}}</b></code></label>
+            {% render_field form.travel_required value=form.travel_required.label class+="form-control" style="border: 2px dashed green;" %}
+        </div>
+        <div class="form-group col-md-3 mb-0">
+            <label>Nb of Consultants</label>
+            <input type="number" name="consultants" value="{{workplan.consultants}}" class="form-control">
+           
+        </div>
+    </div>
+
+   
+    
+
+    <div class="form-row">
+        <div class="form-group col-md-3 mb-0">
+            <label>Duration days</label>
+            <input type="number" name="duration_days" value="{{workplan.duration_days}}" class="form-control">
+        </div>
+        <div class="form-group col-md-3 mb-0">
+            <label>Travel amount</label>
+            <input type="number" name="travel_amount" value="{{workplan.travel_amount}}" class="form-control">
+        </div>
+        <div class="form-group col-md-2 mb-0">
+            <label>Staff amount</label>
+            <input type="number" name="staff_amount" value="{{workplan.staff_amount}}" class="form-control">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3 mb-0">
+            <label>Procurment amount</label>
+            <input type="number" name="procurment_amount" value="{{workplan.procurment_amount}}" class="form-control">
+        </div>
+        <div class="form-group col-md-3 mb-0">
+            <label>Service amount</label>
+            <input type="number" name="service_amount" value="{{workplan.service_amount}}" class="form-control">
+        </div>
+        <div class="form-group col-md-3 mb-0">
+            <label>Flexible amount</label>
+            <input type="number" name="flexible_amount" value="{{workplan.flexible_amount}}" class="form-control">
+        </div>
+        <div class="form-group col-md-3 mb-0">
+            <label>VC amount</label>
+            <input type="number" name="vc_amount" value="{{workplan.vc_amount}}" class="form-control">
+        </div>
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <label>Responsible officer name</label>
+            <input type="text" name="responsable" value="{{workplan.responsable}}" class="form-control">
+    </div>    
+    <div class="form-group col-md-12 mb-0">
+        <label>Coworkers name</label>
+        <input type="text" name="coworkers" value="{{workplan.coworkers}}" class="form-control">
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <label>Expected result description</label>
+        <textarea name="expected_result" class="form-control" rows="3">{{workplan.expected_result}}</textarea>
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <label>Indicator measuring</label>
+        <textarea name="indicator_measuring" class="form-control" rows="3">{{workplan.indicator_measuring}}</textarea>
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <label>Collect method description</label>
+        <textarea name="collect_method" class="form-control" rows="3">{{workplan.collect_method}}</textarea>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+             <!-- Date dd/mm/yyyy -->
+             <label>Completion date:<code>Last reporting<b> :{{workplan.completion_date}}</b></code></label>
+             <div class="input-group">
+                 <div class="input-group-addon">
+                     <i class="fa fa-calendar"></i>
+                 </div>
+                 <input type="date" name="completion_date" id="completionDate" class="form-control" data-inputmask="'alias': 'mm/dd/yyyy'" data-mask required/>
+                 {% comment "" %}%}<input type="text" name="completion_date" id="completionDate"value="{{workplan.completion_date}}" class="form-control" data-inputmask="'alias': 'mm/dd/yyyy'" data-mask/>{% endcomment%}
+             </div><!-- /.input group -->
+        </div>
+        <div class="form-group col-md-6 mb-0">
+            <label>Statut progress<code>Last reporting: <b>{{workplan.statut_name}}</b></code></label>
+            {% render_field form.statut_name placeholder=form.statut_name.label class+="form-control" style="border: 2px dashed red;" %}
+        </div>
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <label>Observations</label>
+        <textarea name="comments" class="form-control" rows="3">{{workplan.comments}}</textarea>
+    </div>   
+    
+    {% endblock value-input %}

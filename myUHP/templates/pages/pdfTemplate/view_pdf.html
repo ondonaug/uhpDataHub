@@ -1,0 +1,136 @@
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>UHP Stats</title>
+         <!-- bootstrap 3.0.2 -->
+         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+         <!-- font Awesome -->
+         <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+         <!-- Ionicons -->
+         <link href="{% static 'css/ionicons.min.css' %}" rel="stylesheet" type="text/css" />
+         <!-- Theme style -->
+         <link href="{% static 'css/AdminLTE.css' %}" rel="stylesheet" type="text/css" />
+
+        <style>
+            @page{
+                size:"A4";
+                margin:1.5cm 1.5cm 2.5cm 1.5cm;              
+            }
+            @top-center{
+                content:"COMPANY NAME";
+            }
+
+            ul.a {
+                list-style-position: outside;
+                
+              }
+              
+              ul.b {
+                list-style-position: inside;
+                
+              }
+              ol.c {
+                list-style-type: upper-roman;
+                padding: 5px;
+              }
+              h1{
+                 border: 2px solid black;
+                 color:black; font-size:20px; 
+                 position:center;
+                 text-align: center;
+                 background-color:powderblue; 
+                 background-repeat: no-repeat;
+                 background-size: auto; 
+                 padding: 10px;
+              }
+              h2{
+                color:#DC143C; 
+                font-size:14px; 
+                padding:center; 
+                font-family:verdana;
+              }
+              h3{
+
+                color:blue;
+                
+                font-size:13px; 
+                padding:center;
+                margin-block: 35px;
+              }  
+
+             
+
+              h4{
+
+                color:#006400;
+                background-color:#d7fcff;
+                font-size:12px; 
+                padding:center;
+                margin-block: 20px;
+              }  
+              h5{
+
+                color:black;
+             
+                font-size:11px; 
+                padding:center;
+                margin-block: 10px;
+              }  
+              h6{
+                color:black;
+                font-size:10px; 
+                padding:center;
+                margin-block: 10px;
+              }    
+        </style>
+    </head>
+    <body>
+        <h1>Status of implementation of operational plan activities for {{code_unit}} unit</h1>
+            <!-- CHE-->
+              {% for unit in data_unit %}
+               <h5>{{unit.unit_description|upper}}: <code>{% now "d/m/y H:i:s"%}</code></h5>
+              {% endfor %}
+
+                {% for outputs in data_outputs  %}
+
+                  <h2><b>Output: </b>{{outputs.output_description}}</h2>
+
+                    {% for topTask in outputs.outputs_toptask.all %}
+                    
+                      <h3><b>Top task {{topTask.top_task}} :</b> {{topTask.top_task_description}}</h3>
+                      {% for lowestTask in topTask.toptask_gsmWorkplan.all %}
+
+                              <h4><b>Activity: </b>{{lowestTask.lowest_task_description}}</h4>
+                            
+                              <ol style="padding: 5px;">
+                                {% for subactivity in lowestTask.gsmWorkplan_operw.all %}
+                                    <li style="font-size:12px; "><label>Sub activity: <b>{{subactivity.sub_activity}}</b>  Completion date: <code> {{subactivity.completion_date}}</code> Responsible: <code> {{subactivity.responsable}}</code>  Statut name: <code style="color=red"> {{subactivity.statut_name}}</code> Comments: <code>{{subactivity.comments}}</code></label></li>   
+                                  {% empty %} 
+                                    <h6>No sub-activities defined for this task</h6>                
+                                {% endfor %}
+                              </ol>
+                      
+                      {% endfor %}
+
+                    {% endfor %}
+      
+                {% endfor %}
+
+           
+             
+                
+
+        <!-- jQuery 2.0.2 -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <!-- Bootstrap -->
+        <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript"></script>
+       
+        <!-- AdminLTE App -->
+        <script src="{% static 'js/AdminLTE/app.js' %}" type="text/javascript"></script>   
+    </body>
+</html>

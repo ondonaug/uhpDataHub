@@ -1,0 +1,33 @@
+{% extends "pages/forms/subscribers/subscribers_add.html" %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+ <!-- Modal Edit form-->
+             
+     <!-- Modal id-->
+    {% block modal-id %} id="editSubscriberModalForm{{subscriber.pk}}" {% endblock modal-id %}
+       <!-- Modal Title-->
+    {% block modal-title %} <i class="fa fa-edit"></i>&nbsp;&nbsp;Edit subscribers <code>NewsLetter</code>{% endblock modal-title %}
+      <!-- Form Action-->
+      {% block Action %} action="/edit_subscribers/{{subscriber.pk}}" {% endblock Action %}
+
+       <!-- Button action-->
+    {% block btn-action %} <i class="fa fa-server"></i>&nbsp;&nbsp;Save Changes {% endblock btn-action %}
+
+    <!-- ALL INPUTS-->
+
+   <!-- Block ID -->
+
+    {% block value-id %}{% endblock value-id %}
+
+    {% block value-input %}   
+    <div class="form-group col-md-12 mb-0">
+        <label>Subsciber name</label>
+        <input type="text" name="name_subscriber" value="{{subscriber.name_subscriber}}" class="form-control">
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <label>Subsciber email</label>
+        <input type="Email" name="email_subscriber" value="{{subscriber.email_subscriber}}" class="form-control">
+    </div> 
+    {% endblock value-input %}

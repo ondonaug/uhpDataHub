@@ -1,0 +1,92 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+
+
+
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side">       
+        {% if user.is_authenticated %}         
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                UNIVERSAL HEALTH COVERAGE/ HEALTHIER POPULATIONS (UHP) CLUSTER
+                <small>Monitoring operationnal workplan</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+                <li><a href="/indiv_report">Report</a></li>
+                <li class="active">Write repor</li>
+            </ol>
+        </section>
+        <div class="pad margin no-print">
+            <div class="alert alert-info" style="margin-bottom: 0!important;">
+                <i class="fa fa-info"></i>
+                <b>Note:</b> This page has been enhanced for printing. Click the print button at the bottom of the report.
+            </div>
+        </div>
+        <!-- Main content -->
+        <section class="content invoice">
+            <form {% block Action %} action="{% url 'add_indivReport' %}"  {% endblock Action %} method="POST">   
+            {% csrf_token %}  
+                 
+            <!-- title row -->        
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="page-header">
+                        <i class="fa fa-user"></i> INDIVIDUAL STAFF ANNUAL REPORT
+                    </h2>                            
+                </div><!-- /.col -->
+            </div>
+            {% block value-id %}{% endblock value-id %}
+
+
+           {% block value-input %} 
+            {{ form.as_p }}
+            {% endblock value-input %}
+           
+            <div class="row">
+                <!-- accepted payments column -->
+                <div class="col-xs-12">
+                    <p class="lead">Instructions for filling out the form:</p>
+                    <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+                       1. The results to be emphasized are those existing in the work plan of the cluster. It is just a matter of identifying the ones you will commit to in your actions <br>
+                       2. The tasks that will require your direct involvement. This can be formulated as follows: <br>
+                       3. The support you need in terms of tools, skills, training, and office environment. This can be formulated as follows: <br>
+                       4. The main achievements are those that you feel your involvement was very important <br>
+                       5. The final comments can include suggestions of how to improve this initiative
+                    </p>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+
+            <!-- this row will not appear when printing -->
+            <div class="row no-print">
+                <div class="col-xs-12">
+                    <button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> Print</button>
+                    <button class="btn btn-success pull-right" type="submit">{% block btn-action %} <i class="fa fa-plus"></i> Submit report{% endblock btn-action %}</button>  
+                    {% block btn-reset %} <button type="reset" class="btn btn-primary pull-right" title="Reset"><i class="fa fa-edit">Reset formular</i></button>{% endblock btn-reset %}
+                </div>
+            </div>
+        </form> 
+        </section><!-- /.content -->
+        {% else %}
+        <section>
+            <p style="position: center;">
+                We could not find the page you were looking for. 
+                Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
+            </p>
+        </section>
+        
+        
+    
+        {% endif %}
+    </aside><!-- /.right-side -->
+
+
+ 
+{% endblock %}

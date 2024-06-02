@@ -1,0 +1,95 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+<link href="{% static 'css/myStyle/individualReport.css' %}" rel="stylesheet" type="text/css" />
+       <main>
+            <div class="container">
+                <div class="row">
+                    <!-- blog-contents -->
+                            <!-- title row -->
+                <div class="col-xs-12">
+                    <h2 class="page-header">
+                        <i class="fa fa-tasks"></i> Operational workplan with the sub-activity
+                    </h2>                            
+                </div><!-- /.col -->
+                            <div class="row invoice-info">  
+                                <p>{{message}}</p>                       
+                            </div><!-- /.row -->
+                            {% for unit in data_unit %}
+                            <div class="alert alert-info">
+                              <h4><strong>{{unit.unit_description}}</strong></h4> 
+                            </div id="allDomObjects">  
+                            {% endfor %}         
+                            
+                            
+                            {% for outputs in data_outputs  %}
+
+                               <h3 style="color:red"><b>Output: </b>{{outputs.output_description}}</h3>
+
+                                {% for topTask in outputs.outputs_toptask.all %}
+                                
+                                    <h3 style="color:blue"><b>Top task {{topTask.top_task}} :</b> {{topTask.top_task_description}}</h3>
+                                    {% for lowestTask in topTask.toptask_gsmWorkplan.all %}
+
+                                            <h3 style="color:green"><b>Activity: </b>{{lowestTask.lowest_task_description}}</h3>
+                                            
+                                            <ol style="padding: 6px;">
+                                                {% for subactivity in lowestTask.gsmWorkplan_operw.all %}
+                                                    <li style="font-size:18px; "><label>Sub activity: <b>{{subactivity.sub_activity}}</b>  Completion date: <code> {{subactivity.completion_date}}</code> Responsible: <code> {{subactivity.responsable}}</code>  Status name: <code style="color=red"> {{subactivity.statut_name}}</code> Comments: <code>{{subactivity.comments}}</code></label></li>   
+                                                {% empty %} 
+                                                    <h6>No sub-activities defined for this task</h6>                
+                                                {% endfor %}
+                                            </ol>
+                                    
+                                    {% endfor %}
+
+                                {% endfor %}
+                
+                            {% endfor %}
+                           
+
+                       
+                     
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" required="required"> Please Check to Confirm
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-info" onclick="window.print();"><i class="fa fa-print"></i> Print</button>    
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <p>Back to <a href="/sub_activity_report">List</a></p>   
+                            </div>
+                        </div>
+                 
+                    <!-- end of blog-contents -->
+                </div>
+            </div> <!-- end of /.container -->
+        </main>
+        <!-- smooth-scroll -->
+
+        <script>
+        $(function() {  
+            jQuery.scrollSpeed(100, 1000);
+        });
+
+        $(unescape(HtmlString)).filter(".allDomObjects").each(function() {
+            if ( $('[id="'+this.id+'"]').length > 1 ) {
+                for ( var i = 1; i < $('[id="'+this.id+'"]').length, i++ ) {
+                    $('[id="'+this.id+'"]')[i].remove();
+                }
+            }
+        })
+        </script>
+
+
+        {% endblock %}

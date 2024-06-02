@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+
+{% block content %}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- Left side column. contains the logo and sidebar -->
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side">
+        {% if user.is_authenticated %}
+
+<!-- <link href="{% static 'css/myStyle/table.css' %}" rel="stylesheet" type="text/css" />-->
+<section class="content-header">
+    <h3>
+        Add, view and edit <code><b>subscriber newsletter</b></code> in our <b>plateform</b>
+        {% for message in messages %}
+        <small><code>{{ message }}</code></small>
+        {% endfor %}
+    </h3>
+    <ol class="breadcrumb">
+        <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+        <li><a href="/subscribers_views">Subscribers</a></li>
+        <li class="active">Subscribers List</li>
+    </ol>
+</section>
+   <div class="container" id="my-subscribers-table-container" style="width: 140rem;">
+            <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#addSubscriberModalForm"><i class="fa fa-plus"></i> <span>Add New subscriber</span></button>
+        <br><br>
+        <table class="table responsive" id="mySubscribers" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">
+            <thead class="table-title">
+                <tr class="head-row">
+                    <th scope="col">#</th>
+                    <th></th>
+                    <th>Subscriber Name</th>
+                    <th>Subscriber email</th>
+                    <th>Date of subscriber</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                    <!-- <th colspan ="2" id="mid">Action</th>-->
+            </thead>
+            <tbody>
+                {% for subscriber in subscribers %}
+                    <tr class="table-row">
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>
+                        <span class="custom-checkbox">
+                            <input type="checkbox" name="option[]" value="1">
+                        </span>
+                    </td>
+                    <td>{{ subscriber.name_subscriber }}</td>
+                    <td>{{ subscriber.email_subscriber }}</td>
+                    <td>{{ subscriber.date_subscriber }}</td>
+                    <td> 
+                        <a data-toggle="modal" data-target="#editSubscriberModalForm{{subscriber.pk}}" title="edit" class="tools"><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td>
+                        <a data-toggle="modal" data-target="#deletSubscriberModalForm{{subscriber.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                     <!-- Modal Dialog Edit-->
+                    {% include "pages/forms/subscribers/subscribers_edit.html" %}
+            
+                    <!-- Modal Dialog delete-->   
+            <div class="modal fade" id="deletSubscriberModalForm{{subscriber.pk}}" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form action="">
+                            <div class="modal-header">                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Are you sure you wante to delete this <code>Subscriber?</code><br/><br/><b>{{subscriber.name_subscriber}}</b><br/><br/>with email :<b>{{subscriber.email_subscriber}}</b></h4>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="{% url 'delete_subscribers' pk=subscriber.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+                {% endfor %}
+            </tbody>
+        </table>
+        <nav aria-label="...">
+            <ul class ="pagination pagination-lg" style = 'justify-content: center'>
+                {% for page in paginator.page_range %}
+                {% if page == subscribers.number %}
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">{{page}}</span>
+                </li>
+                {% else %}
+                <li class ="page-item"><a class ="page-link" href="?page={{page}}">{{page}}</a></li>
+                
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+          {% include "pages/forms/subscribers/subscribers_add.html" %}
+          {% else %}
+          <section>
+              <p style="position: center;">
+                  We could not find the page you were looking for. 
+                  Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
+              </p>
+          </section>   
+          {% endif %}
+        </aside><!-- /.right-side -->
+    </div>
+
+{% endblock %}
+
+

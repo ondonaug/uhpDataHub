@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- Left side column. contains the logo and sidebar -->
+
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side">
+        {% if user.is_authenticated %}
+   <div class="container tbl-container" id="my-workplans-table-container" style="width: 185rem;">
+       
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="text-left caption">
+                    {% for message in messages %}
+                    <small><code>{{ message }}</code></small>
+                    {% endfor %}
+                </h2>
+            </div>
+        </div>
+        <section class="content-header">
+            <h3>
+                Add, view and edit <b>Data from survey</b>
+                <small>Preview</small>
+                
+            </h3>
+            <ol class="breadcrumb">
+                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+                <li><a href="/project_survey">Survey project</a></li>
+                <li><a href="export_to_excel_survey_dataset/{{by_survey}}/{{end_day}}"><i class="fa fa-download"></i> Export survey dataset to Excel</a></li>
+                <li><a href="{% url 'export_to_excel' %}">Export to Excel</a></li>
+                <li class="active">Enter Data</li>
+            </ol>
+        </section>
+        <hr>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4"> 
+                <form method="GET">
+                    {% csrf_token %}
+                    <div class="input-group margin-bottom-sm">
+                        <div class="row">
+                            <div class="col-md-10"><input class="form-control" name="quest_code" type="text" placeholder="Search here question code"></div>
+                            <div class="col-md-2"><button type="submit" class="btn btn-success">
+                                <i class="fa fa-search fa-fw"></i>
+                            </button></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-xs-12 col-sm-8"> 
+                <form method="GET" action="{% url 'index_survey' %}">
+                    {% csrf_token %}
+                    {{form_survey_title.as_p}}
+                    <button class="btn btn-success">Fiter the title's survey <i class="fa fa-download"></i></a></button>
+                </form> 
+            </div> 
+        </div>
+        <div class="row tbl-fixed">
+            <table class="table responsive table-condensed" id="myWorkplansTable1" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">
+                <form method="POST" action="{% url 'index_survey' %}">
+                    {% csrf_token %}
+                        <tr>
+                            <th>Title for the survey</th>
+                            <th>Question code</th>
+                            <th>Questions</th>
+                            <th>Response in text format</th>
+                            <th>Response in integer format</th>
+                            <th>First geographic area</th>
+                            <th>Second geographic area</th>
+                        </tr>
+                        {% if not form.instance.id %}
+                        <tr> 
+                            {% include 'pages/survey/survey_dataset_save.html' %}
+                        </tr>
+                        {% endif %}
+                    {% for surveyDataset in surveyDatasets %}
+                        <tr>
+                            {% if form.instance.id == surveyDataset.id %}
+                            {% include 'pages/survey/survey_dataset_save.html' %}
+                            {% else %} 
+                            <td>{{surveyDataset.surveyProject.title_surv}}</td>
+                            <td>{{surveyDataset.quest_code}}</td>
+                            <td>{{surveyDataset.question}}</td>
+                            <td>{{surveyDataset.response_text}}</td>
+                            <td>{{surveyDataset.response_num}}</td>
+                            <td>{{surveyDataset.level_1}}</td>
+                            <td>{{surveyDataset.level_2}}</td>
+                            <td><button formnovalidate name="edit" value="{{surveyDataset.id}}" class="btn btn-primary btn-sm">Edit</button></td>
+                            <td><button formnovalidate name="delete" value="{{surveyDataset.id}}" class="btn btn-warning btn-sm">delete</button></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %} 
+                </form>
+            </table>
+        </div>
+
+        {% comment  %}
+        <ul class="pagination justify-content-center my-5">
+            {% if surveyDatasets.has_previous %}
+            <!-- 'First' and 'Previous' Buttons -->
+              <li class="page-item">
+                <a class="page-link" href="?page=1">|&lt; First</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ surveyDatasets.previous_page_number }}">&lt; Previous</a>
+              </li>
+            {% endif %}
+          
+            <!-- Numbered Buttons -->
+            {% for page in paginator.page_range %}
+              {% if surveyDatasets.number == page %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
+                </li>
+              {% elif page > surveyDatasets.number|add:'-3' and page < surveyDatasets.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          
+            <!-- 'Next' and 'Last' Buttons -->
+            {% if surveyDatasets.has_next %}
+              <li class="page-item">
+                <a class="page-link" 
+                  href="?page={{ surveyDatasets.next_page_number }}">Next &gt;</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ surveyDatasets.paginator.num_pages }}">Last &gt;|</a>
+            </li>
+            {% endif %}
+        </ul>
+        {% endcomment %}
+
+
+    </div>
+    {% else %}
+    <section>
+        <p style="position: center;">
+            We could not find the page you were looking for. 
+            Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
+        </p>
+    </section>   
+    {% endif %}
+</aside><!-- /.right-side -->
+</div>
+
+{% endblock %}
+
+

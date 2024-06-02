@@ -1,0 +1,29 @@
+{% extends "baselog.html" %}
+
+{% block content %}
+
+{% for message in messages %}
+    <div class="message alert alert-info  {{ message.tags }}">
+        {{ message }}
+    </div>
+{% endfor %}
+
+    <form action="/signin" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <h3 class="text-center">Sign In</h3>
+            <br><br>
+            <label for="">Username</label>
+            <input type="text" id="username" name="username">
+            <br>
+            <label for="">Password</label>
+            <input type="password" id="pass1" name="pass1" Required>
+            <br><br>
+        </div>
+        <div class="form-group submit-btn">
+            <input type="submit" value="Sign In">
+            <a href="/signup" class="text-center">I have not account</a>
+          </div>
+    </form>
+
+{% endblock %} 

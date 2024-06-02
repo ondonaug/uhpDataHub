@@ -1,0 +1,110 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+
+<link href="{% static 'css/myStyle/individualReport.css' %}" rel="stylesheet" type="text/css" />
+
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- Left side column. contains the logo and sidebar -->
+
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side">                
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h3>
+                <b>List of Unit with the <code>sub activity</code>  submitted to the <code>operationnal workplan</code></b> 
+                <small>Monitoring operationnal workplan</small>
+            </h3>
+            <ol class="breadcrumb">
+                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+                <li><a href="/workplans">Enter sub activity</a></li>
+                <li class="active">Report</li>
+            </ol>
+        </section>
+
+        <section class="content invoice">
+           
+        <main>
+            <form class="mt-5" id="order-form">
+                {% csrf_token %}
+      
+            <!-- select -->
+            {% comment "" %}
+            <div class="form-group" >
+                <label>Select</label>
+                <select class="form-control" id="gsm-data-box">
+                    {% for unit in units %}
+                    <option value="{{unit}}">{{unit.unit_description}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endcomment %}
+
+            {% for unit in units %}
+            <div class="col-sm-4 text-center">
+                  <h3><a href="single_sub_activity_page/{{unit.unit_code}}"><strong>{{unit.unit_description}}</strong>
+                    
+                </a></h3>
+                <img src="{% static 'images/demo/afro.png' %}" height="40%" width="40%" alt="...">
+                <button class="btn btn-sm btn-primary"><a href="subActivities_doc_report/{{unit.unit_code}}" style="color:#ffffff;">Generate document <i class="fa fa-download"></i></a></button>
+                  {% comment "" %}
+                        <ul>
+                    {% for gsm in unit.units_gsmWorkplan.all %}
+                    <li>{{gsm.lowest_task_description}}</li>
+                    {% endfor %}
+                  </ul>
+                  <ul>
+                    {% for kpi in unit.units_kpi.all %}
+                    <li>{{kpi.kpi_description}}</li>
+                    {% endfor %}
+                  </ul>
+                  {% endcomment %}
+            
+              </div>
+              {% if forloop.counter|divisibleby:3 %}
+              <div class="clearfix"></div>
+              {% endif %}
+            {% endfor %}    
+            {% comment "" %}
+            <div>
+                {% for operworkplan in operworkplans %}
+                <p>{{operworkplan.gsmWorkplan.lowest_task_description}}--{{operworkplan.sub_activity}}--{{operworkplan.responsable}}--{{operworkplan.completion_date}}</p>
+                
+                {% endfor %}
+                <p></p>
+            </div>
+            {% endcomment %}
+
+            {% comment "" %}
+                        {% for operworkplan in operworkplans  %}
+            <div class="col-sm-4 text-center">
+             
+                <h4><a href="/">{{operworkplan.gsmWorkplan.unit.unit_code}}</a></h4>
+
+            </div>
+            {% if forloop.counter|divisibleby:3 %}
+            <div class="clearfix"></div>
+            
+            {% endif %}
+            
+            {% endfor %}
+            {% endcomment %}
+
+     
+            </form>
+
+  
+        </main>
+    </section>
+
+    
+        </section><!-- /.content -->
+    </aside><!-- /.right-side -->
+</div>
+   
+{% endblock %}

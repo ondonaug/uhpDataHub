@@ -1,0 +1,42 @@
+{% extends "pages/forms/toptask/toptask_add.html" %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+ <!-- Modal Edit form-->
+             
+     <!-- Modal id-->
+    {% block modal-id %} id="editTopTaskModal{{toptask.pk}}" {% endblock modal-id %}
+       <!-- Modal Title-->
+    {% block modal-title %} <i class="fa fa-edit"></i>&nbsp;&nbsp;Edit Tasks for <code><b>{{toptask.unit}}</b></code>under Output <b>{{toptask.output.output_description}}</b>, and KPI<code><b>{{toptask.kpi}}</b></code>{% endblock modal-title %}
+      <!-- Form Action-->
+      {% block Action %} action="/edit_toptask/{{toptask.pk}}" {% endblock Action %}
+
+       <!-- Button action-->
+    {% block btn-action %} <i class="fa fa-server"></i>&nbsp;&nbsp;Save Changes {% endblock btn-action %}
+    
+    {% block value-id %}{% endblock value-id %}
+    
+    {% block value-input %} 
+    <h5> <code>Top task description:</code><b>{{toptask.top_task_description}}</b></h5>
+
+    <input type="text" name="unit" value="{{toptask.unit.id}}" class="form-control" style="display: none;">
+    <input type="text" name="output" value="{{toptask.output.id}}" class="form-control" style="display: none;">
+    <input type="text" name="kpi" value="{{toptask.kpi.id}}" class="form-control" style="display: none;">
+
+    <div class="form-row">
+        <div class="form-group col-md-4 mb-0">
+            <label>Top task code</label>
+            <input type="text" name="top_task" value="{{toptask.top_task}}" class="form-control">
+        </div>
+        <div class="form-group col-md-8 mb-0">
+            <label>Top task short name</label>
+            <input type="text" name="top_task_short" value="{{toptask.top_task_short}}" class="form-control">
+        </div>
+    </div>
+    <div class="form-group col-md-12 mb-0">
+        <label>Top task description</label>
+        <textarea name="top_task_description" class="form-control" rows="3">{{toptask.top_task_description}}</textarea>
+    </div>
+  
+    {% endblock value-input %}

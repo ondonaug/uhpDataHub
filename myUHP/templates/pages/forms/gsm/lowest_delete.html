@@ -1,0 +1,26 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+
+    <!-- Modal Dialog delete-->   
+    <div class="modal fade" id="deleteTaskModal{{gsmWorkplan.pk}}" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="">
+                    <div class="modal-header">                
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are you sure you wante to delete this <code>Lowest task?</code><br/><br/><b>{{gsmWorkplan.lowest_task_description}}</b><br>from output :<code>{{gsmWorkplan.output}}</code><br/><br/> and<code>{{gsmWorkplan.kpi}}</code> </h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{% url 'delete_lowest' pk=gsmWorkplan.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>

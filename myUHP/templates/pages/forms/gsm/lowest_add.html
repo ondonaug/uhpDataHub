@@ -1,0 +1,81 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+  <!-- Modal -->
+  <div class="modal fade bd-example-modal-lg" {% block modal-id %} id="addTaskModal" {% endblock modal-id %} tabindex="-1" role="dialog" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="addTaskModalLabel">{% block modal-title %} <i class="fa fa-plus"></i>&nbsp;&nbsp;Add Task {% endblock modal-title %}</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form {% block Action %} action="/add_lowest" {% endblock Action %} method="POST" class="post-form" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+
+            {% block value-id %}{% endblock value-id %}
+            {{ form.media }}
+            <div class="modal-body">
+              {% block value-input %}
+
+              {% comment "" %}
+
+              <div class="form-row">
+                <div class="form-group col-md-4 mb-0">
+                    {{ form_gsm.unit|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                    {{ form_gsm.output|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0">
+                  {{ form_gsm.kpi|as_crispy_field }}
+              </div>
+            </div>
+              <div class="form-row">
+                  <div class="form-group col-md-4 mb-0">
+                        {{ form_gsm.top_task|as_crispy_field }}
+                  </div>
+                  <div class="form-group col-md-8 mb-0">
+                        {{ form_gsm.top_task_short|as_crispy_field }}
+                  </div>
+              </div>
+              <div class="form-group col-md-12 mb-0">
+                  {{ form_gsm.top_task_description|as_crispy_field }}
+              </div>
+              {% endcomment %}
+
+
+
+              <div class="form-row">
+                <div class="form-group col-md-4 mb-0">
+                    {{ form_gsm.lowest_task|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-8 mb-0">
+                    {{ form_gsm.lowest_task_short|as_crispy_field }}
+                </div>
+            </div>
+            <div class="form-group col-md-12 mb-0">
+              {{ form_gsm.lowest_task_description|as_crispy_field }}
+           </div>
+              {% endblock value-input %}
+           </div>
+            <div class="modal-footer">
+                  <button type="submit" class="btn btn-secondary">  {% block btn-action %}<i class="fa fa-plus"></i>&nbsp;&nbsp;Submit{% endblock btn-action %}</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
+                  <button type="reset" class="btn btn-warning btn-sm" title="Reset"><i class="fa fa-edit"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+
+ 

@@ -1,0 +1,110 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+
+        <main>
+            <div class="container">
+                <div class="row">
+
+                    <!-- blog-contents -->
+                    <section class="col-md-12">
+
+                        <article class="single-blog-item">
+
+                            <!-- title row -->
+           
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="page-header">
+                        <i class="fa fa-signal"></i> Key Performance Indicators with results submitted
+                        
+                    </h2>                            
+                </div><!-- /.col -->
+            </div>
+                            <p>{{message}}</p>
+                            <div class="row invoice-info">                         
+                            </div><!-- /.row -->
+                
+
+                            <div class="alert alert-info">
+                              <h4><strong>{{kpis.kpi_description }}</strong></h4> 
+                            </div>
+                            <div class="alert">
+                                <h4>1. Unit leading : <b>{{kpis.unit.unit_code }} :</b>
+                                    {{kpis.unit.unit_description }}</h4> 
+                                
+                                <h4>2. Reference at the country level : <b> {{kpis.kpi_country_level }}</b></h4> 
+                               
+                                <h4>3. Data description: <b>{{kpis.data_description }}</b></h4> 
+                         
+                                <h4>4. Data source : <b> {{kpis.data_source }}</b></h4> 
+                       
+                                <h4>5. Collection methods : <b>{{kpis.collection_methods }}</b> </h4> 
+                           
+                                <h4>6. Data frequency : <b>{{kpis.data_frequency }}</b> </h4> 
+                       
+                                <h4>7. Kpi linked with : <b>{{kpis.kpi_link }}</b> </h4>
+                                <h4>8. Results :</h4>  
+                                <table class="table responsive" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">  
+                                    <thead>
+                                        <tr>
+                                            <th>Report date</th>
+                                            <th>Baseline of the KPI</th>
+                                            <th>Target of the KPI</th>
+                                            <th>Result of the KPI</th>
+                                            <th>Comment</th>
+                                        </tr>                                    
+                                    </thead>
+                                    {% for kpiAchieve in kpiAchieves %}
+                                    <tbody>             
+                                        <tr>
+                                            <td>{{kpiAchieve.kpis_kpiAchive__report_date}}</td>
+                                            <td>{{kpiAchieve.kpis_kpiAchive__kpi_baseline}}</td>
+                                            <td>{{kpiAchieve.kpis_kpiAchive__kpi_target}}</td>
+                                            <td>{{kpiAchieve.kpis_kpiAchive__report_resut}}</td>
+                                            <td>{{kpiAchieve.kpis_kpiAchive__report_comment}}</td>
+                                        </tr>
+                                    </tbody>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <!-- Table row -->
+                        </article>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" required="required"> Please Check to Confirm
+                                    </label>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <button class="btn btn-info" onclick="window.print();"><i class="fa fa-print"></i> Print</button>    
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <p>Back to <a href="/kpi_report">List</a></p>   
+                            </div>
+                        </div>
+                    </section>
+                    <!-- end of blog-contents -->
+                </div>
+            </div> <!-- end of /.container -->
+        </main>
+        <!-- smooth-scroll -->
+
+        <script>
+        $(function() {  
+            jQuery.scrollSpeed(100, 1000);
+        });
+        </script>
+
+
+        {% endblock %}
+        

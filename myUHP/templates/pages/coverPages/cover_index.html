@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+
+{% block content %}
+
+<!-- <link href="{% static 'css/myStyle/table.css' %}" rel="stylesheet" type="text/css" />-->
+   <div class="container" id="my-workplans-table-container" style="width: 140rem;">
+        <hr>
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="text-left caption">Add, view and edit <code><b> items</b></code> in <b>cover page</b></h2>
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#addCovertItemModalForm"><i class="fa fa-plus"></i> <span>Add New items</span></button>
+            </div>
+        </div>
+        <table class="table responsive" id="myWorkplansTable1" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">
+            <thead class="table-title">
+                <tr class="head-row">
+                    <th scope="col">#</th>
+                    <th></th>
+                    <th>name</th>
+                    <th>details</th>
+                    <th></th>
+                    <th></th>
+                    <!-- <th colspan ="2" id="mid">Action</th>-->
+            </thead>
+            <tbody>
+                {% for item_list in items_list %}
+                    <tr class="table-row">
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>
+                        <span class="custom-checkbox">
+                            <input type="checkbox" name="option[]" value="1">
+                        </span>
+                    </td>
+                    <td>{{ item_list.name }}</td>
+                    <td>{{ item_list.details }}</td>
+                    <td> 
+                        <a data-toggle="modal" data-target="#editCovertModalForm{{item_list.pk}}" title="edit" class="tools"><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td>
+                        <a data-toggle="modal" data-target="#deletCovertModalForm{{item_list.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                     <!-- Modal Dialog Edit-->
+                   {% include "pages/coverPages/edit_covertPageItems_modal.html" %}
+                    <!-- Modal Dialog delete-->   
+            <div class="modal fade" id="deletCovertModalForm{{item_list.pk}}" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form action="">
+                            <div class="modal-header">                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Are you sure you wante to delete this <code>items?</code><br/><br/><b>{{item_list.name}}</b><br/><br/>with the details :<b>{{item_list.details}}</b></h4>
+                            </div>
+                            <div class="modal-footer">
+                                
+                                <a href="{% url 'delete_cover_page' pk=item_list.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                              
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+        <nav aria-label="...">
+            <ul class ="pagination pagination-lg" style = 'justify-content: center'>
+                {% for page in paginator.page_range %}
+                {% if page == items_list.number %}
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">{{page}}</span>
+                </li>
+                {% else %}
+                <li class ="page-item"><a class ="page-link" href="?page={{page}}">{{page}}</a></li>          
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+         {% include "pages/coverPages/add_covertPageItems_modal.html" %}
+
+{% endblock %}
+
+

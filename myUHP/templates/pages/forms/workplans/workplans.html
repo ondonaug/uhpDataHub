@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+
+{% block content %}
+
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- Left side column. contains the logo and sidebar -->
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side">
+        {% if perms.uhpapp.delete_operworkplan %}
+<!-- <link href="{% static 'css/myStyle/table.css' %}" rel="stylesheet" type="text/css" />-->
+
+<section class="content-header">
+    <h3>
+        Add, view and edit <code><b>sub activity</b></code> in <b>operational workplan</b>
+        {% for message in messages %}
+        <small><code>{{ message }}</code></small>
+        {% endfor %}
+    </h3>
+    <ol class="breadcrumb">
+        <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li><a href="/sub_activity_report"><i class="fa fa-file-text-o"></i> Workplan summury</a></li>
+        <li><a href="export_to_excel_workplan/{{by_unit}}/{{end_date}}"><i class="fa fa-download"></i> Export unit's to Excel</a></li>
+        <li><a href="{% url 'export_subactivity_excel' %}"><i class="fa fa-table"></i>Export All to Excel</a></li>
+       
+        <li class="active">Enter sub activity</li>
+    </ol>
+</section>
+
+   <div class="container tbl-container" id="my-workplans-table-container" style="width: 190rem;">
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-4">
+            <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#addNewWorkplanModalForm"><i class="fa fa-plus"></i> <span>Add New sub activity</span></button>
+        </div>
+        <div class="col-xs-12 col-sm-4"> 
+            <form method="GET" action="{% url 'workplans' %}">
+                {{form_unit.as_p}}
+                <button class="btn btn-success">Filter the unit's workplan <i class="fa fa-download"></i></a></button>
+            </form> 
+        </div>  
+        <div class="col-xs-12 col-sm-4">
+            <form method="GET">
+                {% csrf_token %}
+                <div class="input-group margin-bottom-sm">
+                    <div class="row">
+                        <div class="col-md-10"><input class="form-control" name="sub_activity" type="text" placeholder="Search here sub activity "></div>
+                        <div class="col-md-2"><button type="submit" class="btn btn-success">
+                            <i class="fa fa-search fa-fw"></i>
+                        </button></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+
+<div class="row tbl-fixed">
+
+
+        <table class="table responsive table-condensed" id="myWorkplansTable1" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">
+            <thead class="table-title">
+                <tr class="head-row">
+                    <th scope="col">#</th>
+                    <th></th>
+                    <th>Sub activity</th>
+                    <th>Country</th>
+                    <th>Consultance</th>
+                    <th>Responsable</th>
+                    <th>coworkers</th>
+                    <th>Expected_result</th>
+                    <th>indicator measuring</th>
+                    <th>Completion date</th>
+                    <th>Statut name</th>
+                    <th>Comments</th>
+                    <th>Unit</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                    <!-- <th colspan ="2" id="mid">Action</th>-->
+            </thead>
+            <tbody>
+                {% for workplan in workplans %}
+                    <tr class="table-row">
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>
+                        <span class="custom-checkbox">
+                            <input type="checkbox" name="option[]" value="1">
+                        </span>
+                    </td>
+                    <td>{{ workplan.sub_activity }}</td>
+                    <td>{% for countryList in workplan.country.all %}{{ countryList }} {% endfor %}</td>
+                    <td>{{ workplan.consultants}}</td>
+                    <td>{{ workplan.responsable }}</td>
+                    <td>{{ workplan.coworkers }}</td>
+                    <td>{{ workplan.expected_result }}</td>
+                    <td>{{ workplan.indicator_measuring }}</td>
+                    <td>{{ workplan.completion_date }}</td>
+                    <td>{{ workplan.statut_name }}</td>
+                    <td>{{ workplan.comments }}</td>
+                    <td>{{ workplan.gsmWorkplan.toptask.unit.unit_code }}</td>
+                    <td> 
+                        <a data-toggle="modal" data-target="#editWorkplanModalForm{{workplan.pk}}" title="edit" class="tools"><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td>
+                        <a data-toggle="modal" data-target="#deletWorkplanModalForm{{workplan.pk}}" title="delete" class="tools"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                     <!-- Modal Dialog Edit-->
+                    {% include "pages/forms/workplans/edit_workplan_modal.html" %}
+            
+                    <!-- Modal Dialog delete-->   
+            <div class="modal fade" id="deletWorkplanModalForm{{workplan.pk}}" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form action="">
+                            <div class="modal-header">                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Are you sure you wante to delete this <code>Sub activity?</code><br/><br/><b>{{workplan.sub_activity}}</b><br/><br/>from lowest task :<b>{{workplan.gsmWorkplan.lowest_task_description}}</b><br/><br/> and<code>{{workplan.gsmWorkplan.kpi}}</code> </h4>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="{% url 'delete_workplan' pk=workplan.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+    </div>
+        {% comment "" %}
+        <div class="page-turn">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 text-center">
+                    <nav>
+                        <ul class="pagination pagination-sm">
+                            <li class="disabled">
+                                <a href="#" aria-label="Previous">
+                                    <span aria-hidden="true">Prev</span>
+                                </a>
+                            </li>
+                            {% for page in paginator.page_range %}
+                            {% if page == workplans.number %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{page}}</span>
+                            </li>
+                            {% else %}
+                            <li><a href="?page={{page}}">{{page}}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul> <!-- /.pagination -->
+                    </nav>
+                </div>
+            </div>
+        </div> <!-- /.page-turn -->
+
+        {% endcomment %}
+
+
+    </div>
+          {% include "pages/forms/workplans/add_workplan_modal.html" %}
+          {% else %}
+          <section>
+              <p style="position: center;">
+                  We could not find the page you were looking for. 
+                  Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
+              </p>
+          </section>   
+          {% endif %}
+        </aside><!-- /.right-side -->
+    </div>
+ 
+<!-- JS Scripts  -->
+<script type="text/javascript">   
+// Code By Webdevtrick ( https://webdevtrick.com )
+$(document).ready(function() {
+//    $("#myWorkplansTable2").DataTable({
+ //      columnDefs : [ { type : 'statut_name', targets : [3] }], 
+ //      lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ], 
+ //      responsive: true
+ //   });
+
+ 
+ $("#myWorkplansTable1").DataTable({
+    processing: true,
+    serverSide: true,
+    lengthChange: true,
+    ajax: {
+        url: "{{ request.get_full_path }}", // send ajax request to itself for filtering and paginating the data
+         data: {ajax_factory_loader:true},
+    },
+    columns: {{ sub_activity | safe }},
+    "dom": 'Blfrtip',
+    "buttons": [
+        {
+            extend: 'excel',
+            text: 'Excel',
+            filename: "{{page_name}}",
+            header: true,
+            title: "{{page_name}}",
+            "action": customExportAction
+        },
+        {
+            extend: 'csv',
+            text: 'CSV',
+            filename: "{{page_name}}",
+            header: true,
+            title: "{{page_name}}",
+            "action": customExportAction
+        },
+        {
+            extend: 'pdf',
+            text: 'PDF',
+            filename: "{{page_name}}",
+            header: true,
+            title: "{{page_name}}",
+            "action": customExportAction
+        },
+    ],
+})
+.buttons()
+.container()
+.appendTo("#download-action-area")
+});
+</script>
+
+
+{% endblock %}
+
+

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+
+{% block content %}
+
+<!-- <link href="{% static 'css/myStyle/table.css' %}" rel="stylesheet" type="text/css" />-->
+
+   <div class="container" id="my-workplans-table-container" style="width: 140rem;">
+    <div class="row p-4">
+        <div class="col-sm-12 mt-3">
+            <div class="card">
+                <div class="card-header">
+                    Research
+
+                </div>
+                <form action="{% url 'workplan_fiche' %}" methon ="POST">
+                    <div class="card-body">
+                        {% csrf_token %}
+                       {{ form.as_p}}
+                       <div class="text-right">
+                        <button class="btn btn-info" type="submit"><i class="fa fa-search" aria-hidden="true"></i>Search</button>
+                       </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+       <div class="table-responsive-sm p-4">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">sub_activity</th>
+                    <th scope="col">responsable</th>
+                    <th scope="col">coworkers</th>
+                    <th scope="col">expected_result</th>
+                    <th scope="col">indicator_measuring</th>
+                    <th scope="col">completion_date</th>
+                    <th scope="col">statut_name</th>
+                    <th scope="col">comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for  workplan in workplan_list %}
+                <tr class ="table-info">
+                    <td>{{workplan.sub_activity}}</td>
+                    <td>{{workplan.responsable}}</td>
+                    <td>{{workplan.coworkers}}</td>
+                    <td>{{workplan.expected_result}}</td>
+                    <td>{{workplan.indicator_measuring}}</td>
+                    <td>{{workplan.completion_date}}</td>
+                    <td>{{workplan.statut_name}}</td>
+                    <td>{{workplan.comments}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination">
+            {% if workplan_list.has_previous %}
+            <a href="{% url 'workplan_fiche' %}?page={{workplan_list.previous_page_number}}">Previous</a>
+            {% endif %}
+            <span class="current">
+                Page {{workplan_list.number }} on {{workplan_list.paginator.num_pages}}
+            </span>
+            {% if workplan_list.has_next %}
+            <a href="{% url 'workplan_fiche' %}?page={{workplan_list.next_page_number}}">Next</a>
+            {% endif %}
+
+        </div>
+       </div>
+ 
+    </div>
+
+
+{% endblock %}
+
+

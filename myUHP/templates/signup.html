@@ -1,0 +1,55 @@
+{% extends "baselog.html" %}
+
+
+{% block content %}
+
+<br>
+
+
+<form action="/signup" method="POST">
+  {% csrf_token %}
+
+  <h2>Register Here</h2>
+  {% for message in messages  %}
+  <div class="alert alert-{{message.tags}} alert-dismissible fade showo" role="alert">
+    <p><strong>Message:</strong>Hello {{user.username}},{{message}}</p>
+  </div>
+  {% endfor %}
+  <div class="form-group fullname">
+    <label for="fullname">Username</label>
+    <input type="text" id="username" name="username" placeholder="Create a username (only letters)">
+  </div>
+  <div class="form-group fullname">
+    <label for="fullname">First name </label>
+    <input type="text" id="fname" name="fname" placeholder="Enter your first name" Required>
+  </div>
+  <div class="form-group fullname">
+    <label for="fullname">Last name</label>
+    <input type="text" id="lname" name="lname" placeholder="Enter your last name" Required>
+  </div>
+
+
+  <div class="form-group email">
+    <label for="email">Email Address</label>
+    <input type="text" id="email" name="email" placeholder="Enter your Email Address" Required>
+  </div>
+  <div class="form-group password">
+    <label for="password">Password</label>
+    <input type="password" id="pass1" name="pass1" placeholder="Create a password" Required>
+    
+  </div>
+
+  <div class="form-group password">
+    <label for="password">Confirm your password</label>
+    <input type="password" id="pass2" name="pass2" placeholder="Confirm your password" Required>
+   
+  </div>
+
+
+
+  <div class="form-group submit-btn">
+    <input type="submit" value="Submit">
+    <a href="/signin" class="text-center">I already have account</a>
+  </div>
+</form>
+{% endblock %}

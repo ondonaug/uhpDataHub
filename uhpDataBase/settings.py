@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,16 +39,25 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myUHP.apps.MyuhpConfig',
+    'crispy_bootstrap4',
+    'crispy_forms',
+    'widget_tweaks',
+    'import_export',
+    'lockdown',
 ]
+
+LOCKDOWN_PASSWORDS = ('david', '1234')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_auto_logout.middleware.auto_logout', # Django auto logout (1)
 ]
 
 ROOT_URLCONF = 'uhpDataBase.urls'
@@ -63,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_auto_logout.context_processors.auto_logout_client', # Django auto logout (2)
             ],
         },
     },
@@ -76,8 +87,15 @@ WSGI_APPLICATION = 'uhpDataBase.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    #    'ENGINE': 'django.db.backends.sqlite3',
+     #   'NAME': BASE_DIR / 'db.sqlite3',
+        
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': 'uhpdatabase',
+         'USER':'root',
+         'PASSWORD':'afrouhp2024',
+         'PORT':3306,
+         'POST':'127.0.0.1',
     }
 }
 
@@ -117,6 +135,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')] # for deploy use staticfiles
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') # for deploy use static
+
+
+AUTO_LOGOUT = {'IDLE_TIME': 1200, 'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
+               'MESSAGE': 'The session has expired. Please login again to continue.',}  # logout after 10 minutes of downtime (4)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

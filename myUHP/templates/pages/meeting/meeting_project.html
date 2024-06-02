@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- Left side column. contains the logo and sidebar -->
+
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side">
+        {% if user.is_authenticated %}  
+   <div class="container" id="my-workplans-table-container" style="width: 160rem;">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="text-left caption">
+                    {% for message in messages %}
+                    <small><code>{{ message }}</code></small>
+                    {% endfor %}
+                </h2>
+            </div>
+        </div>
+        <section class="content-header">
+            <h3>
+                Add, view and edit <b>the meeting Project</b>
+                <small>Planned</small>
+            </h3>
+            <ol class="breadcrumb">
+                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+                <li><a href="/meeting_report">Meetings views</a></li>
+                <li><a href="{% url 'export_all_meeting' %}">Export to Excel</a></li>
+                <li><a href="/index_meeting">Enter topics for discussion</a></li>
+                <li class="active">Create meeting project</li>
+            </ol>
+        </section>
+        <hr>
+        <form method="GET">
+            {% csrf_token %}
+            <div class="input-group margin-bottom-sm">
+                <div class="row">
+                    <div class="col-md-10"><input class="form-control" name="chair_name" type="text" placeholder="Search here chair name "></div>
+                    <div class="col-md-2"><button type="submit" class="btn btn-success">
+                        <i class="fa fa-search fa-fw"></i>
+                    </button></div>
+                </div>
+            </div>
+        </form>
+        <br>
+        <table class="table responsive" id="myWorkplansTable1" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">
+            <form method="POST" action="{% url 'project_meeting' %}">
+                {% csrf_token %}
+                    <tr>
+                        <th>Link to output</th>
+                        <th>Link to kpi</th>
+                        <th>Date</th>
+                        <th>Meeting Name</th>
+                        <th>Type of the meeting</th>
+                        <th>Objective</th>
+                        <th>Where is the meeting taking place</th>
+                        <th>Chair Name</th>
+                        <th>NoteTaker Name</th>
+                        <th>Participants list</th>
+                    </tr>
+                    {% if not form.instance.id %}
+                    <tr> 
+                        {% include 'pages/meeting/meeting_project_save.html' %}
+                    </tr>
+                    {% endif %}
+                {% for meetingProject in meetingProjects %}
+                    <tr>
+                        {% if form.instance.id == meetingProject.id %}
+                        {% include 'pages/meeting/meeting_project_save.html' %}
+                        {% else %} 
+                        <td>{% for outputList in meetingProject.output.all %}{{ outputList }} {% endfor %}</td>
+                        <td>{% for kpiList in meetingProject.kpi.all %}{{ kpiList }} {% endfor %}</td>
+                       
+                        <td>{{meetingProject.date_meeting}}</td>
+                        <td>{{meetingProject.name_meeting}}</td>
+                        <td>{{meetingProject.type_meeting}}</td>
+                        <td>{{meetingProject.objective_meeting}}</td>
+                        <td>{{meetingProject.taking_place}}</td>
+                        <td>{{meetingProject.chair_name}}</td>
+                        <td>{{meetingProject.note_taker}}</td>
+                        <td>{{meetingProject.participants_list}}</td>
+                        <td><button formnovalidate name="edit" value="{{meetingProject.id}}" class="btn btn-primary btn-sm">Edit</button></td>
+                        <td><button formnovalidate name="delete" value="{{meetingProject.id}}" class="btn btn-warning btn-sm">delete</button></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %} 
+        </form>
+        </table>
+        <ul class="pagination justify-content-center my-5">
+            {% if meetingProjects.has_previous %}
+            <!-- 'First' and 'Previous' Buttons -->
+              <li class="page-item">
+                <a class="page-link" href="?page=1">|&lt; First</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ meetingProjects.previous_page_number }}">&lt; Previous</a>
+              </li>
+            {% endif %}
+          
+            <!-- Numbered Buttons -->
+            {% for page in paginator.page_range %}
+              {% if meetingProjects.number == page %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
+                </li>
+              {% elif page > meetingProjects.number|add:'-3' and page < meetingProjects.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          
+            <!-- 'Next' and 'Last' Buttons -->
+            {% if meetingProjects.has_next %}
+              <li class="page-item">
+                <a class="page-link" 
+                  href="?page={{ meetingProjects.next_page_number }}">Next &gt;</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ meetingProjects.paginator.num_pages }}">Last &gt;|</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    {% else %}
+    <section>
+        <p style="position: center;">
+            We could not find the page you were looking for. 
+            Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
+        </p>
+    </section>   
+    {% endif %}
+</aside><!-- /.right-side -->
+</div>
+
+{% endblock %}
+
+

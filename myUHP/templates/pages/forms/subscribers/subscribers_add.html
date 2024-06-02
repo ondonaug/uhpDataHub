@@ -1,0 +1,44 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+            <!-- Modal Add New Sub activity-->
+            <div class="modal fade bd-example" {% block modal-id %} id="addSubscriberModalForm" {% endblock modal-id %}  tabindex="-1" role="dialog" aria-labelledby="addNewworkplanModalFormLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <form class="form" {% block Action %} action="/add_subscribers" {% endblock Action %} method= "POST" id="add_new_subscibers_form">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title" id="addSubscribeModalFormLabel"> {% block modal-title %} <i class="fa fa-plus"></i>&nbsp;&nbsp;Add New Subscribers {% endblock modal-title %}</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                           {% csrf_token %}
+                           {% block value-id %}{% endblock value-id %}
+                           {{ form.media }}
+                          <!--{{ form.as_div }} --> 
+                          {% block value-input %}
+                          <div class="form-group col-md-12 mb-0">
+                            <label>Name</label>
+                            <input type="text" name="name_subscriber" class="form-control">
+                        
+                            </div>
+                            <div class="form-group col-md-12 mb-0">
+                                <label>Email</label>
+                                <input type="email" name="email_subscriber" class="form-control">
+                          
+                            </div>
+                          {% endblock value-input %}
+                           <!--  
+                           {{form.gsmWorkplan}}-->
+                        </div>
+                        <div class="modal-footer">
+                              <button type="submit" class="btn btn-secondary">  {% block btn-action %}<i class="fa fa-plus"></i>&nbsp;&nbsp;Submit{% endblock btn-action %}</button>
+                              <!--  <button type="button" class="btn btn-secondary" onclick=onclick="addNewWorkplan()"><i class="fa fa-plus"></i>&nbsp;&nbsp;Submit</button>-->
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>          
+                              <button type="reset" class="btn btn-warning btn-sm" title="Reset"><i class="fa fa-edit"></i></button>
+                        </div>
+                      </div>
+                </form>
+                </div>
+              </div>

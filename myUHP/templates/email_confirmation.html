@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+Welcome to UHP website Login
+Hello {{ name }}
+Please confirm you email by cliking on the following link:
+https//{{ domain}}{% url 'activate' uidb64=uid token=token %}
+
+{% endautoescape %}

@@ -1,0 +1,28 @@
+{% extends "pages/forms/individual_report/add_individual_report.html" %}
+
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+ <!-- Modal Edit form-->
+             
+    
+      <!-- Form Action-->
+      {% block Action %} action="{{individualReport.pk}}" {% endblock Action %}
+
+       <!-- Button action-->
+    {% block btn-action %} <i class="fa fa-edit"></i>&nbsp;&nbsp;Save Changes {% endblock btn-action %}
+    {% block btn-reset %}{% endblock btn-reset %}
+
+    <!-- ALL INPUTS-->
+
+   <!-- Block ID -->
+
+    {% block value-id %}
+   
+    {% endblock value-id %}
+
+
+   
+    {% block value-input %} 
+    {{ form.as_p }}
+    {% endblock value-input %}

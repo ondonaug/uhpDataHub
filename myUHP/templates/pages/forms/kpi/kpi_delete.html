@@ -1,0 +1,26 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+
+    <!-- Modal Dialog delete-->   
+    <div class="modal fade" id="deleteKpiModal{{kpi.pk}}" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="">
+                    <div class="modal-header">                
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are you sure you wante to delete this <code>KPI description?</code><br/><br/><b>{{kpi.kpi_description}}</b><br>from :<code>{{kpi.unit}}</code></h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{% url 'delete_kpi' pk=kpi.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>

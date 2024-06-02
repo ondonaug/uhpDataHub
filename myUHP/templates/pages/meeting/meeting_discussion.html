@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block content %}
+<div class="wrapper row-offcanvas row-offcanvas-left">
+    <!-- Left side column. contains the logo and sidebar -->
+
+    <!-- Right side column. Contains the navbar and content of the page -->
+    <aside class="right-side">
+        {% if user.is_authenticated %}
+   <div class="container tbl-container" id="my-workplans-table-container" style="width: 185rem;">
+       
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="text-left caption">
+                    {% for message in messages %}
+                    <small><code>{{ message }}</code></small>
+                    {% endfor %}
+                </h2>
+            </div>
+        </div>
+        <section class="content-header">
+            <h3>
+                Add, view and edit <b>topics for discussion in the meeting</b>
+                <small>Preview</small>
+                
+            </h3>
+            <ol class="breadcrumb">
+                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
+                <li><a href="/project_meeting">Create meeting project</a></li>
+                <li><a href="{% url 'export_all_meeting' %}">Export to Excel</a></li>
+                <li class="active">Enter topics for discussion</li>
+                <li>
+                   
+                </li>
+            </ol>
+        </section>
+        <hr>
+        <div class="row">
+           <div class="col-xs-12 col-sm-8"> 
+              <form method="GET">
+                {% csrf_token %}
+                <div class="input-group margin-bottom-sm">
+                    <div class="row">
+                        <div class="col-md-10"><input class="form-control" name="responsible" type="text" placeholder="Search here responsible "></div>
+                        <div class="col-md-2"><button type="submit" class="btn btn-success">
+                            <i class="fa fa-search fa-fw"></i>
+                        </button></div>
+                    </div>
+                </div>
+             </form>
+            </div>
+          <div class="col-xs-12 col-sm-4"> 
+             <form method="GET" action="{% url 'index_meeting' %}">
+                {{form_meeting.as_p}}
+                <button class="btn btn-success">Filter the Name of meeting <i class="fa fa-download"></i></a></button>
+              </form> 
+          </div> 
+       </div>
+       <div class="row tbl-fixed">
+
+        <table class="table responsive" id="myWorkplansTable1" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">
+                <form method="POST" action="{% url 'index_meeting' %}">
+                    {% csrf_token %}
+                        <tr>
+                            <th>Meeting name</th>
+                            <th>Topics for discussion</th>
+                            <th>Summary of discussion</th>
+                            <th>Recommandations</th>
+                            <th>Actions points</th>
+                            <th>Responsible</th>
+                            <th>Deadlines</th>
+                            <th>Status</th>
+                            <th>Feedback of discussion</th>
+                        </tr>
+                        {% if not form.instance.id %}
+                        <tr> 
+                            {% include 'pages/meeting/meeting_dataset_save.html' %}
+                        </tr>
+                        {% endif %}
+                    {% for meetingDiscussion in meetingDiscussions %}
+                        <tr>
+                            {% if form.instance.id == meetingDiscussion.id %}
+                            {% include 'pages/meeting/meeting_dataset_save.html' %}
+                            {% else %} 
+                            <td>{{meetingDiscussion.meetingProject.name_meeting}}</td>
+                            <td>{{meetingDiscussion.topic_discussion}}</td>
+                            <td>{{meetingDiscussion.summary_discussion}}</td>
+                            <td>{{meetingDiscussion.recommandation}}</td>
+                            <td>{{meetingDiscussion.actions_points}}</td>
+                            <td>{{meetingDiscussion.responsible}}</td>
+                            <td>{{meetingDiscussion.action_deadlines}}</td>
+                            <td>{{meetingDiscussion.action_status}}</td>
+                            <td>{{meetingDiscussion.feedback_discussion}}</td>
+                            <td><button formnovalidate name="edit" value="{{meetingDiscussion.id}}" class="btn btn-primary btn-sm">Edit</button></td>
+                            <td><button formnovalidate name="delete" value="{{meetingDiscussion.id}}" class="btn btn-warning btn-sm">delete</button></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %} 
+                </form>
+        </table>
+
+        {% comment  %}
+        <ul class="pagination justify-content-center my-5">
+            {% if meetingDiscussions.has_previous %}
+            <!-- 'First' and 'Previous' Buttons -->
+              <li class="page-item">
+                <a class="page-link" href="?page=1">|&lt; First</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ meetingDiscussions.previous_page_number }}">&lt; Previous</a>
+              </li>
+            {% endif %}
+          
+            <!-- Numbered Buttons -->
+            {% for page in paginator.page_range %}
+              {% if meetingDiscussions.number == page %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
+                </li>
+              {% elif page > meetingDiscussions.number|add:'-3' and page < meetingDiscussions.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          
+            <!-- 'Next' and 'Last' Buttons -->
+            {% if meetingDiscussions.has_next %}
+              <li class="page-item">
+                <a class="page-link" 
+                  href="?page={{ meetingDiscussions.next_page_number }}">Next &gt;</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ meetingDiscussions.paginator.num_pages }}">Last &gt;|</a>
+              </li>
+            {% endif %}
+          </ul>
+        {% endcomment %}
+      </div>
+    </div>
+    {% else %}
+    <section>
+        <p style="position: center;">
+            We could not find the page you were looking for. 
+            Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
+        </p>
+    </section>   
+    {% endif %}
+</aside><!-- /.right-side -->
+</div>
+
+{% endblock %}
+
+
