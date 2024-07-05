@@ -1,0 +1,318 @@
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+<!doctype html>
+<html class="no-js" lang="zxx">
+    <head>
+        <!-- Meta Tags -->
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="keywords" content="Site keywords here">
+		<meta name="description" content="">
+		<meta name='copyright' content=''>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Title -->
+        <title>UHP Cluster</title>
+		<!-- Favicon -->
+        <link rel="icon" href= "{% static 'img/favicon.png' %}" >
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'coverStyle/css/bootstrap.min.css' %}"  rel="stylesheet" type="text/css">
+		<!-- Nice Select CSS -->
+		<link rel="stylesheet" href="{% static 'coverStyle/css/nice-select.css' %}"  rel="stylesheet" type="text/css">
+		<!-- Font Awesome CSS -->
+		<link rel="stylesheet" href="{% static 'coverStyle/css/font-awesome.min.css' %}"  rel="stylesheet" type="text/css">
+		<!-- icofont CSS -->
+		<link rel="stylesheet" href="{% static 'coverStyle/css/icofont.css' %}"  rel="stylesheet" type="text/css">
+		<!-- Slicknav -->
+		<link rel="stylesheet" href="{% static 'coverStyle/css/slicknav.min.css' %}">
+		<!-- Owl Carousel CSS -->
+		<link rel="stylesheet" href="{% static 'coverStyle/css/owl-carousel.css' %}">
+		<!-- Datepicker CSS -->
+		<link rel="stylesheet" href="{% static 'coverStyle/css/datepicker.css' %}">
+		<!-- Animate CSS -->
+      	<link rel="stylesheet" href="{% static 'coverStyle/css/animate.min.css' %}">
+		<!-- Magnific Popup CSS -->
+		<link rel="stylesheet" href="{% static 'coverStyle/css/magnific-popup.css' %}">
+		<!-- Medipro CSS -->
+		<link rel="stylesheet" href="{% static 'coverStyle/css/normalize.css' %}">
+		<link rel="stylesheet" href="{% static 'coverStyle/style.css' %}">
+		<link rel="stylesheet" href="{% static 'coverStyle/css/responsive.css' %}">	
+    </head>
+    <body>
+		<!-- Preloader -->
+        <div class="preloader">
+            <div class="loader">
+                <div class="loader-outter"></div>
+                <div class="loader-inner"></div>
+                <div class="indicator"> 
+                    <svg width="16px" height="12px">
+                        <polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                        <polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <!-- End Preloader -->
+		<!-- Get Pro Button -->
+		<ul class="pro-features">
+			<a class="get-pro" href="#">Workshop</a>
+			<li class="big-title">Submission of informations</li>
+			{% comment "" %}
+			<li class="title">Pro Version Features</li>
+			{% endcomment %}
+			<li>1. Collection overview</li>
+			<li>2. Methodological framework</li>
+			<li>3. Collection data</li>
+			<li>4. Process validation rules</li>
+			<li>5. The data</li>
+			<div class="button">
+				<a href="/project_meeting" target="_blank" class="btn">Submitting Meeting report</a>
+				<a href="/project_briefing" target="_blank" class="btn">Submitting Birefing note</a>
+			</div>
+		</ul>
+		<!-- Header Area -->
+		<header class="header" >
+			<!-- Topbar -->
+			<div class="topbar">
+				<div class="container">
+					<div class="row">
+						{% comment "" %}
+						<div class="col-lg-6 col-md-5 col-12">
+							<!-- Contact -->
+							<ul class="top-link">
+								<li><a href="#">About</a></li>
+								<li><a href="#">Doctors</a></li>
+								<li><a href="#">Contact</a></li>
+								<li><a href="#">FAQ</a></li>
+							</ul>
+							<!-- End Contact -->
+						</div>
+						{% endcomment %}
+						<div class="col-lg-12 col-md-7 col-12">
+							<!-- Top Contact -->
+							<ul class="top-contact">
+								<li><i class="fa fa-user"></i>{{user.username|default:"Anonymous"}}</li>
+								<li><i class="fa fa-envelope"></i><a href="mailto:{{user.email|default:"Anonymous"}}">{{user.email|default:"Anonymous"}}</a></li>
+							</ul>
+							<!-- End Top Contact -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Topbar -->
+			<!-- Header Inner -->
+			<div class="header-inner">
+				<div class="container">
+					<div class="inner">
+						<div class="row">
+							<div class="col-lg-3 col-md-3 col-12">
+								<!-- Start Logo -->
+								<div class="logo">
+									<a href=""><img src="{% static 'coverStyle/img/logo.png' %}" alt="#"></a>
+								</div>
+								<!-- End Logo -->
+								<!-- Mobile Nav -->
+								<div class="mobile-nav"></div>
+								<!-- End Mobile Nav -->
+							</div>
+							<div class="col-lg-7 col-md-9 col-12">
+								<!-- Main Menu -->
+								<div class="main-menu">
+									<nav class="navigation">
+										<ul class="nav menu">
+											<li class="active"><a href="#">Home <i class="icofont-rounded-down"></i></a>
+												<ul class="dropdown">
+													<li><a href="/">Home Page</a></li>
+												</ul>
+											</li>
+											<li><a href="#">Data<i class="icofont-rounded-down"></i> </a>
+												<ul class="dropdown">
+												
+													<li><a href="{% url 'views_report'%}">Monitoring</a></li>
+													<li><a href="{% url 'meeting_report'%}">Meeting</a></li>
+													<li><a href="{% url 'briefing_report'%}">Briefing note</a></li>
+													<li><a href="{% url 'risk_report'%}">Risk register</a></li>
+													<li><a href="{% url 'download_monitoring'%}">Download report</a></li>
+
+												</ul>
+											</li>
+											<li><a href="#">Indicators<i class="icofont-rounded-down"></i> </a>
+												<ul class="dropdown">
+													<li><a href="{% url 'reporting_indicator'%}">Indicator Trends</a></li>
+													<li><a href="{% url 'render_pdf_view'%}">KPI</a></li>
+													<li><a href="/sub_activity_level?by_unit">Sub activity</a></li>
+												  </ul>
+											
+											</li>
+											<li><a href="#">Survey <i class="icofont-rounded-down"></i></a>
+												<ul class="dropdown">
+													<li><a href="#">404 Error</a></li>
+												</ul>
+											</li>
+											<li><a href="#">Reports <i class="icofont-rounded-down"></i></a>
+												<ul class="dropdown">
+													<li><a href="{% url 'views_report'%}">Monitoring</a></li>
+													<li><a href="{% url 'render_lowestTask_view'%}">Progress UHP</a></li>
+													<li><a href="{% url 'che_lowestTask_view'%}">CHE</a></li>
+													<li><a href="{% url 'hpd_lowestTask_view'%}">HPD</a></li>
+													<li><a href="{% url 'nut_lowestTask_view'%}">NUT</a></li>
+													<li><a href="{% url 'tnr_lowestTask_view'%}">TNR</a></li>
+													<li><a href="{% url 'uhu_lowestTask_view'%}">UHU</a></li>
+													<li><a href="{% url 'vid_lowestTask_view'%}">VID</a></li>
+												</ul>
+											</li>
+											<li><a href="/mail_letter">Contact Us</a></li>
+										</ul>
+									</nav>
+								</div>
+								<!--/ End Main Menu -->
+							</div>
+							<div class="col-lg-2 col-12">
+								<div class="get-quote">
+									<a href="/signin" class="btn">Login</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ End Header Inner -->
+		</header>
+		<!-- End Header Area -->
+            <!---Block content (ROOT)--> 
+            {% block content %}{% endblock content %}
+		<!-- Footer Area -->
+		<footer id="footer" class="footer ">
+			<!-- Footer Top -->
+			<div class="footer-top">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-12">
+							<div class="single-footer">
+								<h2>About Us</h2>
+								<p>An indispensable tool for preparing for and responding to public health emergencies.</p>
+								<!-- Social -->
+								<ul class="social">
+									<li><a href="https://www.facebook.com/WHOAFRO"><i class="icofont-facebook"></i></a></li>
+									<li><a href="#"><i class="icofont-google-plus"></i></a></li>
+									<li><a href="#"><i class="icofont-twitter"></i></a></li>
+									<li><a href="#"><i class="icofont-vimeo"></i></a></li>
+									<li><a href="#"><i class="icofont-pinterest"></i></a></li>
+								</ul>
+								<!-- End Social -->
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-12">
+							<div class="single-footer f-link">
+								<h2>Quick Links</h2>
+								<div class="row">
+									<div class="col-lg-12 col-md-6 col-12">
+										<ul>
+											<li><a href="https://africa-datas.shinyapps.io/profile/"><i class="fa fa-caret-right" aria-hidden="true"></i>Dashboard of UHP indicator</a></li>
+											<li><a href="https://worldhealthorg.sharepoint.com/sites/UHCHPPublic"><i class="fa fa-caret-right" aria-hidden="true"></i>SharePoint Website</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Export manual</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>System environment, installation and configuration procedures</a></li>
+											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Organization of the Data Management Center </a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% comment "" %}
+						<div class="col-lg-3 col-md-6 col-12">
+							<div class="single-footer">
+								<h2>Survey embedding</h2>
+								<p>A network of functional collection points for the operation of SPAD at national level.</p>
+								
+								<ul class="time-sidual">
+									<li class="day">Monday - Fridayp <span>8.00-20.00</span></li>
+									<li class="day">Saturday <span>9.00-18.30</span></li>
+									<li class="day">Monday - Thusday <span>9.00-15.00</span></li>
+								</ul>
+								
+							</div>
+						</div>
+						{% endcomment %}
+						<div class="col-lg-3 col-md-6 col-12">
+							<div class="single-footer">
+								<h2>Newsletter</h2>
+								<p>subscribe to our newsletter to get allour news in your inbox..</p>
+								<form action="/newsletter_add" method="POST" class="newsletter-inner">
+									{% csrf_token %}
+									<div>
+										<input id="name_newsletter" name="name_subscriber" placeholder="Name" class="common-input" onfocus="this.placeholder = ''"
+											onblur="this.placeholder = 'Your name'" required="" type="text">
+										<input id="email_newsletter" name="email_newsletter" placeholder="Email Address" class="common-input" onfocus="this.placeholder = ''"
+											onblur="this.placeholder = 'Your email address'" required="" type="email">
+									</div>
+									<div>
+										<button type="submit" class="button"><i class="icofont icofont-paper-plane"></i></button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ End Footer Top -->
+			<!-- Copyright -->
+			<div class="copyright">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-12">
+							<div class="copyright-content">
+								<p>© Copyright 2024 |  All Rights Reserved by <a href="https://aho.afro.who.int/" target="_blank">WHO/AFRO</a> </p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ End Copyright -->
+		</footer>
+		<!--/ End Footer Area -->
+		<!-- jquery Min JS -->
+        <script src="{% static 'coverStyle/js/jquery.min.js' %}"></script>
+		<!-- jquery Migrate JS -->
+		<script src="{% static 'coverStyle/js/jquery-migrate-3.0.0.js' %}"></script>
+		<!-- jquery Ui JS -->
+		<script src="{% static 'coverStyle/js/jquery-ui.min.js' %}"></script>
+		<!-- Easing JS -->
+		<script src="{% static 'coverStyle/js/easing.js' %}"></script>
+		<!-- Color JS -->
+		<script src="{% static 'coverStyle/js/colors.js' %}"></script>
+		<!-- Popper JS -->
+		<script src="{% static 'coverStyle/js/popper.min.js' %}"></script>
+		<!-- Bootstrap Datepicker JS -->
+		<script src="{% static 'coverStyle/js/bootstrap-datepicker.js' %}"></script>
+		<!-- Jquery Nav JS -->
+		<script src="{% static 'coverStyle/js/jquery.nav.js' %}"></script>
+		<!-- Slicknav JS -->
+		<script src="{% static 'coverStyle/js/slicknav.min.js' %}"></script>
+		<!-- ScrollUp JS -->
+		<script src="{% static 'coverStyle/js/jquery.scrollUp.min.js' %}"></script>
+		<!-- Niceselect JS -->
+		<script src="{% static 'coverStyle/js/niceselect.js' %}"></script>
+		<!-- Tilt Jquery JS -->
+		<script src="{% static 'coverStyle/js/tilt.jquery.min.js' %}"></script>
+		<!-- Owl Carousel JS -->
+		<script src="{% static 'coverStyle/js/owl-carousel.js' %}"></script>
+		<!-- counterup JS -->
+		<script src="{% static 'coverStyle/js/jquery.counterup.min.js' %}"></script>
+		<!-- Steller JS -->
+		<script src="{% static 'coverStyle/js/steller.js' %}"></script>
+		<!-- Wow JS -->
+		<script src="{% static 'coverStyle/js/wow.min.js' %}"></script>
+		<!-- Magnific Popup JS -->
+		<script src="{% static 'coverStyle/js/jquery.magnific-popup.min.js' %}"></script>
+		<!-- Counter Up CDN JS -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+		<!-- Bootstrap JS -->
+		<script src="{% static 'coverStyle/js/bootstrap.min.js' %}"></script>
+		<!-- Main JS -->
+		<script src="{% static 'coverStyle/js/main.js' %}"></script>
+    </body>
+</html>

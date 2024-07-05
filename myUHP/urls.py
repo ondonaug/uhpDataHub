@@ -4,7 +4,10 @@ from .import views
 
 
 urlpatterns = [
-    path('', views.index, name='index'), 
+    # coverPage
+    
+    path('', views.coverPage, name='coverPage'), 
+    path('index', views.index, name='index'), 
     
       # For USER ACCOUNT 
     path('signup', views.signup, name='signup'),

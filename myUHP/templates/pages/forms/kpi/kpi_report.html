@@ -1,5 +1,5 @@
 
-{% extends "base.html" %}
+{% extends "cover/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
@@ -16,18 +16,23 @@
     <!-- Right side column. Contains the navbar and content of the page -->
     <aside class="right-side">              
         <!-- Content Header (Page header) -->
-
-        <section class="content-header">
-            <h3>
-                <b>List of KPIs with results submitted to the platform</b> 
-                <small>Pillar 3</small>
-            </h3>
-            <ol class="breadcrumb">
-                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
-                <li><a href="/index_kpi">Enter KPI result</a></li>
-                <li class="active">KPI report</li>
-            </ol>
-        </section>
+        <section class="contact-us section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-8 col-8">
+                        <h4 class="news-title">
+                            <b>List of KPIs with results submitted to the platform</b> 
+                            <small>Pillar 3</small>
+                        </h4>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-4">
+                        <ul class="bread-list">
+                            <li><a href="/dashboard"><i class="fa fa-dashboard" aria-hidden="true"></i>Dashboard</a></li>
+                            <li><a href="/index_kpi"><i class="fa fa-edit" aria-hidden="true"></i>  Enter KPI result  </a></li>
+                            <li class="active"><i class="fa fa-table" aria-hidden="true"></i>  KPI report</li>
+                        </ul>
+                    </div>
+                </div>
             <div class="container">
                 <div class="row">
                     <!-- blog-contents -->
@@ -36,13 +41,14 @@
                         <article class="blog-item box box-solid box-success">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <h3> 
+                                    <h5> 
                                         <a href="single_kpi_page/{{kpi.pk}}">
                                         <b>{{ kpi.kpi_code }}</b>  
                                         </a>
-                                    </h3>
+                                    </h5>
                                 </div>
                                 <div class="col-md-8">
+                                    
                                     <p>
                                         from 
                                        <code>{{ kpi.unit }}</code> 
@@ -50,17 +56,18 @@
                                        <code><time>{{ kpi.kpi_link }}<time></code> 
                                         <a href="export_kpi_excel/{{kpi.pk}}">Export to Excel</a>
                                     </p>
-                                    <h4>
+                                    <h6>
                                         <a href="single_kpi_page/{{kpi.pk}}">{{ kpi.kpi_description }}</a>
-                                    </h4>
+                                    </h6>
                                     <button class="btn btn-sm btn-primary"><a href="download_kpi_result/{{kpi.pk}}" style="color:#ffffff;">Generate document <i class="fa fa-download"></i></a></button>
+                                
                                 </div>
                             </div>
                         </article> <!-- /.blog-item -->
                         {% endfor %}
                         <div class="page-turn">
                             <div class="row">
-                                <div class="col-md-6 col-md-offset-3 text-center">
+                                <div class="col-md-12 col-md-offset-3 text-center">
                                     <nav>
                                         <ul class="pagination pagination-sm">
                                             <li class="disabled">
@@ -89,14 +96,15 @@
                         <div class="sidebar">
                             <!-- search option -->
                             <div class="search-widget">
+
+
                                 <form method="GET">
                                     {% csrf_token %}
                                     <div class="input-group margin-bottom-sm">
                                         <div class="row">
-                                            <div class="col-md-10"><input class="form-control" name="kpi_code" type="text" placeholder="Search here kpi code"></div>
-                                            <div class="col-md-2"><button type="submit" class="btn btn-primary">
-                                                <i class="fa fa-search fa-fw"></i>
-                                            </button></div>
+                                         
+                                            <input class="common-input" name="kpi_code" type="text" placeholder="Search here kpi code">
+                                            <button type="submit" class="button"><i class="fa fa-search fa-fw"></i></button>
                                             
                                         </div>
 
@@ -111,6 +119,8 @@
                 </div>
             </div> <!-- end of /.container -->
         </section><!-- /.content -->
+    </div>
+    </section>
     </aside><!-- /.right-side -->
 </div>
 {% endblock %}

@@ -1,0 +1,131 @@
+{% extends "cover/base.html" %}
+{% load static %}
+{% block content %}
+
+	<!-- Breadcrumbs -->
+	<div class="breadcrumbs overlay">
+		<div class="container">
+			<div class="bread-inner">
+				<div class="row">
+					<div class="col-12">
+						<h2>Contact Us</h2>
+						<ul class="bread-list">
+							<li><a href="#">Home</a></li>
+							<li><i class="icofont-simple-right"></i></li>
+							<li class="active">Contact Us</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Breadcrumbs -->
+			
+	<!-- Start Contact Us -->
+	<section class="contact-us section">
+		<div class="container">
+			<div class="inner">
+				<div class="row"> 
+					{% comment "" %}
+					<div class="col-lg-6">
+						<div class="contact-us-left">
+							<!--Start Google-map -->
+							<div id="myMap"></div>
+							<!--/End Google-map -->
+						</div>
+					</div>
+					{% endcomment %}
+					<div class="col-lg-12">
+						<div class="contact-us-form">
+							<h2>Contact With Us</h2>
+							<p>If you have any questions please fell free to contact with us.</p>
+							<!-- Form -->
+							<form class="form" method="POST" action="/mail_letter">
+								{% csrf_token %}
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="form-group">
+											<input type="text" name="title_mail" placeholder="Name" required="">
+										</div>
+									</div>
+									{% comment "" %}
+									<div class="col-lg-6">
+										<div class="form-group">
+											<input type="email" name="mail_contact" placeholder="Email" required="">
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="form-group">
+											<input type="text" name="phone_contact" placeholder="Phone" required="">
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="form-group">
+											<input type="text" name="subject_contact" placeholder="Subject" required="">
+										</div>
+									</div>
+									{% endcomment %}
+									<div class="col-lg-12">
+										<div class="form-group">
+											<textarea name="message_mail" placeholder="Your Message" required=""></textarea>
+										</div>
+									</div>
+									<div class="col-12">
+										<div class="form-group login-btn">
+											<button class="btn" type="submit">Send</button>
+										</div>
+										{% comment "" %}
+										<div class="checkbox">
+											<label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox">Do you want to subscribe our Newsletter ?</label>
+										</div>
+										{% endcomment %}
+									</div>
+								</div>
+							</form>
+							<!--/ End Form -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="contact-info">
+				<div class="row">
+					<!-- single-info -->
+					<div class="col-lg-4 col-12 ">
+						<div class="single-info">
+							<i class="icofont icofont-ui-call"></i>
+							<div class="content">
+								<h3>+(242) 0X XXX XX XX</h3>
+								<p>xxx@who.int</p>
+							</div>
+						</div>
+					</div>
+					<!--/End single-info -->
+					<!-- single-info -->
+					<div class="col-lg-4 col-12 ">
+						<div class="single-info">
+							<i class="icofont-google-map"></i>
+							<div class="content">
+								<h3>WHO/AFRO UHP cluter</h3>
+								<p>Address:xxxxx</p>
+							</div>
+						</div>
+					</div>
+					<!--/End single-info -->
+					<!-- single-info -->
+					<div class="col-lg-4 col-12 ">
+						<div class="single-info">
+							<i class="icofont icofont-wall-clock"></i>
+							<div class="content">
+								<h3>Monday - Friday: 8am - 4pm</h3>
+								<p>Saturday and Sunday Closed</p>
+							</div>
+						</div>
+					</div>
+					<!--/End single-info -->
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+{% endblock  %}

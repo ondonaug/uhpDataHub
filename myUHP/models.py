@@ -176,9 +176,7 @@ class ReportSave(models.Model):
     
     def __str__(self):
         return self.title_rep
-    
-    
-     
+        
 class SurveyProject(models.Model):
     responsible =  models.CharField('Organization responsible for the survey',max_length = 500, null = True, blank=True)
     title_surv = models.CharField('Survey title', max_length=350, null = True, blank=True)
@@ -266,9 +264,7 @@ class BriefingBackground(models.Model):
     comment_background =  models.CharField('Comments ',max_length = 500, null = True, blank=True)
 
     def __str__(self):
-            return self.subject_background 
-    
-    
+            return self.subject_background  
 
 class RiskIdentification(models.Model):
     CATEGORY_CHOICES = (

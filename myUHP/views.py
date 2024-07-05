@@ -74,6 +74,13 @@ import xlwt
 #from bokeh.models import ColumnDataSource, CDSView, GroupFilter
 def is_visitors(user):
     return user.groups.filter(name='Visitors').exists()
+
+# CREATE NEW COVER PAGE------------------------------------------
+
+def coverPage(request):
+    context={}
+    return render(request, 'cover/index.html', context)
+
 # CREATE VIEWS FOR COVER PAGE---------------------------------------
 
 def index(request):   
@@ -254,10 +261,8 @@ def signup(request):
         email.fail_silency = True
         email.send()
         
-    
-        
-        return redirect('index')
-    return render(request,'signup.html')
+        return redirect('coverPage') #   return redirect('index')
+    return render(request,'cover/signup.html') # return render(request,'signup.html')
 
 def signin(request):
     if request.method == 'POST':
@@ -271,13 +276,13 @@ def signin(request):
             fname = user.first_name
             messages.success(request, "Your're successfully logged in.")
             
-            return redirect('dashboard')
+            return redirect('coverPage') # return redirect('dashboard')
             #return render(request, 'index.html',{'fname':fname})
         else:
             messages.error(request, 'You are not logged in')
             #return redirect('signin')
-            return redirect('index')
-    return render(request,'signin.html')
+            return redirect('coverPage') #  return redirect('index')
+    return render(request,'cover/signin.html') # return render(request,'signin.html')
 
 def signout(request):
     logout(request)
@@ -361,7 +366,7 @@ def mail_letter(request):
         'form':form
         
     }
-    return render(request, 'mail_letter.html', context)
+    return render(request, 'cover/contact.html', context)
 
 # CREATE VIEWS FOR DASHBOARD -------------------------
 
@@ -2038,28 +2043,44 @@ def export_survey_page(request,pk):
     return response
 
 # Method to export on Excel file
-def export_kpi_excel(request, pk):
+def export_kpi_excel(request,pk):
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="KpiPage.xlsx"'
+    response['Content-Disposition'] = 'attachment; filename="kpi_results.xls"'
 
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "KpiPage"
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('KPI')
 
-    # Add headers
-    headers = ["Unit","Output","kpi", "kpi_baseline", "kpi_target", "report_date", "report_resut", "report_comment"]
-    ws.append(headers)
+    # Sheet header, first row
+    row_num = 0
 
-    # Add data from the model
-    kpiAchieve = KpiAchieve.objects.get(id = pk) 
-    #surveyDatasets = SurveyDataset.objects.all()
-   # for surveyDataset in surveyDatasets:
-    ws.append([kpiAchieve.kpi.unit.unit_code, kpiAchieve.kpi.expected_result, kpiAchieve.kpi.kpi_description, kpiAchieve.kpi_baseline, kpiAchieve.kpi_target, kpiAchieve.report_date, kpiAchieve.report_resut, 
-                   kpiAchieve.report_comment])
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
 
-    # Save the workbook to the HttpResponse
+    columns = ['kpi_code', 'kpi_description', 'kpi_baseline', 'kpi_target', 'report_date', 'report_resut', 'report_comment' ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    rows = Kpi.objects.filter(Q(id__icontains=pk) & Q(kpis_kpiAchive__kpi_target__isnull=False)).values_list(
+        'kpi_code',
+        'kpi_description',
+        'kpis_kpiAchive__kpi_baseline',
+        'kpis_kpiAchive__kpi_target',
+        'kpis_kpiAchive__report_date',
+        'kpis_kpiAchive__report_resut',
+        'kpis_kpiAchive__report_comment'
+    ).order_by('-kpis_kpiAchive__report_date')
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
     wb.save(response)
     return response
+
 
 #Method to export on Excel file the list of KPI
 def export_listKpi_excel(request):
