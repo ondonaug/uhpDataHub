@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-yp@yq=yq8^s3uu^nrgq47_jgtckb4i4^rps66)8bi0%_3&#5yc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*'] # For local 
-
+#ALLOWED_HOSTS = ['*'] # For local 
+ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net/'] # For deployement
 
 # Application definition
 
@@ -90,11 +90,14 @@ DATABASES = {
     #    'ENGINE': 'django.db.backends.sqlite3',
      #   'NAME': BASE_DIR / 'db.sqlite3',
          'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'uhpdatabase',
-         'USER':'root',
-         'PASSWORD':'afrouhp2024',
+         'NAME': 'uhpcdb-database',
+         'USER':'ylpmjzzgdo',
+         'PASSWORD':'$cGy4BjroDQMMmPn',
+         'HOST':'uhpcdb-server.mysql.database.azure.com',
          'PORT':3306,
-         'POST':'127.0.0.1',
+         'OPTION':{
+                'init_command':"SET sql_mode=STICT_TRANS_TABLES"
+           }
     }
 }
 
