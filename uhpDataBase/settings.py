@@ -24,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-yp@yq=yq8^s3uu^nrgq47_jgtckb4i4^rps66)8bi0%_3&#5yc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 #ALLOWED_HOSTS = ['*'] # For local 
-ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net/'] # For deployement
+ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net'] # For deployement
 
 # Application definition
 
@@ -90,7 +90,7 @@ DATABASES = {
     #    'ENGINE': 'django.db.backends.sqlite3',
      #   'NAME': BASE_DIR / 'db.sqlite3',
          'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'uhpcdb-database',
+         'NAME': 'ylpmjzzgdo$uhpcdb-database',
          'USER':'ylpmjzzgdo',
          'PASSWORD':'$cGy4BjroDQMMmPn',
          'HOST':'uhpcdb-server.mysql.database.azure.com',
