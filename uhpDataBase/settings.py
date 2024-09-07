@@ -145,8 +145,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # for deploy use staticfiles
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # for deploy use static
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')] # for deploy use staticfiles
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') # for deploy use static
 
 
 AUTO_LOGOUT = {'IDLE_TIME': 1200, 'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
