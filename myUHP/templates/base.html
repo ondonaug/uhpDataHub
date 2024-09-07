@@ -496,7 +496,7 @@
           
           </div><!-- ./wrapper -->
         <!-- add new calendar event modal -->
-        {% block js_block %}
+      
 
         <!-- jQuery 2.0.2 -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
@@ -523,7 +523,7 @@
         <!-- iCheck -->
         <script src="{% static 'js/plugins/iCheck/icheck.min.js' %}" type="text/javascript"></script>
         <!-- AdminLTE App -->
-        <script type="text/javascript" src="{% static 'js/AdminLTE/app.js' %}"></script>         
+        <script type="text/javascript" src="{% static 'js/AdminLTE/app.js'%}"></script>         
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
         <script type="text/javascript" src="{% static 'js/AdminLTE/dashboard.js' %}"></script>    
         <!-- DATA TABES SCRIPT 
@@ -549,7 +549,7 @@
         <script src="{% static 'js/plugins/input-mask/jquery.inputmask.date.extensions.js' %}" type="text/javascript"></script>
         <script src="{% static 'js/plugins/input-mask/jquery.inputmask.extensions.js' %}" type="text/javascript"></script>
         <!-- date-range-picker -->
-        <script src="{% static 's/plugins/daterangepicker/daterangepicker.js' %}" type="text/javascript"></script>
+        <script src="{% static 'js/plugins/daterangepicker/daterangepicker.js' %}" type="text/javascript"></script>
         <!-- bootstrap color picker -->
         <script src="{% static 'js/plugins/colorpicker/bootstrap-colorpicker.min.js' %}" type="text/javascript"></script>
         <!-- bootstrap time picker -->
@@ -580,7 +580,7 @@
     });
         </script>
 
-        {% endblock %} 
+     
 
         {{ redirect_to_login_immediately }} <!-- Django auto logout (3)-->
 
