@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_static_jquery',
     'myUHP.apps.MyuhpConfig',
     'crispy_bootstrap4',
     'crispy_forms',
