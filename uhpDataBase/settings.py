@@ -26,8 +26,11 @@ SECRET_KEY = 'django-insecure-yp@yq=yq8^s3uu^nrgq47_jgtckb4i4^rps66)8bi0%_3&#5yc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-#ALLOWED_HOSTS = ['*'] # For local 
-ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net'] # For deployement
+ALLOWED_HOSTS = ['*'] # For local 
+#ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net'] # For deployement
+CSRF_TRUSTED_ORIGINS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net']
+# security.W016
+CSRF_COOKIE_SECURE = False
 
 # Application definition
 
