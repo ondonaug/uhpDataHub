@@ -35,7 +35,6 @@ CSRF_TRUSTED_ORIGINS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebs
 # Application definition
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -148,7 +147,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # for deploy use staticfiles
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') # for deploy use static
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # for deploy use static
 
 
 AUTO_LOGOUT = {'IDLE_TIME': 1200, 'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
