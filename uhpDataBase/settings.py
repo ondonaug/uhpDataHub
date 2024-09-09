@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['*'] # For local
 #ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net'] # For deployement
 CSRF_TRUSTED_ORIGINS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net']
 # security.W016
-CSRF_COOKIE_SECURE = False
+#CSRF_COOKIE_SECURE = False
 
 # Application definition
 
@@ -146,9 +146,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # for deploy use staticfiles
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/') # for deploy use static
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') # for deploy use static
 
 
 AUTO_LOGOUT = {'IDLE_TIME': 1200, 'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
