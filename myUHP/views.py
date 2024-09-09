@@ -3985,9 +3985,9 @@ def wpkl_subActivities_add(request):
     operworkplans = Operworkplan.objects.all()
     
     if request.method=='GET':
-        st=request.GET.get('responsable')
+        st=request.GET.get('sub_activity')
         if st!=None:
-            operworkplans= Operworkplan.objects.filter(responsable__icontains=st)
+            operworkplans= Operworkplan.objects.filter(sub_activity__icontains=st)
             
         if by_unit!=None:
             operworkplans = Operworkplan.objects.all().filter(Q(gsmWorkplan__toptask__unit__unit_code__icontains=by_unit)& Q(completion_date__lte=end_date)).order_by("gsmWorkplan")
