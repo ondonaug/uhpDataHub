@@ -1,160 +1,175 @@
-{% extends "base.html" %}
+{% extends "cover/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
 {% load crispy_forms_field %}
 
 {% block content %}
-
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
 
 <div class="wrapper row-offcanvas row-offcanvas-left">
     <!-- Left side column. contains the logo and sidebar -->    
     <!-- Right side column. Contains the navbar and content of the page -->
-    <aside class="right-side">                
+        <aside class="right-side">                
         <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h3>
-                List of submitted <b>meeting reports</b>  whose document is saved in the platform
-                <small>Preview</small>
-            </h3>
-            <ol class="breadcrumb">
-                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
-                <li><a href="/index_meeting">Submit meeting report</a></li>
-                <li class="active">View meeting report</li>
-            </ol>
-        </section>
-        <hr>
-            <div class="container">
-                <div class="row">
-                    <!-- blog-contents -->
-                    <section class="col-md-8">
-                        {% for  meetingProject in meetingProjects  %}                            
-                        <article class="blog-item box box-solid box-success">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <h4> 
-                                        <a href="single_meeting_page/{{meetingProject.pk}}">
-                                        <b>{{ meetingProject.name_meeting }}</b>  
-                                        <img src="{% static 'images/demo/afro.png' %}" height="100%" width="100%" alt="...">
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div class="col-md-8">
-                                    <p>
-                                        Date: 
-                                       <code>{{ meetingProject.date_meeting }}</code> 
-                                        Chair name:
-                                       <code><time>{{ meetingProject.chair_name }}<time></code> 
-                                        <a href="export_meeting_page/{{meetingProject.pk}}">Export to Excel</a>
-                                    </p>
-                                    <h3>
-                                        <b><a href="single_meeting_page/{{meetingProject.pk}}">{{ meetingProject.objective_meeting }}</a></b>
-                                    </h3>
-                                    <h4><small>Type:</small>  {{ meetingProject.type_meeting }} <small>Taking place:</small> {{ meetingProject.taking_place }}</h4>
-                                    <h4><small>Note taker:</small>  {{ meetingProject.note_taker }} <small>Participants:</small> {{ meetingProject.participants_list }}</h4>
-                                    <button class="btn btn-sm btn-primary"><a href="meeting_doc_report/{{meetingProject.pk}}" style="color:#ffffff;">Generate document <i class="fa fa-download"></i></a></button>
-                                </div>
-                            </div>
-                        </article> <!-- /.blog-item -->
-                        {% endfor %}
+            <section class="contact-us section">
+                <div class="container">
 
-                        <ul class="pagination justify-content-center my-5">
-                            {% if meetingProjects.has_previous %}
-                            <!-- 'First' and 'Previous' Buttons -->
-                              <li class="page-item">
-                                <a class="page-link" href="?page=1">|&lt; First</a>
-                              </li>
-                              <li class="page-item">
-                                <a class="page-link" href="?page={{ meetingProjects.previous_page_number }}">&lt; Previous</a>
-                              </li>
-                            {% endif %}
-                          
-                            <!-- Numbered Buttons -->
-                            {% for page in paginator.page_range %}
-                              {% if meetingProjects.number == page %}
-                                <li class="page-item">
-                                  <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
-                                </li>
-                              {% elif page > meetingProjects.number|add:'-3' and page < meetingProjects.number|add:'3' %}
-                                <li class="page-item">
-                                  <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                                </li>
-                              {% endif %}
-                            {% endfor %}
-                          
-                            <!-- 'Next' and 'Last' Buttons -->
-                            {% if meetingProjects.has_next %}
-                              <li class="page-item">
-                                <a class="page-link" 
-                                  href="?page={{ meetingProjects.next_page_number }}">Next &gt;</a>
-                              </li>
-                              <li class="page-item">
-                                <a class="page-link" href="?page={{ meetingProjects.paginator.num_pages }}">Last &gt;|</a>
-                              </li>
-                            {% endif %}
-                          </ul>
-
-
-                          {% comment "" %}
-
-                          
-
-                        <div class="page-turn">
-                            <div class="row">
-                                <div class="col-md-6 col-md-offset-3 text-center">
-                                    <nav>
-                                        <ul class="pagination pagination-sm">
-                                            <li class="disabled">
-                                                <a href="#" aria-label="Previous">
-                                                    <span aria-hidden="true">Prev</span>
-                                                </a>
-                                            </li>
-                                            {% for page in paginator.page_range %}
-                                            {% if page == surveyProjects.number %}
-                                            <li class="page-item active" aria-current="page">
-                                                <span class="page-link">{{page}}</span>
-                                            </li>                                 
-                                            {% else %}
-                                            <li><a href="?page={{page}}">{{page}}</a></li>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </ul> <!-- /.pagination -->
-                                    </nav>
-                                </div>
-                            </div>
-                        </div> <!-- /.page-turn -->
-                        {% endcomment %}
-                    </section>
-                    <!-- end of blog-contents -->
-                    <!-- sidebar -->
-                    <aside class="col-md-4 col-sm-8 col-xs-8">
-                        <div class="sidebar">
-                            <!-- search option -->
-                            <div class="search-widget">
-                                <form method="GET">
-                                    {% csrf_token %}
-                                    <div class="input-group margin-bottom-sm">
-                                        <div class="row">
-                                            <div class="col-md-10"><input class="form-control" name="name_meeting" type="text" placeholder="Search here name meeting "></div>
-                                            <div class="col-md-2"><button type="submit" class="btn btn-primary">
-                                                <i class="fa fa-search fa-fw"></i>
-                                            </button></div>
-                                            
-                                        </div>
-
-
-                                       
-                                    </div>
-                                </form>
-                            </div>
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-8">
+                            <h3 class="news-title">
+                                <b> List of submitted <code>meeting reports</code> whose document is saved</b> 
+                            </h3>
                         </div>
-                    </aside> 
-                    <!-- end of sidebar -->
+                        <div class="col-lg-4 col-md-4 col-4">
+                            <ul class="bread-list">
+                                <li><a href="/"><i class="fa fa-dashboard"></i> Cover page</a></li>
+                                <li><a href="/index_meeting"><i class="fa fa-edit" aria-hidden="true"></i> Submit meeting report</a></li>
+                                <li class="active"><i class="fa fa-table" aria-hidden="true"></i> View meeting report</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <!-- blog-contents -->
+                            <section class="col-md-8">
+                                {% for  meetingProject in meetingProjects  %}                            
+                                <article class="blog-item box box-solid box-success">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h4> 
+                                                <a href="single_meeting_page/{{meetingProject.pk}}">
+                                                <b>{{ meetingProject.name_meeting }}</b>  
+                                                <img src="{% static 'images/demo/afro.png' %}" height="60%" width="60%" alt="...">
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <p>
+                                                Date: 
+                                               <code>{{ meetingProject.date_meeting }}</code> 
+                                                Chair name:
+                                               <code><time>{{ meetingProject.chair_name }}<time></code> 
+                                                <a href="export_meeting_page/{{meetingProject.pk}}">Export to Excel</a>
+                                            </p>
+                                            <h3>
+                                                <b><a href="single_meeting_page/{{meetingProject.pk}}">{{ meetingProject.objective_meeting }}</a></b>
+                                            </h3>
+                                            <h4><small>Type:</small>  {{ meetingProject.type_meeting }} <small>Taking place:</small> {{ meetingProject.taking_place }}</h4>
+                                            <h4><small>Note taker:</small>  {{ meetingProject.note_taker }} <small>Participants:</small> {{ meetingProject.participants_list }}</h4>
+                                            <button class="btn btn-sm btn-primary"><a href="meeting_doc_report/{{meetingProject.pk}}" style="color:#ffffff;">Generate document <i class="fa fa-download"></i></a></button>
+                                        </div>
+                                    </div>
+                                </article> <!-- /.blog-item -->
+                                {% endfor %}
+        
+                
+
+                                <ul class="pagination justify-content-center my-5">
+                                    {% if meetingProjects.has_previous %}
+                                    <!-- 'First' and 'Previous' Buttons -->
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1">|&lt; First</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ meetingProjects.previous_page_number }}">&lt; Previous</a>
+                                    </li>
+                                    {% endif %}
+                                
+                                    <!-- Numbered Buttons -->
+                                    {% for page in paginator.page_range %}
+                                    {% if meetingProjects.number == page %}
+                                        <li class="page-item">
+                                        <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
+                                        </li>
+                                    {% elif page > meetingProjects.number|add:'-3' and page < meetingProjects.number|add:'3' %}
+                                        <li class="page-item">
+                                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                        </li>
+                                    {% endif %}
+                                    {% endfor %}
+                                
+                                    <!-- 'Next' and 'Last' Buttons -->
+                                    {% if meetingProjects.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" 
+                                        href="?page={{ meetingProjects.next_page_number }}">Next &gt;</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ meetingProjects.paginator.num_pages }}">Last &gt;|</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+
+
+                                {% comment "" %}
+
+                                
+
+                                <div class="page-turn">
+                                    <div class="row">
+                                        <div class="col-md-6 col-md-offset-3 text-center">
+                                            <nav>
+                                                <ul class="pagination pagination-sm">
+                                                    <li class="disabled">
+                                                        <a href="#" aria-label="Previous">
+                                                            <span aria-hidden="true">Prev</span>
+                                                        </a>
+                                                    </li>
+                                                    {% for page in paginator.page_range %}
+                                                    {% if page == surveyProjects.number %}
+                                                    <li class="page-item active" aria-current="page">
+                                                        <span class="page-link">{{page}}</span>
+                                                    </li>                                 
+                                                    {% else %}
+                                                    <li><a href="?page={{page}}">{{page}}</a></li>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </ul> <!-- /.pagination -->
+                                            </nav>
+                                        </div>
+                                    </div>
+                                </div> <!-- /.page-turn -->
+                                {% endcomment %}
+                            </section>
+                            <!-- end of blog-contents -->
+                            <!-- sidebar -->
+                            <aside class="col-md-4 col-sm-8 col-xs-8">
+                                <div class="sidebar">
+                                    <!-- search option -->
+                                    <div class="search-widget">
+                                        <form method="GET">
+                                            {% csrf_token %}
+                                            <div class="input-group margin-bottom-sm">
+                                                <div class="row">
+                                                    <input class="common-input" name="name_meeting" type="text" placeholder="Search here name meeting">
+                                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></button>
+                                                </div>
+                                            </div>
+
+                                            {% comment "" %}
+
+                                            <div class="input-group margin-bottom-sm">
+                                                <div class="row">
+                                                    <div class="col-md-10"><input class="form-control" name="responsible" type="text" placeholder="Filter by survey author "></div>
+                                                    <div class="col-md-2"><button type="submit" class="btn btn-primary">
+                                                        <i class="fa fa-search fa-fw"></i>
+                                                    </button></div>
+                                                </div>
+                                            </div>
+                                            {% endcomment %}
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </aside> 
+                            <!-- end of sidebar -->
+                        </div>
+                    </div> <!-- end of /.container -->
                 </div>
-            </div> <!-- end of /.container -->
-    
-        </section><!-- /.content -->
-    </aside><!-- /.right-side -->
-</div>
- 
+            
+            </section><!-- /.content -->
+   
+        </aside><!-- /.right-side -->
+    </div>
 {% endblock %}

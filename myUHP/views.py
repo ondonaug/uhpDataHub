@@ -321,14 +321,14 @@ def subscribers(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Your Subscription has been successfully')
-            return redirect('index')
+            return redirect('coverPage')
            # return HttpResponse('<h1>Hello HttpResponse</h1>')   
     else:
         form = SubscribersForm()
         context = {
             'form': form
         }
-        return render(request, 'index.html', context)
+        return render(request, 'cover/index.html', context)
     
 def mail_letter(request):
  #   emails = Subscribers.objects.all()
@@ -1148,9 +1148,9 @@ def kpi_achieve_index(request):
     if request.method=='GET':
       #  by_unit =  request.GET.get('by_unit')
         
-        st=request.GET.get('report_date')
+        st=request.GET.get('kpi_code')
         if st!=None:
-            kpiAchieves= KpiAchieve.objects.filter(report_date__icontains=st).order_by("kpi")
+            kpiAchieves= KpiAchieve.objects.select_related('kpi').filter(kpi__kpi_code__icontains=st).order_by("kpi")
         
         if by_unit!=None:
             kpiAchieves = KpiAchieve.objects.select_related('kpi').filter(Q(kpi__unit__unit_code__icontains=by_unit)).order_by("kpi")
@@ -1241,21 +1241,38 @@ def single_kpi_page(request, pk):
     
     try:
         kpis = Kpi.objects.get(id=pk) 
-        kpiAchieves = Kpi.objects.filter(Q(id__icontains=pk) & Q(kpis_kpiAchive__report_resut__isnull=False)).values(
-            'expected_result',
-            'kpi_code',
-            'kpi_description',
-            'kpi_country_level',
-            'data_description',
-            'data_source',
-            'collection_methods',
-            'data_frequency',
-            'kpi_link',
-            'kpis_kpiAchive__kpi_baseline',
-            'kpis_kpiAchive__kpi_target',
-            'kpis_kpiAchive__report_date',
-            'kpis_kpiAchive__report_resut',
-            'kpis_kpiAchive__report_comment').order_by('kpi_code')
+        kpiAchieves = KpiAchieve.objects.select_related('kpi').filter(Q(kpi__id__icontains=kpis.id) & Q(kpi__kpi_code__icontains=kpis.kpi_code) & Q(report_resut__isnull=False)).values(
+            
+            'kpi__expected_result',
+            'kpi__kpi_code',
+            'kpi__kpi_description',
+            'kpi__kpi_country_level',
+            'kpi__data_description',
+            'kpi__data_source',
+            'kpi__collection_methods',
+            'kpi__data_frequency',
+            'kpi__kpi_link',
+            'kpi_baseline',
+            'kpi_target',
+            'report_date',
+            'report_resut',
+            'report_comment').order_by('kpi')
+         
+   #     kpiAchieves = Kpi.objects.filter(Q(id__icontains=pk) & Q(kpis_kpiAchive__report_resut__isnull=False)).values(
+   #         'expected_result',
+   #         'kpi_code',
+   #         'kpi_description',
+   #         'kpi_country_level',
+    #        'data_description',
+    #        'data_source',
+    #        'collection_methods',
+   #         'data_frequency',
+  #          'kpi_link',
+  #          'kpis_kpiAchive__kpi_baseline',
+  #          'kpis_kpiAchive__kpi_target',
+  #          'kpis_kpiAchive__report_date',
+  #          'kpis_kpiAchive__report_resut',
+  #          'kpis_kpiAchive__report_comment').order_by('kpi_code')
         data={'kpis':kpis, 'kpiAchieves':kpiAchieves}   
     except:
         data={'message':'The KPI you requested doesn t\' exist or isn t in the submitted results'}
@@ -1566,7 +1583,8 @@ def single_sub_activity_page(request,unit_code):
     try:
 
         data_unit =list(Units.objects.prefetch_related('units_toptask').filter(Q(unit_code__icontains=unit_code)& Q(units_toptask__toptask_gsmWorkplan__lowest_task_description__isnull=False)).distinct())
-        data_outputs = Outputworkplan.objects.exclude(outputs_toptask__unit__unit_code__isnull=True).filter(Q(outputs_toptask__unit__unit_code__icontains=unit_code)).prefetch_related('outputs_toptask').distinct().order_by("outputs_toptask__output__output_code") 
+        data_outputs = Outputworkplan.objects.prefetch_related('outputs_toptask').filter(Q(outputs_toptask__unit__unit_code__isnull=False) & Q(outputs_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(outputs_toptask__unit__unit_code__icontains=unit_code)).distinct().order_by("outputs_toptask__output__output_code") 
+      #  data_outputs = Operworkplan.objects.exclude(sub_activity__isnull=True).filter(Q(gsmWorkplan__toptask__unit__unit_code__icontains=unit_code)).distinct().order_by("gsmWorkplan__toptask__output__output_code") 
         kpis = Kpi.objects.filter(Q(unit__unit_code__icontains=unit_code)).prefetch_related('kpis_kpiAchive','kpis_toptask').distinct()
         context = {
                 'data_unit':data_unit,
@@ -1952,6 +1970,7 @@ def delete_subscribers(request,pk):
     messages.warning(request, 'Subscribers deleted successfully')
    
     return redirect('subscribers_views')
+
 
 #Method to export ALL SURVEY PROJECT on Excel file
 def export_project_survey(request):
@@ -2988,7 +3007,7 @@ def export_meeting_page(request,pk):
     rows = MeetingProject.objects.filter(Q(id__icontains=pk) & Q(meetingProject_discussion__summary_discussion__isnull=False)).all().values_list(
         'date_meeting',
         'name_meeting',
-        'type_meeting',
+        'type_meeting__group_meeting',
         'objective_meeting',
         'taking_place',
         'chair_name',
@@ -3348,8 +3367,8 @@ def single_briefing_page(request, pk):
         'briefingProject_background__specific_topic',
         'briefingProject_background__accomplished_last_period',
         'briefingProject_background__planned_next_steps',
-        'briefingProject_background__output',
-        'briefingProject_background__kpi',
+        'briefingProject_background__output__output_code',
+        'briefingProject_background__kpi__kpi_code',
         'briefingProject_background__comment_background'
     ).distinct()
         page = request.GET.get('page')
@@ -3397,8 +3416,8 @@ def export_briefing_page(request,pk):
                "specific_topic",
                "accomplished_last_period",
                "planned_next_steps",
-            #   "output",
-            #   "kpi",
+               "output",
+               "kpi",
                "comment_background"
         ]
 
@@ -3408,9 +3427,9 @@ def export_briefing_page(request,pk):
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
 
-    rows = BriefingProject.objects.filter(Q(id__icontains=pk)).all().values_list(
+    rows = BriefingProject.objects.select_related('unit').filter(Q(id__icontains=pk)).all().values_list(
        'briefing_title',
-        'unit',
+        'unit__unit_code',
      #   'type_meeting',
         'start_date',
         'end_date',
@@ -3419,8 +3438,8 @@ def export_briefing_page(request,pk):
         'briefingProject_background__specific_topic',
         'briefingProject_background__accomplished_last_period',
         'briefingProject_background__planned_next_steps',
-      #  'briefingProject_background__output',
-      #  'briefingProject_background__kpi',
+        'briefingProject_background__output__output_code',
+        'briefingProject_background__kpi__kpi_code',
         'briefingProject_background__comment_background'
     ).order_by('-reporting_date')
     for row in rows:
@@ -3985,9 +4004,9 @@ def wpkl_subActivities_add(request):
     operworkplans = Operworkplan.objects.all()
     
     if request.method=='GET':
-        st=request.GET.get('responsable')
+        st=request.GET.get('sub_activity')
         if st!=None:
-            operworkplans= Operworkplan.objects.filter(responsable__icontains=st)
+            operworkplans= Operworkplan.objects.filter(sub_activity__icontains=st)
             
         if by_unit!=None:
             operworkplans = Operworkplan.objects.all().filter(Q(gsmWorkplan__toptask__unit__unit_code__icontains=by_unit)& Q(completion_date__lte=end_date)).order_by("gsmWorkplan")
@@ -4813,21 +4832,38 @@ def download_monitoring_progress(request):
 def download_kpi_result(request, pk): 
     
     kpis = Kpi.objects.get(id=pk) 
-    kpiAchieves = Kpi.objects.filter(Q(id__icontains=pk) & Q(kpis_kpiAchive__report_resut__isnull=False)).values(
-            'expected_result',
-            'kpi_code',
-            'kpi_description',
-            'kpi_country_level',
-            'data_description',
-            'data_source',
-            'collection_methods',
-            'data_frequency',
-            'kpi_link',
-            'kpis_kpiAchive__kpi_baseline',
-            'kpis_kpiAchive__kpi_target',
-            'kpis_kpiAchive__report_date',
-            'kpis_kpiAchive__report_resut',
-            'kpis_kpiAchive__report_comment').order_by('kpi_code')
+    kpiAchieves = KpiAchieve.objects.select_related('kpi').filter(Q(kpi__id__icontains=kpis.id) & Q(kpi__kpi_code__icontains=kpis.kpi_code) & Q(report_resut__isnull=False)).values(
+            
+            'kpi__expected_result',
+            'kpi__kpi_code',
+            'kpi__kpi_description',
+            'kpi__kpi_country_level',
+            'kpi__data_description',
+            'kpi__data_source',
+            'kpi__collection_methods',
+            'kpi__data_frequency',
+            'kpi__kpi_link',
+            'kpi_baseline',
+            'kpi_target',
+            'report_date',
+            'report_resut',
+            'report_comment').order_by('kpi')
+    
+    #kpiAchieves = Kpi.objects.filter(Q(id__icontains=pk) & Q(kpis_kpiAchive__report_resut__isnull=False)).values(
+    #        'expected_result',
+    #        'kpi_code',
+    #        'kpi_description',
+    #        'kpi_country_level',
+    #        'data_description',
+    #        'data_source',
+    #        'collection_methods',
+    #        'data_frequency',
+    #        'kpi_link',
+    #        'kpis_kpiAchive__kpi_baseline',
+    #        'kpis_kpiAchive__kpi_target',
+    #        'kpis_kpiAchive__report_date',
+    #        'kpis_kpiAchive__report_resut',
+    #        'kpis_kpiAchive__report_comment').order_by('kpi_code')
 
     if kpiAchieves is not None:
         document = Document()
@@ -4885,11 +4921,11 @@ def download_kpi_result(request, pk):
        
         for i in range(len(kpiAchieves)):
             row_cells = table.add_row().cells
-            row_cells[0].text = str(kpiAchieves[i]['kpis_kpiAchive__report_date'])
-            row_cells[1].text = str(kpiAchieves[i]['kpis_kpiAchive__kpi_baseline'])
-            row_cells[2].text = str(kpiAchieves[i]['kpis_kpiAchive__kpi_target'])
-            row_cells[3].text = str(kpiAchieves[i]['kpis_kpiAchive__report_resut'])
-            row_cells[4].text = str(kpiAchieves[i]['kpis_kpiAchive__report_comment'])
+            row_cells[0].text = str(kpiAchieves[i]['report_date'])
+            row_cells[1].text = str(kpiAchieves[i]['kpi_baseline'])
+            row_cells[2].text = str(kpiAchieves[i]['kpi_target'])
+            row_cells[3].text = str(kpiAchieves[i]['report_resut'])
+            row_cells[4].text = str(kpiAchieves[i]['report_comment'])
         
         document.add_page_break()
 

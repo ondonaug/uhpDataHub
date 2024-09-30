@@ -41,6 +41,7 @@
 		<link rel="stylesheet" href="{% static 'coverStyle/css/normalize.css' %}">
 		<link rel="stylesheet" href="{% static 'coverStyle/style.css' %}">
 		<link rel="stylesheet" href="{% static 'coverStyle/css/responsive.css' %}">	
+		
     </head>
     <body>
 		<!-- Preloader -->
@@ -59,17 +60,21 @@
         <!-- End Preloader -->
 		<!-- Get Pro Button -->
 		<ul class="pro-features">
-			<a class="get-pro" href="#">Workshop</a>
-			<li class="big-title">Submission of informations</li>
+			<a class="get-pro" href="#">Component</a>
 			{% comment "" %}
+			<li class="big-title">Submission of informations</li>
+			
 			<li class="title">Pro Version Features</li>
-			{% endcomment %}
+			
 			<li>1. Collection overview</li>
 			<li>2. Methodological framework</li>
 			<li>3. Collection data</li>
 			<li>4. Process validation rules</li>
 			<li>5. The data</li>
+			{% endcomment %}
 			<div class="button">
+				
+				<a href="/index_kpi" target="_blank" class="btn">Edit KPI</a>
 				<a href="/project_meeting" target="_blank" class="btn">Submitting Meeting report</a>
 				<a href="/project_briefing" target="_blank" class="btn">Submitting Birefing note</a>
 			</div>
@@ -127,45 +132,65 @@
 											<li class="active"><a href="#">Home <i class="icofont-rounded-down"></i></a>
 												<ul class="dropdown">
 													<li><a href="/">Home Page</a></li>
+													<li><a href="{% url 'views_report'%}">List of reports and documents</a></li>
+													<li><a href="{% url 'report_upload'%}">Upload report</a></li>
+													<li><a href="{% url 'index_report'%}">Table</a></li>
+													<li><a href="{% url 'doc_import'%}">Upload images</a></li>
 												</ul>
 											</li>
-											<li><a href="#">Data<i class="icofont-rounded-down"></i> </a>
+											<li><a href="#">Monitoring<i class="icofont-rounded-down"></i> </a>
 												<ul class="dropdown">
-												
-													<li><a href="{% url 'views_report'%}">Monitoring</a></li>
-													<li><a href="{% url 'meeting_report'%}">Meeting</a></li>
-													<li><a href="{% url 'briefing_report'%}">Briefing note</a></li>
+													<li><a href="{% url 'workplans'%}">Update activity</a></li>
+													<li><a href="{% url 'sub_activity_wkpl'%}">Edit workplan</a></li>
+													<li><a href="{% url 'sub_activity_report'%}">Work plan overview</a></li>
+													<li><a href="{% url 'dashboard'%}">Dashboard</a></li>
 													<li><a href="{% url 'risk_report'%}">Risk register</a></li>
+													<li><a href="/sub_activity_level?by_unit">Number of activities carried out</a></li>
+													<li><a href="{% url 'render_lowestTask_view'%}">Summary of activity status</a></li>
+													<li><a href="{% url 'che_lowestTask_view'%}">Status for CHE</a></li>
+													<li><a href="{% url 'hpd_lowestTask_view'%}">Status for HPD</a></li>
+													<li><a href="{% url 'nut_lowestTask_view'%}">Status for NUT</a></li>
+													<li><a href="{% url 'tnr_lowestTask_view'%}">Status for TNR</a></li>
+													<li><a href="{% url 'uhu_lowestTask_view'%}">Status for UHU</a></li>
+													<li><a href="{% url 'vid_lowestTask_view'%}">Status for VID</a></li>
+												
+													
+													
+													{% comment "" %}
 													<li><a href="{% url 'download_monitoring'%}">Download report</a></li>
+													{% endcomment %}
 
 												</ul>
 											</li>
 											<li><a href="#">Indicators<i class="icofont-rounded-down"></i> </a>
 												<ul class="dropdown">
-													<li><a href="{% url 'reporting_indicator'%}">Indicator Trends</a></li>
-													<li><a href="{% url 'render_pdf_view'%}">KPI</a></li>
-													<li><a href="/sub_activity_level?by_unit">Sub activity</a></li>
+													<li><a href="/index_kpi">Enter KPI result</a></li>
+													<li><a href="/kpi_report">Summary of KPI results</a></li>
+													<li><a href="{% url 'render_pdf_view'%}">Overview of KPI results by Unit</a></li>
+													<li><a href="{% url 'reporting_indicator'%}">Dashboard of other indicators</a></li>
 												  </ul>
 											
 											</li>
 											<li><a href="#">Survey <i class="icofont-rounded-down"></i></a>
 												<ul class="dropdown">
-													<li><a href="#">404 Error</a></li>
+													<li><a href="/project_survey">Create a survey project</a></li>
+													<li><a href="/upload_survey">Import survey data</a></li>
+													<li><a href="/index_survey">Display survey dataset</a></li>
+													<li><a href="/survey_report">List of surveys conducted</a></li>
 												</ul>
 											</li>
-											<li><a href="#">Reports <i class="icofont-rounded-down"></i></a>
+											<li><a href="#">Meeting <i class="icofont-rounded-down"></i></a>
 												<ul class="dropdown">
-													<li><a href="{% url 'views_report'%}">Monitoring</a></li>
-													<li><a href="{% url 'render_lowestTask_view'%}">Progress UHP</a></li>
-													<li><a href="{% url 'che_lowestTask_view'%}">CHE</a></li>
-													<li><a href="{% url 'hpd_lowestTask_view'%}">HPD</a></li>
-													<li><a href="{% url 'nut_lowestTask_view'%}">NUT</a></li>
-													<li><a href="{% url 'tnr_lowestTask_view'%}">TNR</a></li>
-													<li><a href="{% url 'uhu_lowestTask_view'%}">UHU</a></li>
-													<li><a href="{% url 'vid_lowestTask_view'%}">VID</a></li>
+													<li><a href="{% url 'project_meeting'%}">Create a meeting project</a></li>
+													<li><a href="{% url 'index_meeting'%}">Enter discussion points </a></li>
+													<li><a href="{% url 'meeting_report'%}">List of meeting conducted</a></li>
+													<li><a href="{% url 'project_briefing'%}">Create a Briefing note project</a></li>
+													<li><a href="{% url 'index_briefing'%}">Background for briefing note</a></li>
+													<li><a href="{% url 'briefing_report'%}">Display List of Briefing note</a></li>
 												</ul>
 											</li>
-											<li><a href="/mail_letter">Contact Us</a></li>
+
+											
 										</ul>
 									</nav>
 								</div>
@@ -194,14 +219,18 @@
 						<div class="col-lg-3 col-md-6 col-12">
 							<div class="single-footer">
 								<h2>About Us</h2>
+								{% comment "" %}
 								<p>An indispensable tool for preparing for and responding to public health emergencies.</p>
+								{% endcomment %}
 								<!-- Social -->
 								<ul class="social">
 									<li><a href="https://www.facebook.com/WHOAFRO"><i class="icofont-facebook"></i></a></li>
-									<li><a href="#"><i class="icofont-google-plus"></i></a></li>
 									<li><a href="#"><i class="icofont-twitter"></i></a></li>
+									{% comment "" %}<li><a href="#"><i class="icofont-google-plus"></i></a></li>
+									
 									<li><a href="#"><i class="icofont-vimeo"></i></a></li>
 									<li><a href="#"><i class="icofont-pinterest"></i></a></li>
+									{% endcomment %}
 								</ul>
 								<!-- End Social -->
 							</div>
@@ -214,9 +243,10 @@
 										<ul>
 											<li><a href="https://africa-datas.shinyapps.io/profile/"><i class="fa fa-caret-right" aria-hidden="true"></i>Dashboard of UHP indicator</a></li>
 											<li><a href="https://worldhealthorg.sharepoint.com/sites/UHCHPPublic"><i class="fa fa-caret-right" aria-hidden="true"></i>SharePoint Website</a></li>
-											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Export manual</a></li>
+											{% comment "" %}<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Export manual</a></li>
 											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>System environment, installation and configuration procedures</a></li>
 											<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Organization of the Data Management Center </a></li>
+											{% endcomment %}
 										</ul>
 									</div>
 								</div>
@@ -237,24 +267,31 @@
 							</div>
 						</div>
 						{% endcomment %}
+						{% comment "" %}
 						<div class="col-lg-3 col-md-6 col-12">
 							<div class="single-footer">
 								<h2>Newsletter</h2>
 								<p>subscribe to our newsletter to get allour news in your inbox..</p>
-								<form action="/newsletter_add" method="POST" class="newsletter-inner">
+								<form action="/subscribers" method="POST" class="newsletter-inner">
 									{% csrf_token %}
 									<div>
 										<input id="name_newsletter" name="name_subscriber" placeholder="Name" class="common-input" onfocus="this.placeholder = ''"
 											onblur="this.placeholder = 'Your name'" required="" type="text">
-										<input id="email_newsletter" name="email_newsletter" placeholder="Email Address" class="common-input" onfocus="this.placeholder = ''"
+										<input id="email_newsletter" name="email_subscriber" placeholder="Email Address" class="common-input" onfocus="this.placeholder = ''"
 											onblur="this.placeholder = 'Your email address'" required="" type="email">
 									</div>
 									<div>
 										<button type="submit" class="button"><i class="icofont icofont-paper-plane"></i></button>
 									</div>
 								</form>
+
+
 							</div>
 						</div>
+						{% endcomment %}
+						
+
+
 					</div>
 				</div>
 			</div>

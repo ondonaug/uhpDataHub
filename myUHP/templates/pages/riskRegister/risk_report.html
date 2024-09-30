@@ -1,34 +1,41 @@
-{% extends "base.html" %}
+{% extends "cover/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
 {% load crispy_forms_field %}
 
 {% block content %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
 
 
 <div class="wrapper row-offcanvas row-offcanvas-left">
-    <!-- Left side column. contains the logo and sidebar -->    
+    <!-- Left side column. contains the logo and sidebar -->
+
     <!-- Right side column. Contains the navbar and content of the page -->
-    <aside class="right-side">                
+    <aside class="right-side">              
         <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h3>
-                List of submitted <b>Units</b>  whose <b><code>Risk register</code></b> is saved in the platform
-                <small>Preview</small>
-            </h3>
-            <ol class="breadcrumb">
-                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
-                <li><a href="/risk_register">Create Risk name</a></li>
-                <li class="active">View Risk register by Unit</li>
-            </ol>
-        </section>
-        <hr>
+        <section class="contact-us section">
             <div class="container">
-                <div class="row">
-                    <!-- blog-contents -->
-                    <section class="col-md-8">
-                        {% for  unit in units  %}                            
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-8">
+                            <h3 class="news-title">
+                                List of submitted <b>Units</b>  whose <b><code>Risk register</code></b> is saved
+                                <small>Display</small>
+                            </h3>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-4">
+                            <ul class="bread-list">
+                                <li><a href="/dashboard"><i class="fa fa-dashboard" aria-hidden="true"></i> Dashboard</a></li>
+                                <li><a href="/risk_register"><i class="fa fa-edit" aria-hidden="true"></i> Editing the risk register</a></li>
+                                <li class="active"><i class="fa fa-table" aria-hidden="true"></i> Risk register</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <!-- blog-contents -->
+                                <section class="col-md-8">
+                                    {% for  unit in units  %}                            
                         <article class="blog-item box box-solid box-success">
                             <div class="row">
                                 <div class="col-md-2">
@@ -43,110 +50,117 @@
                                     <p>
                                         <a href="export_unit_risk/{{unit.pk}}">Export to Excel</a>
                                     </p>
-                                    <h3>
+                                    <h5>
                                         <b><a href="unit_risk_page/{{unit.pk}}">{{ unit.unit_description }}</a></b>
-                                    </h3>
+                                    </h5>
                                     <button class="btn btn-sm btn-primary"><a href="risk_doc_report/{{unit.pk}}" style="color:#ffffff;">Generate document <i class="fa fa-download"></i></a></button>
                                 </div>
                             </div>
                         </article> <!-- /.blog-item -->
                         {% endfor %}
-                        <ul class="pagination justify-content-center my-5">
-                            {% if units.has_previous %}
-                            <!-- 'First' and 'Previous' Buttons -->
-                              <li class="page-item">
-                                <a class="page-link" href="?page=1">|&lt; First</a>
-                              </li>
-                              <li class="page-item">
-                                <a class="page-link" href="?page={{ units.previous_page_number }}">&lt; Previous</a>
-                              </li>
-                            {% endif %}
-                            <!-- Numbered Buttons -->
-                            {% for page in paginator.page_range %}
-                              {% if units.number == page %}
-                                <li class="page-item">
-                                  <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
-                                </li>
-                              {% elif page > units.number|add:'-3' and page < units.number|add:'3' %}
-                                <li class="page-item">
-                                  <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                                </li>
-                              {% endif %}
-                            {% endfor %}
-                          
-                            <!-- 'Next' and 'Last' Buttons -->
-                            {% if units.has_next %}
-                              <li class="page-item">
-                                <a class="page-link" 
-                                  href="?page={{ units.next_page_number }}">Next &gt;</a>
-                              </li>
-                              <li class="page-item">
-                                <a class="page-link" href="?page={{ units.paginator.num_pages }}">Last &gt;|</a>
-                              </li>
-                            {% endif %}
-                          </ul>
+                                    
 
-
-                          {% comment "" %}
-
-                          
-
-                        <div class="page-turn">
-                            <div class="row">
-                                <div class="col-md-6 col-md-offset-3 text-center">
-                                    <nav>
-                                        <ul class="pagination pagination-sm">
-                                            <li class="disabled">
-                                                <a href="#" aria-label="Previous">
-                                                    <span aria-hidden="true">Prev</span>
-                                                </a>
+                                    <!--Pagination-->
+                                    <ul class="pagination justify-content-center my-5">
+                                        {% if units.has_previous %}
+                                        <!-- 'First' and 'Previous' Buttons -->
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=1">|&lt; First</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ units.previous_page_number }}">&lt; Previous</a>
+                                        </li>
+                                        {% endif %}
+                                    
+                                        <!-- Numbered Buttons -->
+                                        {% for page in paginator.page_range %}
+                                        {% if units.number == page %}
+                                            <li class="page-item">
+                                            <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
                                             </li>
-                                            {% for page in paginator.page_range %}
-                                            {% if page == surveyProjects.number %}
-                                            <li class="page-item active" aria-current="page">
-                                                <span class="page-link">{{page}}</span>
-                                            </li>                                 
-                                            {% else %}
-                                            <li><a href="?page={{page}}">{{page}}</a></li>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </ul> <!-- /.pagination -->
-                                    </nav>
-                                </div>
-                            </div>
-                        </div> <!-- /.page-turn -->
-                        {% endcomment %}
-                    </section>
-                    <!-- end of blog-contents -->
-                    <!-- sidebar -->
-                    <aside class="col-md-4 col-sm-8 col-xs-8">
-                        <div class="sidebar">
-                            <!-- search option -->
-                            <div class="search-widget">
-                                <form method="GET">
-                                    {% csrf_token %}
-                                    <div class="input-group margin-bottom-sm">
+                                        {% elif page > units.number|add:'-3' and page < units.number|add:'3' %}
+                                            <li class="page-item">
+                                            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                            </li>
+                                        {% endif %}
+                                        {% endfor %}
+                                    
+                                        <!-- 'Next' and 'Last' Buttons -->
+                                        {% if units.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" 
+                                            href="?page={{ units.next_page_number }}">Next &gt;</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ units.paginator.num_pages }}">Last &gt;|</a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+
+                                    <!--/End Pagination-->
+
+
+
+                                    {% comment "pagination" %}
+                                    <div class="page-turn">
                                         <div class="row">
-                                            <div class="col-md-10"><input class="form-control" name="unit_code" type="text" placeholder="Search here unit code "></div>
-                                            <div class="col-md-2"><button type="submit" class="btn btn-primary">
-                                                <i class="fa fa-search fa-fw"></i>
-                                            </button></div>
-                                            
+                                            <div class="col-md-12 col-md-offset-3 text-center">
+                                                <nav>
+                                                    <ul class="pagination pagination-sm">
+                                                        <li class="disabled">
+                                                            <a href="#" aria-label="Previous">
+                                                                <span aria-hidden="true">Prev</span>
+                                                            </a>
+                                                        </li>
+                                                        {% for page in paginator.page_range %}
+                                                        {% if page == kpis.number %}
+                                                        <li class="page-item active" aria-current="page">
+                                                            <span class="page-link">{{page}}</span>
+                                                        </li>
+                                                        {% else %}
+                                                        <li><a href="?page={{page}}">{{page}}</a></li>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </ul> <!-- /.pagination -->
+                                                </nav>
+                                            </div>
                                         </div>
+                                    </div> <!-- /.page-turn -->
+                                    {% endcomment %}
+                                </section>
+                            <!-- end of blog-contents -->
+                            <!-- sidebar -->
+                            <aside class="col-md-4 col-sm-8 col-xs-8">
+                                <div class="sidebar">
+                                    <!-- search option -->
+                                    <div class="search-widget">
 
 
-                                       
+                                        <form method="GET">
+                                            {% csrf_token %}
+                                            <div class="input-group margin-bottom-sm">
+                                                <div class="row">
+                                                
+                                                    <input class="common-input" name="unit_code" type="text" placeholder="Search here unit code ">
+                                                    <button type="submit" class="btn btn-primary"><i class="fa fa-search fa-fw"></i></button>
+                                                    
+                                                </div>
+
+                                                
+                                            </div>
+                                        </form>
+                                    
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </aside> 
+                            <!-- end of sidebar -->
                         </div>
-                    </aside> 
-                    <!-- end of sidebar -->
-                </div>
-            </div> <!-- end of /.container -->
-    
-        </section><!-- /.content -->
+                    </div> <!-- end of /.container -->
+                
+            </div>
+        </section>
     </aside><!-- /.right-side -->
 </div>
- 
+
+
 {% endblock %}

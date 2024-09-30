@@ -473,9 +473,9 @@ class RiskIdentificationForm(forms.ModelForm):
 class SelectSurveyForm(forms.Form):
     SURVEY_TITLES = SurveyProject.objects.all().values_list('id','title_surv').order_by('title_surv').distinct() 
     
-    by_survey =  forms.ChoiceField(choices = SURVEY_TITLES,  label=('Please select survey title'))
+    by_survey =  forms.ChoiceField(choices = SURVEY_TITLES,  label=('Select survey title'))
    # start = forms.DateField(widget=forms.DateInput(attrs={'type':'date'}))
-    end = forms.DateField(widget=forms.DateInput(attrs={'type':'date'}), label=('End date of survey'))
+    end = forms.DateField(widget=forms.DateInput(attrs={'type':'date'}), label=('Survey end date'))
     
 
 

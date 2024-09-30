@@ -20,6 +20,7 @@ django-crispy-forms==2.1
 django-datatables-view==1.20.0
 django-import-export==4.0.7
 django-lockdown==4.0.0
+django-static-jquery==2.1.4
 django-widget-tweaks==1.5.0
 docxcompose==1.4.0
 docxtpl==0.17.0

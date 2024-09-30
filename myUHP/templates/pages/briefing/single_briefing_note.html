@@ -1,11 +1,36 @@
 
-{% extends "base.html" %}
+{% extends "cover/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
 {% load crispy_forms_field %}
 
 {% block content %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+
+<style>
+    .tbl-container{
+        max-width:fit-content;
+        max-height:fit-content;
+    }
+    .tbl-fixed{
+        overflow-x: scroll;
+        overflow-y: scroll;
+        height: fit-content;
+        max-height:70vh;
+        margin-top: 40px;
+    }
+    table tr:hover{
+        background-color: #ddd;
+    }
+    table th{
+        position:sticky;
+        top:0px;
+        background-color: #04AA6D;
+        color: white;
+    }
+  </style>
+
         <main>
             <div class="container">
                 <div class="row">
@@ -16,52 +41,57 @@
                             <!-- title row -->
             <div class="row">
                 <div class="col-xs-12">
-                    <h2 class="page-header">
-                        <i class="fa fa-list-ol"></i> Briefing background with Note submitted
-                    </h2>                            
+                    <h3 class="page-header">
+                        <i class="fa fa-list-ol"></i><b> Briefing background with Note submitted</b> 
+                    </h3>                            
                 </div><!-- /.col -->
             </div>
                             <p>{{message}}</p>
                             <div class="row invoice-info">                         
                             </div><!-- /.row -->
                             <div class="alert alert-info">
-                              <h4><strong>{{briefingProject.briefing_title }}</strong></h4> 
+                              <h3><strong>{{briefingProject.briefing_title }}</strong></h3> 
                             </div>
                             <div class="alert">
-                                <h3>1. Start date:<b>{{briefingProject.start_date }}</b></h3> 
-                                <h3>2. End date: <b> {{briefingProject.end_date }}</b></h3>
-                                <h3>3. Reporting date place: <b>{{briefingProject.reporting_date }}</b></h3>
-                                <h3>4. Background:</h3> 
-                                <table class="table responsible" style="width:100%">  
-                                    <thead>
-                                        <tr>
-                                            <th>Subject </th>
-                                            <th>Specific topic </th>
-                                            <th>Activities accomplished last period</th>
-                                            <th>Activities planned current month</th>
-                                            <th>Output</th>
-                                            <th>Kpi</th>
-                                            <th>Comments</th>
-                                        </tr>                                    
-                                    </thead>
-                                    {% for briefingProject in briefingProjects %}
-                                    <tbody>             
-                                        <tr>
-                                            <td>{{briefingProject.briefingProject_background__subject_background}}</td>
-                                            <td>{{briefingProject.briefingProject_background__specific_topic}}</td>
-                                            <td>{{briefingProject.briefingProject_background__accomplished_last_period}}</td>
-                                            <td>{{briefingProject.briefingProject_background__planned_next_steps}}</td>
-                                            <td>{{briefingProject.briefingProject_background__output}}</td>
-                                            <td>{{briefingProject.briefingProject_background__kpi}}</td>
-                                            <td>{{briefingProject.briefingProject_background__comment_background}}</td>
-                                            
-                                        </tr>
-                                    </tbody>
-                                    {% endfor %}
-                                </table>
+                                <h4>1. Start date:<b>{{briefingProject.start_date }}</b></h4> 
+                                <h4>2. End date: <b> {{briefingProject.end_date }}</b></h4>
+                                <h4>3. Reporting date place: <b>{{briefingProject.reporting_date }}</b></h4>
+                                <h4>4. Background:</h4> 
+                                <div class="row tbl-fixed">
+                                    <table class="table responsible" style="width:100%">  
+                                        <thead>
+                                            <tr>
+                                                <th>Subject </th>
+                                                <th>Specific topic </th>
+                                                <th>Activities accomplished last period</th>
+                                                <th>Activities planned current month</th>
+                                                <th>Output</th>
+                                                <th>Kpi</th>
+                                                <th>Comments</th>
+                                            </tr>                                    
+                                        </thead>
+                                        {% for briefingProject in briefingProjects %}
+                                        <tbody>             
+                                            <tr>
+                                                <td>{{briefingProject.briefingProject_background__subject_background}}</td>
+                                                <td>{{briefingProject.briefingProject_background__specific_topic}}</td>
+                                                <td>{{briefingProject.briefingProject_background__accomplished_last_period}}</td>
+                                                <td>{{briefingProject.briefingProject_background__planned_next_steps}}</td>
+                                                <td>{{briefingProject.briefingProject_background__output__output_code}}</td>
+                                                <td>{{briefingProject.briefingProject_background__kpi__kpi_code}}</td>
+                                                <td>{{briefingProject.briefingProject_background__comment_background}}</td>
+                                            </tr>
+                                        </tbody>
+                                        {% endfor %}
+                                    </table>
+
+                                </div>
+                              
                             </div>
                             <!-- Table row -->
                         </article>
+
+                        {% comment "" %}
 
 
                         <ul class="pagination justify-content-center my-5">
@@ -99,6 +129,7 @@
                               </li>
                             {% endif %}
                           </ul>
+                          {% endcomment %}
 
                           {% comment "" %}
 
@@ -129,7 +160,11 @@
                         {% endcomment %}
                         <div class="row">
                             <div class="col-md-6">
+                                <a class="btn btn-success" href="{% url 'export_briefing_page' briefingProject.pk %}"><i class="fa-list-ol"></i> Export to Excel</a>
+                                {% comment "" %}
+
                                 <a class="btn btn-success" href="export_briefing_page/{{briefingProject.pk}}"><i class="fa-list-ol"></i> Export to Excel</a>
+                                {% endcomment %}
                             </div>
                             <div class="col-md-3">
                                 <button class="btn btn-info" onclick="window.print();"><i class="fa fa-print"></i> Print</button>    

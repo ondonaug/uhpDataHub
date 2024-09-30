@@ -1,162 +1,202 @@
-{% extends "base_view.html" %}
+{% extends "cover/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
 {% block content %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+
+<style>
+  .tbl-container{
+      max-width:fit-content;
+      max-height:fit-content;
+  }
+  .tbl-fixed{
+      overflow-x: scroll;
+      overflow-y: scroll;
+      height: fit-content;
+      max-height:70vh;
+      margin-top: 40px;
+  }
+  table tr:hover{
+      background-color: #ddd;
+  }
+  table th{
+      position:sticky;
+      top:0px;
+      background-color: #04AA6D;
+      color: white;
+  }
+</style>
+  
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+      <aside class="right-side">
+        {% if user.is_authenticated %} 
+
+        <div class="container tbl-container" style="width: 190rem;">
+          
+              <section class="content-header">
+                  <h3>
+                      Add, view and edit the <code><b>Risk Identification Register</b></code> 
+                      {% for message in messages %}
+                      <small><code>{{ message }}</code></small>
+                      {% endfor %}
+                  </h3>
+
+                  <div class="row">
+                    <div class="col-lg-8 col-md-8 col-8">
+                      <ol class="breadcrumb">
+                        <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                        <li><a href="/risk_report">Risk register by unit</a></li>
+                        <li><a href="export_to_excel_riskRegister/{{by_unit}}/{{end_date}}"><i class="fa fa-download"></i> Export unit's to Excel</a></li>
+                        <li><a href="{% url 'export_risk_to_excel' %}"><i class="fa fa-table"></i> Export All to Excel</a></li>
+                        <li class="active">Create Risk name</li>
+                    </ol>
     
-    {% if user.is_authenticated %}  
-   <div class="container tbl-container" style="width: 190rem;">
-        <div class="row">
-            <div class="col-sm-8">
-                <h2 class="text-left caption">
-                    {% for message in messages %}
-                    <small><code>{{ message }}</code></small>
-                    {% endfor %}
-                </h2>
-            </div>
-        </div>
-        <section class="content-header">
-            <h3>
-                Add, view and edit <b>the Risk Identification Register</b>
-                <small>Planned</small>
-            </h3>
-            <ol class="breadcrumb">
-                <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li><a href="/risk_report">Risk register by unit</a></li>
-                <li><a href="export_to_excel_riskRegister/{{by_unit}}/{{end_date}}"><i class="fa fa-download"></i> Export unit's to Excel</a></li>
-                <li><a href="{% url 'export_risk_to_excel' %}"><i class="fa fa-table"></i> Export All to Excel</a></li>
-                <li class="active">Create Risk name</li>
-            </ol>
-        </section>
-        <hr>
-        <div class="row">
-          <div class="col-xs-12 col-sm-8"> 
-            <form method="GET">
-                {% csrf_token %}
-                <div class="input-group margin-bottom-sm">
-                    <div class="row">
-                        <div class="col-md-10"><input class="form-control" name="risk_name" type="text" placeholder="Search here risk name"></div>
-                        <div class="col-md-2"><button type="submit" class="btn btn-success">
-                            <i class="fa fa-search fa-fw"></i>
-                        </button></div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-4">
+                        <form method="GET">
+                            {% csrf_token %}
+                            <div class="input-group margin-bottom-sm">
+                                <div class="row">
+                                  <div class="col-md-10"><input class="form-control" name="risk_name" type="text" placeholder="Search here risk name"></div>
+                                    <div class="col-md-2"><button type="submit" class="btn btn-success">
+                                        <i class="fa fa-search fa-fw"></i>
+                                    </button></div>
+
+                                    
+                                </div>
+                            </div>
+                        </form>
+    
                     </div>
                 </div>
-            </form>
-          </div>
-          <div class="col-xs-12 col-sm-4"> 
-            <form method="GET" action="{% url 'risk_register' %}">
-                {{form_unit.as_p}}
-                <button class="btn btn-success">Fiter the unit's workplan <i class="fa fa-download"></i></a></button>
-            </form> 
-          </div> 
-        </div> 
-    <div class="row tbl-fixed">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12"> 
+                        <form method="GET" action="{% url 'risk_register' %}">
+                            {% csrf_token %}
+                            <div class="form-group col-md-4 mb-0">
+                              <div class="input-group">
+                                <div class="input-group-addon">
+                                  Please select<code><b> unit: </b></code>
+                                </div>
+                                {% render_field form_unit.by_unit class+="form-control" placeholder=form_unit.by_unit.label %}
+                            </div><!-- /.input group -->
+                            
+                            
+                            </div>
+                            <div class="form-group col-md-4 mb-0">
+                              <!-- Date dd/mm/yyyy -->
+                                  <div class="input-group">
+                                      <div class="input-group-addon">
+                                          Completion date:<code><b>(mm/dd/yyyy)</b></code>
+                                      </div>
+                                      <input type="date" name="end" id="end" class="form-control" data-inputmask="'alias': 'mm/dd/yyyy'" data-mask required/>
+                                  </div><!-- /.input group -->
+                          </div> <!-- /.form group -->
+                          {% comment "" %}
+                             {{form_unit.as_p}}
+                              {% endcomment %}
+                              <div class="col-lg-4 col-md-4 col-4">
+                                  <button class="btn btn-success">Filter the unit's workplan <i class="fa fa-download"></i></a></button>
+                              </div>
+                        </form> 
+                    </div> 
+                </div>
+              
+    
+                  <div class="row tbl-fixed">
+                      <table class="table responsive table-condensed" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">
+                        <form method="POST" action="{% url 'risk_register' %}">
+                          {% csrf_token %}
+                              <tr>
+                                  <th>Unit</th>
+                                  <th>Top task</th>
+                                  <th>Risk identification</th>
+                                  <th>Cause</th>
+                                  <th>Risk consequence</th>
+                                  <th>Risk Category</th>
+                                  <th>Risk Status</th>
+                                  <th>Probability of Risk Occurings</th>
+                                  <th>Risk Impact Rating</th>
+                                  <th>Risk Criticality</th>
+                                  <th>Response Decision</th>
+                                  <th>Risk Response Plan</th>
+                                  <th>Budget Implication</th>
+                                  <th>Response Date</th>
+                                  <th>Review of Existing Response Plans</th>
+                                  <th>Comment</th>
+                                  <th>Responsible Person</th>
+                                  <th>Monitoring percent</th>
+                                  <th>After preventive actions</th>
+                              </tr>
+                              {% if not form.instance.id %}
+                              <tr> 
+                                  {% include 'pages/riskRegister/risk_identification_save.html' %}
+                              </tr>
+                              {% endif %}
+                          {% for riskIdentification in riskIdentifications %}
+                              <tr>
+                                  {% if form.instance.id == riskIdentification.id %}
+                                  {% include 'pages/riskRegister/risk_identification_save.html' %}
+                                  {% else %} 
+                                  <td>{{riskIdentification.unit}}</td>
+                                  <td>{{riskIdentification.toptask}}</td>
+                                  <td>{{riskIdentification.risk_name}}</td>
+                                  <td>{{riskIdentification.risk_cause}}</td>
+                                  <td>{{riskIdentification.risk_impact}}</td>
+                                  <td>{{riskIdentification.risk_category}}</td>
+                                  <td>{{riskIdentification.risk_status}}</td>
+                                  <td>{{riskIdentification.risk_occuring}}</td>
+                                  <td>{{riskIdentification.risk_rating}}</td>
+                                  <td>{{riskIdentification.risk_criticality}}</td>
+                                  <td>{{riskIdentification.response_decision}}</td>
+                                  <td>{{riskIdentification.risk_action}}</td>
+                                  <td>{{riskIdentification.budget}}</td>
+                                  <td>{{riskIdentification.response_date}}</td>
+                                  <td>{{riskIdentification.review_plan}}</td>
+                                  <td>{{riskIdentification.comments}}</td>
+                                  <td>{{riskIdentification.responsible}}</td>
+                                  <td>{{riskIdentification.monitoring}}</td> 
+                                  <td>{{riskIdentification.risk_criticality_after}}</td> 
+                                  <td><button formnovalidate name="edit" value="{{riskIdentification.id}}" class="btn btn-primary btn-sm">Edit</button></td>
+                                  <td><button formnovalidate name="delete" value="{{riskIdentification.id}}" class="btn btn-warning btn-sm">delete</button></td>
+                                  {% endif %}
+                              </tr>
+                          {% endfor %} 
+                  </form>
+                        </table>
+                      
+                    </div>
+                  </div>  
 
-        <table>
-            <form method="POST" action="{% url 'risk_register' %}">
-                {% csrf_token %}
-                    <tr>
-                        <th>Unit</th>
-                        <th>Top task</th>
-                        <th>Risk identification</th>
-                        <th>Cause</th>
-                        <th>Risk consequence</th>
-                        <th>Risk Category</th>
-                        <th>Risk Status</th>
-                        <th>Probability of Risk Occurings</th>
-                        <th>Risk Impact Rating</th>
-                        <th>Risk Criticality</th>
-                        <th>Response Decision</th>
-                        <th>Risk Response Plan</th>
-                        <th>Budget Implication</th>
-                        <th>Response Date</th>
-                        <th>Review of Existing Response Plans</th>
-                        <th>Comment</th>
-                        <th>Responsible Person</th>
-                        <th>Monitoring percent</th>
-                        <th>After preventive actions</th>
-                    </tr>
-                    {% if not form.instance.id %}
-                    <tr> 
-                        {% include 'pages/riskRegister/risk_identification_save.html' %}
-                    </tr>
-                    {% endif %}
-                {% for riskIdentification in riskIdentifications %}
-                    <tr>
-                        {% if form.instance.id == riskIdentification.id %}
-                        {% include 'pages/riskRegister/risk_identification_save.html' %}
-                        {% else %} 
-                        <td>{{riskIdentification.unit}}</td>
-                        <td>{{riskIdentification.toptask}}</td>
-                        <td>{{riskIdentification.risk_name}}</td>
-                        <td>{{riskIdentification.risk_cause}}</td>
-                        <td>{{riskIdentification.risk_impact}}</td>
-                        <td>{{riskIdentification.risk_category}}</td>
-                        <td>{{riskIdentification.risk_status}}</td>
-                        <td>{{riskIdentification.risk_occuring}}</td>
-                        <td>{{riskIdentification.risk_rating}}</td>
-                        <td>{{riskIdentification.risk_criticality}}</td>
-                        <td>{{riskIdentification.response_decision}}</td>
-                        <td>{{riskIdentification.risk_action}}</td>
-                        <td>{{riskIdentification.budget}}</td>
-                        <td>{{riskIdentification.response_date}}</td>
-                        <td>{{riskIdentification.review_plan}}</td>
-                        <td>{{riskIdentification.comments}}</td>
-                        <td>{{riskIdentification.responsible}}</td>
-                        <td>{{riskIdentification.monitoring}}</td> 
-                        <td>{{riskIdentification.risk_criticality_after}}</td> 
-                        <td><button formnovalidate name="edit" value="{{riskIdentification.id}}" class="btn btn-primary btn-sm">Edit</button></td>
-                        <td><button formnovalidate name="delete" value="{{riskIdentification.id}}" class="btn btn-warning btn-sm">delete</button></td>
-                        {% endif %}
-                    </tr>
-                {% endfor %} 
-        </form>
-        </table>
-        {% comment %}
-        <ul class="pagination justify-content-center my-5">
-            {% if riskIdentifications.has_previous %}
-            <!-- 'First' and 'Previous' Buttons -->
-              <li class="page-item">
-                <a class="page-link" href="?page=1">|&lt; First</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="?page={{ riskIdentifications.previous_page_number }}">&lt; Previous</a>
-              </li>
-            {% endif %}
-          
-            <!-- Numbered Buttons -->
-            {% for page in paginator.page_range %}
-              {% if riskIdentifications.number == page %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
-                </li>
-              {% elif page > riskIdentifications.number|add:'-3' and page < riskIdentifications.number|add:'3' %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          
-            <!-- 'Next' and 'Last' Buttons -->
-            {% if riskIdentifications.has_next %}
-              <li class="page-item">
-                <a class="page-link" 
-                  href="?page={{ riskIdentifications.next_page_number }}">Next &gt;</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="?page={{ riskIdentifications.paginator.num_pages }}">Last &gt;|</a>
-            </li>
-            {% endif %}
-        </ul>
-      {% endcomment %}
+              </section>
+          {% else %}
+          <section>
+              <p style="position: center;">
+                  We could not find the page you were looking for. 
+                  Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
+              </p>
+          </section>  
+        </div>
+     
 
-      </div> 
-    </div>
-    {% else %}
-    <section>
-        <p style="position: center;">
-            We could not find the page you were looking for. 
-            Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
-        </p>
-    </section>   
     {% endif %}
+  </aside><!-- /.right-side -->
+</div>
+
+ 
+
+
+
+
+
+
+
+
+
+
 
 
 

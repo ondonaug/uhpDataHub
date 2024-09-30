@@ -1,141 +1,126 @@
-{% extends "base.html" %}
+{% extends "base_view.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
 {% load crispy_forms_field %}
 
 {% block content %}
-<div class="wrapper row-offcanvas row-offcanvas-left">
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+
+<style>
+    .tbl-container{
+        max-width:fit-content;
+        max-height:fit-content;
+    }
+    .tbl-fixed{
+        overflow-x: scroll;
+        overflow-y: scroll;
+        height: fit-content;
+        max-height:70vh;
+        margin-top: 40px;i
+    }
+    table tr:hover{
+        background-color: #ddd;
+    }
+    table th{
+        position:sticky;
+        top:0px;
+        background-color: #04AA6D;
+        color: white;
+    }
+  </style>
+
+
+  <div class="wrapper row-offcanvas row-offcanvas-left">
     <!-- Left side column. contains the logo and sidebar -->
 
     <!-- Right side column. Contains the navbar and content of the page -->
     <aside class="right-side">
+       
+    <div class="container tbl-container" id="my-workplans-table-container" style="width: 185rem;">
         {% if user.is_authenticated %}
-   <div class="container" id="my-workplans-table-container" style="width: 160rem;">
-       
-        <div class="row">
-            <div class="col-sm-8">
-                <h2 class="text-left caption">
-                    {% for message in messages %}
-                    <small><code>{{ message }}</code></small>
-                    {% endfor %}
-                </h2>
-            </div>
-        </div>
-        <section class="content-header">
-            <h3>
-                Add, view and edit <b>background for briefing note</b>
-                <small>Preview</small>
-                
-            </h3>
-            <ol class="breadcrumb">
-                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
-                <li><a href="/project_briefing">Create briefing project</a></li>
-                <li><a href="{% url 'export_all_briefing' %}">Export to Excel</a></li>
-                <li class="active">Enter background for briefing note</li>
-                <li>
-                   
-                </li>
-            </ol>
-        </section>
-        <hr>
-       
-        <form method="GET">
-          {% csrf_token %}
-          <div class="input-group margin-bottom-sm">
-              <div class="row">
-                  <div class="col-md-10"><input class="form-control" name="subject_background" type="text" placeholder="Search here subject background"></div>
-                  <div class="col-md-2"><button type="submit" class="btn btn-success">
-                      <i class="fa fa-search fa-fw"></i>
-                  </button></div>
-              </div>
-          </div>
-      </form>
+            <section class="content-header">
+                <h3>
+                Add, view and edit topics for <code><b>background for briefing note</b></code> 
+                {% for message in messages %}
+                <small><code>{{ message }}</code></small>
+                {% endfor %}               
+                </h3>
+                <div class="row">
+                <div class="col-lg-8 col-md-8 col-8">
+                    <ol class="breadcrumb">
+                    <li><a href="/"><i class="fa fa-dashboard"></i> Cover page</a></li>
+                    <li><a href="/project_briefing"><i class="fa fa-file-text-o"></i> Create briefing project</a></li>
+                    <li><a href="{% url 'export_all_briefing' %}"><i class="fa fa-download"></i> Export to Excel</a></li>
+                    <li class="active">Enter background for briefing note</li>
+                </ol>
+                </div>
+                <div class="col-lg-4 col-md-4 col-4">
+                    <form method="GET">
+                        {% csrf_token %}
+                        <div class="input-group margin-bottom-sm">
+                            <div class="row">
+                                <div class="col-md-10"><input class="form-control" name="subject_background" type="text" placeholder="Search here subject background"></div>
+                                <div class="col-md-2"><button type="submit" class="btn btn-success">
+                                    <i class="fa fa-search fa-fw"></i>
+                                </button></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                </div>
 
-      <br>
-        <table class="table responsive" id="myWorkplansTable1" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">
-            <form method="POST" action="{% url 'index_briefing' %}">
-                {% csrf_token %}
-                    <tr>
-                        <th>briefingProject</th>
-                        <th>Subject</th>
-                        <th>Specific topic</th>
-                        <th>Activities accomplished last period</th>
-                        <th>Activities planned current month</th>
-                        <th>output</th>
-                        <th>kpi</th>
-                        <th>Comment</th>
-                    </tr>
-                    {% if not form.instance.id %}
-                    <tr> 
-                        {% include 'pages/briefing/briefing_dataset_save.html' %}
-                    </tr>
-                    {% endif %}
-                {% for briefingBackground in briefingBackgrounds %}
-                    <tr>
-                        {% if form.instance.id == briefingBackground.id %}
-                        {% include 'pages/briefing/briefing_dataset_save.html' %}
-                        {% else %} 
-                        <td>{{briefingBackground.briefingProject.briefing_title}}</td>
-                        <td>{{briefingBackground.subject_background}}</td>
-                        <td>{{briefingBackground.specific_topic}}</td>
-                        <td>{{briefingBackground.accomplished_last_period}}</td>
-                        <td>{{briefingBackground.planned_next_steps}}</td>
-                        <td>{% for outputList in briefingBackground.output.all %}{{ outputList }} {% endfor %}</td>
-                        <td>{% for kpiList in briefingBackground.kpi.all %}{{ kpiList }} {% endfor %}</td>
-                        <td>{{briefingBackground.comment_background}}</td>
-                        <td><button formnovalidate name="edit" value="{{briefingBackground.id}}" class="btn btn-primary btn-sm">Edit</button></td>
-                        <td><button formnovalidate name="delete" value="{{briefingBackground.id}}" class="btn btn-warning btn-sm">delete</button></td>
+            </section>
+            <div class="row tbl-fixed">
+            <table class="table responsive" id="myWorkplansTable1" style="width:100%"  data-toggle="table" data-pagination="true" data-search="true">
+                <form method="POST" action="{% url 'index_briefing' %}">
+                    {% csrf_token %}
+                        <tr>
+                            <th>briefingProject</th>
+                            <th>Subject</th>
+                            <th>Specific topic</th>
+                            <th>Activities accomplished last period</th>
+                            <th>Activities planned current month</th>
+                            <th>output</th>
+                            <th>kpi</th>
+                            <th>Comment</th>
+                        </tr>
+                        {% if not form.instance.id %}
+                        <tr> 
+                            {% include 'pages/briefing/briefing_dataset_save.html' %}
+                        </tr>
                         {% endif %}
-                    </tr>
-                {% endfor %} 
-        </form>
-        </table>
-
-        <ul class="pagination justify-content-center my-5">
-            {% if briefingBackgrounds.has_previous %}
-            <!-- 'First' and 'Previous' Buttons -->
-              <li class="page-item">
-                <a class="page-link" href="?page=1">|&lt; First</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="?page={{ briefingBackgrounds.previous_page_number }}">&lt; Previous</a>
-              </li>
-            {% endif %}
-          
-            <!-- Numbered Buttons -->
-            {% for page in paginator.page_range %}
-              {% if briefingBackgrounds.number == page %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ page }}"><strong><u>{{ page }}</u></strong></a>
-                </li>
-              {% elif page > briefingBackgrounds.number|add:'-3' and page < briefingBackgrounds.number|add:'3' %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          
-            <!-- 'Next' and 'Last' Buttons -->
-            {% if briefingBackgrounds.has_next %}
-              <li class="page-item">
-                <a class="page-link" 
-                  href="?page={{ briefingBackgrounds.next_page_number }}">Next &gt;</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="?page={{ briefingBackgrounds.paginator.num_pages }}">Last &gt;|</a>
-              </li>
-            {% endif %}
-          </ul>
-    </div>
-    {% else %}
-    <section>
-        <p style="position: center;">
-            We could not find the page you were looking for. 
-            Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
-        </p>
-    </section>   
-    {% endif %}
+                    {% for briefingBackground in briefingBackgrounds %}
+                        <tr>
+                            {% if form.instance.id == briefingBackground.id %}
+                            {% include 'pages/briefing/briefing_dataset_save.html' %}
+                            {% else %} 
+                            <td>{{briefingBackground.briefingProject.briefing_title}}</td>
+                            <td>{{briefingBackground.subject_background}}</td>
+                            <td>{{briefingBackground.specific_topic}}</td>
+                            <td>{{briefingBackground.accomplished_last_period}}</td>
+                            <td>{{briefingBackground.planned_next_steps}}</td>
+                            <td>{% for outputList in briefingBackground.output.all %}{{ outputList }} {% endfor %}</td>
+                            <td>{% for kpiList in briefingBackground.kpi.all %}{{ kpiList }} {% endfor %}</td>
+                            <td>{{briefingBackground.comment_background}}</td>
+                            <td><button formnovalidate name="edit" value="{{briefingBackground.id}}" class="btn btn-primary btn-sm">Edit</button></td>
+                            <td><button formnovalidate name="delete" value="{{briefingBackground.id}}" class="btn btn-warning btn-sm">delete</button></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %} 
+                </form>
+            </table>      
+            </div>
+    
+        {% else %}
+            <section>
+                <p style="position: center;">
+                    We could not find the page you were looking for. 
+                    Meanwhile, you may <a href='/signin'>login with your account</a> or <a href='/'>return to home page</a>.
+                </p>
+            </section>  
+            </div>  
+        {% endif %}
 </aside><!-- /.right-side -->
 </div>
 

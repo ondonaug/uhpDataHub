@@ -23,6 +23,7 @@ urlpatterns = [
     path('add_subscribers', views.add_subscribers, name ='add_subscribers'),
     path('edit_subscribers/<int:pk>', views.edit_subscribers, name = 'edit_subscribers'),
     path('delete_subscribers/<int:pk>', views.delete_subscribers, name = 'delete_subscribers'),
+   # path('newsletter_add', views.newsletter_add, name ='newsletter_add'),
         
     # For DASHBOARD VIEW 
     path('dashboard', views.dashboard, name = 'dashboard'),

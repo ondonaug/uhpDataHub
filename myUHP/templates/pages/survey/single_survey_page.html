@@ -1,11 +1,12 @@
 
-{% extends "base.html" %}
+{% extends "cover/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
 {% load crispy_forms_field %}
 
 {% block content %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
         <main>
             <div class="container">
                 <div class="row">
@@ -16,9 +17,9 @@
                             <!-- title row -->
             <div class="row">
                 <div class="col-xs-12">
-                    <h2 class="page-header">
-                        <i class="fa fa-list-ol"></i> Survey with Dataset submitted
-                    </h2>                            
+                    <h3 class="page-header">
+                        <i class="fa fa-list-ol"></i> <code>Survey</code> with Dataset submitted
+                    </h3>                            
                 </div><!-- /.col -->
             </div>
                             <p>{{message}}</p>
@@ -28,10 +29,10 @@
                               <h4><strong>{{surveyProject.title_surv }}</strong></h4> 
                             </div>
                             <div class="alert">
-                                <h3>1. Organization responsible for the survey:<b>{{surveyProject.responsible }}</b></h3> 
-                                <h3>2. Date of the survey: <b> From {{surveyProject.start_date }} To {{surveyProject.end_date }}</b></h3>
-                                <h3>3. Survey location: <b>{{surveyProject.location_survey }}</b></h3>
-                                <h3>4. Data value:</h3> 
+                                <h5>1. Survey author:<b>{{surveyProject.responsible }}</b></h5> 
+                                <h5>2. Date of the survey: <b> From {{surveyProject.start_date }} To {{surveyProject.end_date }}</b></h5>
+                                <h5>3. Survey location: <b>{{surveyProject.location_survey }}</b></h5>
+                                <h5>4. Survey data:</h5> 
                                 <table class="table responsible" style="width:100%">  
                                     <thead>
                                         <tr>

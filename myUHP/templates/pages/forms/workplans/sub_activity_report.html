@@ -1,5 +1,5 @@
 
-{% extends "base.html" %}
+{% extends "cover/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<link href="{% static 'css/myStyle/individualReport.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
 
 <div class="wrapper row-offcanvas row-offcanvas-left">
     <!-- Left side column. contains the logo and sidebar -->
@@ -21,9 +21,9 @@
                 <small>Monitoring operationnal workplan</small>
             </h3>
             <ol class="breadcrumb">
-                <li><a href="/dashboard"><i class="fa fa-dashboard"></i>Dashboard</a></li>
-                <li><a href="/workplans">Enter sub activity</a></li>
-                <li class="active">Report</li>
+                <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li><a href="/workplans"> Enter sub activity</a></li>
+                <li class="active"> Report</li>
             </ol>
         </section>
 
@@ -47,9 +47,9 @@
 
             {% for unit in units %}
             <div class="col-sm-4 text-center">
-                  <h3><a href="single_sub_activity_page/{{unit.unit_code}}"><strong>{{unit.unit_description}}</strong>
+                  <h4><a href="single_sub_activity_page/{{unit.unit_code}}"><strong>{{unit.unit_description}}</strong>
                     
-                </a></h3>
+                </a></h4>
                 <img src="{% static 'images/demo/afro.png' %}" height="40%" width="40%" alt="...">
                 <button class="btn btn-sm btn-primary"><a href="subActivities_doc_report/{{unit.unit_code}}" style="color:#ffffff;">Generate document <i class="fa fa-download"></i></a></button>
                   {% comment "" %}

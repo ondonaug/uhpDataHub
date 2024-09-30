@@ -24,21 +24,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-yp@yq=yq8^s3uu^nrgq47_jgtckb4i4^rps66)8bi0%_3&#5yc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-#ALLOWED_HOSTS = ['*'] # For local 
-ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net/'] # For deployement
+ALLOWED_HOSTS = ['*'] # For local 
+#CSRF_TRUSTED_ORIGINS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net']
+#ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net'] # For deployement
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+   # 'django_static_jquery',
     'myUHP.apps.MyuhpConfig',
     'crispy_bootstrap4',
     'crispy_forms',
@@ -86,36 +89,35 @@ WSGI_APPLICATION = 'uhpDataBase.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#    #    'ENGINE': 'django.db.backends.sqlite3',
-#     #   'NAME': BASE_DIR / 'db.sqlite3',
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'uhpdatabase',
-#         'USER':'root',
-#         'PASSWORD':'afrouhp2024',
-#         'PORT':3306,
-#         'POST':'127.0.0.1',
-#    }
-#}
-
-
-
-DATABASES={
-   'default': {
-        'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'uhpcdb-database',
-         'USER':'ylpmjzzgdo',
-         'PASSWORD':'$cGy4BjroDQMMmPn',
-         'HOST':'uhpcdb-server.mysql.database.azure.com',
+DATABASES = {
+    'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+     #   'NAME': BASE_DIR / 'db.sqlite3',
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': 'uhpdatabase',
+         'USER':'root',
+         'PASSWORD':'afrouhp2024',
          'PORT':3306,
-         'OPTION':{
-                'init_command':"SET sql_mode=STICT_TRANS_TABLES"
-           }
+         'POST':'127.0.0.1',
     }
 }
 
 
+
+#DATABASES = {
+ #   'default': {
+
+ #        'ENGINE': 'django.db.backends.mysql',
+ #        'NAME': 'uhpdatabase',
+ #        'USER':'ylpmjzzgdo',
+ #        'PASSWORD':'$cGy4BjroDQMMmPn',
+ #        'HOST':'uhpcdb-server.mysql.database.azure.com',
+ #        'PORT':3306,
+ #        'OPTION':{
+ #               'init_command':"SET sql_mode=STICT_TRANS_TABLES"
+ #          }
+ #   }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -156,8 +158,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # for deploy use staticfiles
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # for deploy use static
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')] # for deploy use staticfiles
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') # for deploy use static
 
 
 AUTO_LOGOUT = {'IDLE_TIME': 1200, 'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
@@ -171,3 +173,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DYNAMIC_DATATB={
     'workplans':"app.models.Operworkplan",
 }
+
+

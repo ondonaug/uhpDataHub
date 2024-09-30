@@ -32,11 +32,15 @@
         <link href="{% static 'css/myStyle/modalStyle.css' %}" rel="stylesheet" type="text/css" />
          <!-- DATA TABLES -->
         <link href="{% static 'css/datatables/dataTables.bootstrap.css' %}" rel="stylesheet" type="text/css" />
+        
+        <!--
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+       
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap.min.css">
-        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap.min.css'>      
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap.min.css'>  
+        -->    
         <style>
             .tbl-container{
                 max-width:fit-content;
@@ -49,6 +53,8 @@
                 max-height:70vh;
                 margin-top: 40px;
             }
+          
+
             table th{
                 position:sticky;
                 top:0px;
@@ -344,6 +350,7 @@
                         </div>
                     </div>
                     <!-- search form -->
+                     {% comment "" %}
                     <form action="#" method="get" class="sidebar-form">
                         <div class="input-group">
                             <input type="text" name="q" class="form-control" placeholder="Search..."/>
@@ -352,6 +359,7 @@
                             </span>
                         </div>
                     </form>
+                    {% endcomment %}
                     <!-- /.search form -->
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
@@ -408,6 +416,7 @@
                                 <li><a href="/index_report"><i class="fa fa-angle-double-right"></i>Report dataset</a></li>
                             </ul>
                         </li>
+                        {% comment "" %}
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-edit"></i> <span>Individual report</span>
@@ -418,6 +427,7 @@
                                 <li><a href="/indiv_report"><i class="fa fa-angle-double-right"></i>Summary</a></li>
                             </ul>
                         </li>
+                        {% endcomment %}
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-table"></i> <span>Settings</span>
@@ -461,12 +471,14 @@
                                 <li><a href="/risk_report"><i class="fa fa-angle-double-right"></i>Risk report</a></li>
                             </ul>
                         </li>
+                        {% comment "" %}
                         <li>
                             <a href="/events">
                                 <i class="fa fa-calendar"></i> <span>Events calendar</span>
                               <!--<small class="badge pull-right bg-red">3</small> -->  
                             </a>
                         </li>
+                        {% endcomment %}
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-folder"></i> <span>Newsletter</span>
@@ -496,15 +508,22 @@
           
           </div><!-- ./wrapper -->
         <!-- add new calendar event modal -->
+{% block js_block %}
 
-        <!-- jQuery 2.0.2 -->
+
+        <!-- jQuery 2.0.2 
+        
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        -->
+        <script src="{% static 'static_jquery/js/jquery.min.js' %}" type="text/javascript"></script>  
+
         <!-- jQuery UI 1.10.3 -->
         <script src="{% static 'js/jquery-ui-1.10.3.min.js' %}" type="text/javascript"></script>
         <!-- Bootstrap -->
         <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript"></script>
-        <!-- Morris.js charts -->
+        <!-- Morris.js charts
         <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+         -->
         <script src="{% static 'js/plugins/morris/morris.min.js' %}" type="text/javascript"></script>
         <!-- Sparkline -->
         <script src="{% static 'js/plugins/sparkline/jquery.sparkline.min.js' %}" type="text/javascript"></script>
@@ -522,9 +541,10 @@
         <!-- iCheck -->
         <script src="{% static 'js/plugins/iCheck/icheck.min.js' %}" type="text/javascript"></script>
         <!-- AdminLTE App -->
-        <script src="{% static 'js/AdminLTE/app.js' %}" type="text/javascript"></script>         
+        <script src="{% static 'coverStyle/js/AdminLTE/app.js' %}" type="text/javascript"></script>         
         <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-        <script src="{% static 'js/AdminLTE/dashboard.js' %}" type="text/javascript"></script>    
+        <script src="{% static 'coverStyle/js/AdminLTE/dashboard.js' %}" type="text/javascript"></script>    
+        
         <!-- DATA TABES SCRIPT 
         <script src="{% static 'js/plugins/datatables/jquery.dataTables.js' %}" type="text/javascript"></script>
         <script src="{% static 'js/plugins/datatables/dataTables.bootstrap.js' %}" type="text/javascript"></script>
@@ -534,11 +554,12 @@
         <script src="{% static 'js/chart.min.js' %}" type="text/javascript"></script>
         <script src="{% static 'js/chart.js' %}" type="text/javascript"></script>
 
-        <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap.min.js"></script>
+       
         <script src="{% static 'js/dialog.js' %}"></script>
       
         <!--<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+         <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>-->
 
         <script src="{% static 'js/plugins/ckeditor/ckeditor.js' %}" type="text/javascript"></script>
@@ -548,7 +569,7 @@
         <script src="{% static 'js/plugins/input-mask/jquery.inputmask.date.extensions.js' %}" type="text/javascript"></script>
         <script src="{% static 'js/plugins/input-mask/jquery.inputmask.extensions.js' %}" type="text/javascript"></script>
         <!-- date-range-picker -->
-        <script src="{% static 's/plugins/daterangepicker/daterangepicker.js' %}" type="text/javascript"></script>
+        <script src="{% static 'js/plugins/daterangepicker/daterangepicker.js' %}" type="text/javascript"></script>
         <!-- bootstrap color picker -->
         <script src="{% static 'js/plugins/colorpicker/bootstrap-colorpicker.min.js' %}" type="text/javascript"></script>
         <!-- bootstrap time picker -->
@@ -578,7 +599,7 @@
         $("#completionDate").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
     });
         </script>
-
+{% endblock %} 
         {{ redirect_to_login_immediately }} <!-- Django auto logout (3)-->
 
       </body>
