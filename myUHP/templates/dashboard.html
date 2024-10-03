@@ -1,4 +1,4 @@
-{% extends "base_view.html" %}
+{% extends "cover/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
@@ -6,6 +6,9 @@
 {% block content %}
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
 <link href="{% static 'css/myStyle/modalStyle.css' %}" rel="stylesheet" type="text/css" />
+ <!-- Ionicons -->
+<link href="{% static 'css/ionicons.min.css' %}" rel="stylesheet" type="text/css" />
+ <!-- Theme style -->
 <link href="{% static 'css/AdminLTE.css' %}" rel="stylesheet" type="text/css" />
 
 <div class="wrapper row-offcanvas row-offcanvas-left">
@@ -14,14 +17,17 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h3>
+                <br>
                 <strong>Performance monitoring of UHP workplan</strong>
-                <small>Dashboard Jan-Dec.2024</small>
+                <small>Dashboard</small>
             </h3>
+            {% comment "" %}
             <ol class="breadcrumb">
                 <li><a href="/"><i class="fa fa-dribbble"></i> Home</a></li>
                 <li><a href="{% url 'pdf' %}"><i class="fa fa-download"></i> Generate pdf</a></li>
                 <li class="active">Dashboard</li>
             </ol>
+            {% endcomment %}
         </section>
         <!-- Main content -->
         <section class="content">
@@ -34,9 +40,9 @@
                             <h3>
                                 {{vbox_totalSubActivity}}           
                             </h3>
-                            <p>
+                            <h4>
                                 Total sub-activit{{vbox_totalSubActivity|pluralize:"ies"}}  
-                            </p>
+                            </h4>
                         </div>
                         <!--
                         <div class="icon">
@@ -55,9 +61,9 @@
                             <h3>
                                 {{vbox_completed}}<sup style="font-size: 20px"> [{{vbox_completedPercent|floatformat:1 }}%]</sup>
                             </h3>
-                            <p>
+                            <h4>
                                 Completed
-                            </p>
+                            </h4>
                         </div>
                         <!--
                         <div class="icon">
@@ -75,9 +81,9 @@
                             <h3>
                                 {{vbox_onTrack}}<sup style="font-size: 20px"> [{{vbox_onTrackPercent|floatformat:1}}%]</sup>
                             </h3>
-                            <p>
+                            <h4>
                                 On Track
-                            </p>
+                            </h4>
                         </div>
                         <!--
                         <div class="icon">
@@ -95,9 +101,9 @@
                             <h3>
                                 {{vbox_notStart}}<sup style="font-size: 20px"> [{{vbox_vbox_notStartPercent|floatformat:1}}%]</sup>
                             </h3>
-                            <p>
+                            <h4>
                                 Not started
-                            </p>
+                            </h4>
                         </div>
                         <!--
                         <div class="icon">
@@ -116,9 +122,9 @@
                             <h3>
                                 {{vbox_notStartIssue}}<sup style="font-size: 20px"> [{{vbox_notStartIssuePercent|floatformat:1}}%]</sup>
                             </h3>
-                            <p>
-                                Started Behind Issues
-                            </p>
+                            <h4>
+                                Stalled
+                            </h4>
                         </div>
                         <!--
                         <div class="icon">
@@ -206,7 +212,7 @@
                                         <th>Completed</th>
                                         <th>On Track</th>
                                         <th>Not started</th>
-                                        <th>Started Behind Issues</th>
+                                        <th>Stalled</th>
                                     </tr>
                                     <tbody>
                                         {% for s in tables_subactivities %}

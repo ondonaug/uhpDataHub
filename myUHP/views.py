@@ -65,9 +65,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 from .pdf import htmlTopdf
 import seaborn as sns 
-
-
 import xlwt
+
+from .decorators import group_required
 
 
 #from bokeh.plotting import figure, show
@@ -155,7 +155,7 @@ def cover_list(request):
 # add new items in cover page
 
 # Method for add new items for cover Page
-
+@permission_required('myuhp.add_feature',raise_exception=True)
 def add_items_cover_page(request):
     if request.method == "POST":
         form = CoverPageForm(request.POST)
@@ -173,6 +173,7 @@ def add_items_cover_page(request):
     return render(request, 'pages/coverPages/add_covertPageItems_modal.html', context)
 
 # Method for edit items for cover Page
+@permission_required('myuhp.change_feature',raise_exception=True)
 def edit_items_cover_page(request, pk): 
     features = Feature.objects.get(id=pk)
     form = CoverPageForm(instance=features)
@@ -188,6 +189,7 @@ def edit_items_cover_page(request, pk):
     return render(request, 'pages/coverPages/edit_covertPageItems_modal.html', {'form': form})
 
 # Method for delete items in the cover page
+@permission_required('myuhp.delete_feature',raise_exception=True)
 def delete_items_cover_page(request,pk):
     data=Feature.objects.filter(id=pk)
     data.delete()
@@ -201,32 +203,41 @@ def delete_items_cover_page(request,pk):
 
 def signup(request):
     if request.method=="POST":
-       # username=request.POST.get('username')
-        username=request.POST['username']
-        fname= request.POST['fname']
-        lname= request.POST['lname']
-        email= request.POST['email']
+        username=request.POST.get('username')
+        fname=request.POST.get('fname')
+        lname=request.POST.get('lname')
+        email=request.POST.get('email')
+       
+       
+      #  username=request.POST['username']
+      #  fname= request.POST['fname']
+      #  lname= request.POST['lname']
+      #  email= request.POST['email']
         pass1= request.POST['pass1']
         pass2= request.POST['pass2']
         
         if User.objects.filter(username = username):
             messages.error(request, "Username already exist. Please try some other username")
             #return redirect('index')
-            return render(request,'signup.html')
+           # return render(request,'signup.html')
+            return render(request,'cover/signup.html')
         
         if User.objects.filter(email = email):
-            messages.error(request, "Email address already registered")
-            return redirect('signup')
+            messages.error(request, "Email address already registered. Please try some other email")
+           # return redirect('signup')
+            return render(request,'cover/signup.html')
         
         if len(username)>10:
-            messages.error(request,"USername must be under 10 characters")
+            messages.error(request,"Username must be under 10 characters")
+            return render(request,'cover/signup.html')
             
         if pass1 != pass2:
             messages.error(request, "Passwords didn't match")
-            
+            return render(request,'cover/signup.html')
         if not username.isalnum():
             messages.error(request, "Username must be Alpha-numeric")
-            return redirect('signup')
+           # return redirect('signup')
+            return render(request,'cover/signup.html')
         
         myuser = User.objects.create_user(username, email, pass1)
         myuser.first_name = fname
@@ -234,34 +245,34 @@ def signup(request):
         myuser.is_active = False
         
         myuser.save()
-        messages.success(request, "Your Account has been successfully created.We have sent you a confirmation email, please confirm your email in oder to activate your account.")
+        messages.success(request, "Your Account has been successfully created")
         
-        # Welcome email
-        subject = "Welcome to the Datawarehouse for AFRO UHP CLUSTER"
-        message = "Hello" + myuser.first_name + "!!\n" + "Welcome to our DataWareHouse for UHP cluster \n Thank you for visiting our website \n We have also sent you a confirmation email, please confirm your email address in oder to activate your account. \n\n Thanking you \n Wilson Ondon"
-        from_email=settings.EMAIL_HOST_USER
-        to_list = [myuser.email]
-        send_mail(subject, message, from_email, to_list, fail_silently = True)
+      #  # Welcome email
+      #  subject = "Welcome to the CLUSTER AFRO UHP data center"
+      #  message = "Dear" + myuser.first_name + "!!\n" + "Welcome to the CLUSTER AFRO UHP data center \n Thank you for visiting our website \n We have also sent you a confirmation email, please confirm your email address in oder to activate your account. \n\n Thanking you \n Wilson Ondon"
+      #  from_email=settings.EMAIL_HOST_USER
+      #  to_list = [myuser.email]
+      #  send_mail(subject, message, from_email, to_list, fail_silently = True)
         
-        # Email Address Confirmation Email
-        current_site = get_current_site(request)
-        email_subject = "Confim your @ UHP - Website Login!!"
-        message2 = render_to_string('email_confirmation.html',{
-            'name':myuser.first_name,
-            'domain':current_site.domain,
-            'uid':urlsafe_base64_encode(force_bytes(myuser.pk)),
-            'token': generate_token.make_token(myuser)
-        })
-        email = EmailMessage(
-            email_subject,
-            message2,
-            settings.EMAIL_HOST_USER,
-            [myuser.email]
-        )
-        email.fail_silency = True
-        email.send()
+      #  # Email Address Confirmation Email
+      #  current_site = get_current_site(request)
+      #  email_subject = "Confim your @ UHP - Website Login!!"
+      #  message2 = render_to_string('email_confirmation.html',{
+      #      'name':myuser.first_name,
+      #      'domain':current_site.domain,
+      #      'uid':urlsafe_base64_encode(force_bytes(myuser.pk)),
+      #      'token': generate_token.make_token(myuser)
+      #  })
+      #  email = EmailMessage(
+      #      email_subject,
+      #      message2,
+      #      settings.EMAIL_HOST_USER,
+      #      [myuser.email]
+      #  )
+      #  email.fail_silency = True
+      #  email.send()
         
-        return redirect('coverPage') #   return redirect('index')
+        return redirect('signin') #   return redirect('index')
     return render(request,'cover/signup.html') # return render(request,'signup.html')
 
 def signin(request):
@@ -288,7 +299,7 @@ def signout(request):
     logout(request)
     messages.success(request, 'logged out successfully')
     
-    return redirect('index')
+    return redirect('/')
 
 def activate(request, uidb64, token):
     try:
@@ -302,10 +313,10 @@ def activate(request, uidb64, token):
            myuser.save()
            messages.success(request, "Votre compte a ete actived felicitation contecte")
           # login(request, myuser)
-           return redirect('index')
+           return redirect('/')
         else:
             messages.error(request, 'activation lost!!!!')
-            return redirect('index')
+            return redirect('/')
     return render(request, 'activate_failed.html')
 
 # CREATE VIEWS FOR SEND EMAIL TO THE NEWSLETTERS SUBSCRIBERS -------------------------
@@ -480,7 +491,7 @@ def dashboard(request, *args, **kwargs):
     #operworkplan['year']=date_col.year
       
    # completeStart=Q(statut_name__icontains='Completed')|Q(statut_name__icontains='On Track')
-   # notStart=Q(statut_name__icontains='Not Started')|Q(statut_name__icontains='Started Behind Issues')
+   # notStart=Q(statut_name__icontains='Not Started')|Q(statut_name__icontains='Stalled')
    # recently_completion=Q(statuts_operwork__completion_date__gt=timezone.now()+timezone.timedelta(days=31))
    # activity_notStart=Statutworkplan.objects.filter(notStart|recently_completion|Q(statuts_operwork__sub_activity__isnull=False)).annotate(
    #     total_statut=Count('statuts_operwork__vc_amount')).values(
@@ -624,7 +635,7 @@ def dashboard(request, *args, **kwargs):
  #       total_completed = Count('statuts_operwork__sub_activity', filter=Q(statut_name__icontains='Completed') & Q(statuts_operwork__sub_activity__isnull=False) & Q(statuts_operwork__gsmWorkplan__unit__unit_code__isnull=False)),
  #       total_OnTrack = Count('statuts_operwork__sub_activity', filter=Q(statut_name__icontains='On Track') & Q(statuts_operwork__sub_activity__isnull=False) & Q(statuts_operwork__gsmWorkplan__unit__unit_code__isnull=False)),
  #       total_Not_Started = Count('statuts_operwork__sub_activity', filter=Q(statut_name__icontains='Not Started') & Q(statuts_operwork__sub_activity__isnull=False)& Q(statuts_operwork__gsmWorkplan__unit__unit_code__isnull=False)),
- #       total_Issues = Count('statuts_operwork__sub_activity', filter=Q(statut_name__icontains='Started Behind Issues') & Q(statuts_operwork__sub_activity__isnull=False)& Q(statuts_operwork__gsmWorkplan__unit__unit_code__isnull=False))
+ #       total_Issues = Count('statuts_operwork__sub_activity', filter=Q(statut_name__icontains='Stalled') & Q(statuts_operwork__sub_activity__isnull=False)& Q(statuts_operwork__gsmWorkplan__unit__unit_code__isnull=False))
  #   ).values('statuts_operwork__gsmWorkplan__unit__unit_code','total_lowest','total_planned','total_completed','total_OnTrack','total_Not_Started','total_Issues').distinct()
    
     tables_subactivities = Units.objects.exclude(units_toptask__toptask_gsmWorkplan__lowest_task_short__isnull=True).annotate(  
@@ -633,7 +644,7 @@ def dashboard(request, *args, **kwargs):
         total_completed = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity',distinct=('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity'),  filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Completed') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
         total_OnTrack = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', distinct=('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity'), filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='On Track') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
         total_Not_Started = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity',distinct=('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity'),  filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Not Started') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
-        total_Issues = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', distinct=('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity'), filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Started Behind Issues') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False))
+        total_Issues = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', distinct=('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity'), filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Stalled') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False))
     ).values('unit_code','total_lowest','total_planned','total_completed','total_OnTrack','total_Not_Started','total_Issues').distinct()
    
       ##0012 count sub activity by Countries and statut name----------------------------------------------------
@@ -660,7 +671,7 @@ def dashboard(request, *args, **kwargs):
     
     ## Value for inbox 
     vbox_totalSubActivity = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False)).count()
-    vbox_notStartIssue = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Started Behind Issues')).count()
+    vbox_notStartIssue = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Stalled')).count()
     vbox_notStart = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Not Started')).count()
     vbox_onTrack = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='On Track')).count()
     vbox_completed = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Completed')).count()
@@ -669,32 +680,38 @@ def dashboard(request, *args, **kwargs):
     vbox_vbox_notStartPercent=(vbox_notStart/vbox_totalSubActivity)*100
     vbox_notStartIssuePercent=(vbox_notStartIssue/vbox_totalSubActivity)*100
     # VID
+    vbox_total_VID = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='VID')).count()
     vbox_completed_VID = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Completed')& Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='VID')).count()
-    vbox_completed_VIDPercent=round((vbox_completed_VID/vbox_totalSubActivity)*100,1) 
+    vbox_completed_VIDPercent=round((vbox_completed_VID/vbox_total_VID)*100,1) 
     #CHE
+    vbox_total_CHE = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='CHE')).count()
     vbox_completed_CHE = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Completed') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='CHE')).count()
     vbox_OnTrack_CHE = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='On Track') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='CHE')).count()
-    vbox_completed_CHEPercent=round(((vbox_completed_CHE+vbox_OnTrack_CHE)/vbox_totalSubActivity)*100,1) 
+    vbox_completed_CHEPercent=round(((vbox_completed_CHE+vbox_OnTrack_CHE)/vbox_total_CHE)*100,1) 
     
     # HPD
+    vbox_total_HPD = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='HPD')).count()
     vbox_completed_HPD = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Completed') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='HPD')).count()
     vbox_OnTrack_HPD = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='On Track') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='HPD')).count()
-    vbox_completed_HPDPercent=("{:0.2f}".format(((vbox_completed_HPD+vbox_OnTrack_HPD)/vbox_totalSubActivity)*100))    
+    vbox_completed_HPDPercent=("{:0.2f}".format(((vbox_completed_HPD+vbox_OnTrack_HPD)/vbox_total_HPD)*100))    
     
      # NUT
+    vbox_total_NUT = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='NUT')).count()
     vbox_completed_NUT = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Completed') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='NUT')).count()
     vbox_OnTrack_NUT = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='On Track') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='NUT')).count()
-    vbox_completed_NUTPercent=round(((vbox_completed_NUT+vbox_OnTrack_NUT)/vbox_totalSubActivity)*100,1) 
+    vbox_completed_NUTPercent=round(((vbox_completed_NUT+vbox_OnTrack_NUT)/vbox_total_NUT)*100,1) 
     
     # TNR
+    vbox_total_TNR = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='TNR')).count()
     vbox_completed_TNR = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Completed') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='TNR')).count()
     vbox_OnTrack_TNR = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='On Track') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='TNR')).count()
-    vbox_completed_TNRPercent=round(((vbox_completed_TNR+vbox_OnTrack_TNR)/vbox_totalSubActivity)*100,1) 
+    vbox_completed_TNRPercent=round(((vbox_completed_TNR+vbox_OnTrack_TNR)/vbox_total_TNR)*100,1) 
     
      # UHU
+    vbox_total_UHU = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='UHU')).count()
     vbox_completed_UHU = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='Completed') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='UHU')).count()
     vbox_OnTrack_UHU = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__icontains='On Track') & Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains='UHU')).count()
-    vbox_completed_UHUPercent=round((vbox_completed_UHU+vbox_OnTrack_UHU)/vbox_totalSubActivity*100,1) 
+    vbox_completed_UHUPercent=round((vbox_completed_UHU+vbox_OnTrack_UHU)/vbox_total_UHU*100,1) 
     
      # OUTPUT 1.1.1
     total_111 = Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statuts_operwork__gsmWorkplan__toptask__output__output_code__icontains='1.1.1')).count()
@@ -874,6 +891,7 @@ def dashboard(request, *args, **kwargs):
     return render(request, 'dashboard.html', context)
 
 # CREATE VIEWS FOR GENERAL INFO SETTING -------------------------- 
+@login_required(login_url='general_info')
 @lockdown()
 def general_info(request, *args, **kwargs):
     data = Outputworkplan.objects.all()
@@ -911,7 +929,7 @@ def general_info(request, *args, **kwargs):
     return render(request, 'pages/forms/general_info.html',context)
 
 # CREATE VIEWS FOR COUNTRY-------------------------
-@permission_required('Myuhp.view_country',raise_exception=True)
+@permission_required('myuhp.view_country',raise_exception=True)
 def countryList(request):
     if request.method == 'POST':
         form = CountryForm(request.POST)
@@ -928,7 +946,7 @@ def countryList(request):
     return render(request, 'pages/forms/general_info.html', context)
 
 # Method to update Country name
-@permission_required('Myuhp.change_country',raise_exception=True)
+@permission_required('myuhp.change_country',raise_exception=True)
 def edit_country(request, pk):
     country=Country.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -946,7 +964,7 @@ def edit_country(request, pk):
         } )
 
 # Methof to delete country name
-@permission_required('Myuhp.delete_country',raise_exception=True)
+@permission_required('myuhp.delete_country',raise_exception=True)
 def delete_country(request,pk):
     country=Country.objects.get(id=pk)
     country.delete()
@@ -954,7 +972,7 @@ def delete_country(request,pk):
     return redirect('general_info')
 
 # CREATE VIEWS FOR STATUT------------------------------
-@permission_required('Myuhp.view_statutworkplan',raise_exception=True)
+@permission_required('myuhp.view_statutworkplan',raise_exception=True)
 def statutList(request):
     if request.method == 'POST':
         form = StatutForm(request.POST)
@@ -973,7 +991,7 @@ def statutList(request):
   
   # Method to update statut rubrique
 
-@permission_required('Myuhp.change_statutworkplan',raise_exception=True)
+@permission_required('myuhp.change_statutworkplan',raise_exception=True)
 def edit_statut(request, pk):
     statutworkplan=Statutworkplan.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -991,7 +1009,7 @@ def edit_statut(request, pk):
         } )
 
 # Methof to delete statut name
-@permission_required('Myuhp.delete_statutworkplan',raise_exception=True)
+@permission_required('myuhp.delete_statutworkplan',raise_exception=True)
 def delete_statut(request,pk):
     statutworkplan=Statutworkplan.objects.get(id=pk)
     statutworkplan.delete()
@@ -999,7 +1017,7 @@ def delete_statut(request,pk):
     return redirect('general_info')
 
 # CREATE VIEWS FOR UNITS-------------------------
-@permission_required('Myuhp.add_units',raise_exception=True)
+@permission_required('myuhp.add_units',raise_exception=True)
 def add_units(request):
     if request.method == 'POST':
         form_unit = UnitsForm(request.POST)
@@ -1016,7 +1034,7 @@ def add_units(request):
     return render(request, 'pages/forms/general_info.html', context)
 
 # Edit unit
-@permission_required('Myuhp.change_units',raise_exception=True)
+@permission_required('myuhp.change_units',raise_exception=True)
 def edit_unit(request, pk):
     unit=Units.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -1034,7 +1052,7 @@ def edit_unit(request, pk):
         } )
 
 # Methof to delete Unit name
-@permission_required('Myuhp.delete_units',raise_exception=True)
+@permission_required('myuhp.delete_units',raise_exception=True)
 def delete_unit(request,pk):
     unit=Units.objects.get(id=pk)
     unit.delete()
@@ -1043,7 +1061,7 @@ def delete_unit(request,pk):
 
 # CREATE VIEWS FOR OUTPUT-----------------------------------------
 # Methof to add new output
-@permission_required('Myuhp.view_outputworkplan',raise_exception=True)
+@permission_required('myuhp.view_outputworkplan',raise_exception=True)
 def add_output(request):
     if request.method == 'POST':
         form = OutputForm(request.POST)
@@ -1060,7 +1078,7 @@ def add_output(request):
     return render(request, 'pages/forms/outputs/output_add.html', context)
 
 # Method to update output
-@permission_required('Myuhp.change_outputworkplan',raise_exception=True)
+@permission_required('myuhp.change_outputworkplan',raise_exception=True)
 def edit_output(request, pk):
     output = Outputworkplan.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -1077,7 +1095,7 @@ def edit_output(request, pk):
             'output': output
         } )
 # Methof to delete output
-@permission_required('Myuhp.delete_outputworkplan',raise_exception=True)
+@permission_required('myuhp.delete_outputworkplan',raise_exception=True)
 def delete_output(request,pk):
     output=Outputworkplan.objects.get(id=pk)
     output.delete()
@@ -1086,7 +1104,7 @@ def delete_output(request,pk):
 
 # CREATE VIEWS FOR KPI------------------------------------
 # Method to add new kpi
-@permission_required('Myuhp.add_kpi',raise_exception=True)
+@permission_required('myuhp.add_kpi',raise_exception=True)
 def add_kpi(request):
     if request.method == 'POST':
         form = KpiForm(request.POST)
@@ -1103,7 +1121,7 @@ def add_kpi(request):
     return render(request, 'pages/forms/kpi/kpi_add.html', context)
 
 # Method to update kpi
-@permission_required('Myuhp.change_kpi',raise_exception=True)
+@permission_required('myuhp.change_kpi',raise_exception=True)
 def edit_kpi(request, pk):
     kpi=Kpi.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -1121,7 +1139,7 @@ def edit_kpi(request, pk):
         } )
 
 # Method to delete kpi
-@permission_required('Myuhp.delete_kpi',raise_exception=True)
+@permission_required('myuhp.delete_kpi',raise_exception=True)
 def delete_kpi(request,pk):
     Kpi=Kpi.objects.get(id=pk)
     Kpi.delete()
@@ -1129,6 +1147,7 @@ def delete_kpi(request,pk):
     return redirect('general_info')
 
 # Method to load kpi
+@lockdown()
 def load_kpi(request):
     options_kpi = Kpi.objects.all()
     options_kpi1=options_kpi[0]
@@ -1136,7 +1155,7 @@ def load_kpi(request):
     return render(request,'pages/forms/droplists/kpi_options.html', data )
 
 #@permission_required('Myuhp.delete_KpiAchieve', raise_exception=False)
-@permission_required('Myuhp.view_kpi achieve',raise_exception=True)
+@permission_required('myuhp.view_kpi achieve',raise_exception=True)
 def kpi_achieve_index(request):
     context={}
     form_unit = SelectUnitForm(request.GET or None)
@@ -1203,7 +1222,7 @@ def kpi_achieve_index(request):
     return render(request, 'pages/forms/kpi/kpi_achieve_index.html', context)
 
 # Method for list all KPI submitted
-@permission_required('Myuhp.change_kpi achieve',raise_exception=True)
+@permission_required('myuhp.change_kpi achieve',raise_exception=True)
 def kpi_report(request):
     kpis = Kpi.objects.all().order_by("kpi_code") 
     if request.method=='GET':
@@ -1333,7 +1352,7 @@ def delete_toptask(request,pk):
 # CREATE VIEWS FOR LOWEST TASK fROM GSM WORKPLAN-------------------------------------
 
 # Method for add new lowest task
-@permission_required('Myuhp.add_gsm workplan',raise_exception=True)
+@permission_required('myuhp.add_gsmworkplan',raise_exception=True)
 def add_lowest(request):
     options_kpi = Kpi.objects.all()
     if request.method == 'POST':
@@ -1352,7 +1371,7 @@ def add_lowest(request):
     return render(request, 'pages/forms/gsm/lowest_add.html', context)
 
 # Method for update lowest task 
-@permission_required('Myuhp.change_gsm workplan',raise_exception=True)
+@permission_required('myuhp.change_gsmworkplan',raise_exception=True)
 def edit_lowest(request, pk):
     gsmWp=GsmWorkplan.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -1370,7 +1389,7 @@ def edit_lowest(request, pk):
     } )
     
 # Method for delete lowest task
-@permission_required('Myuhp.delete_gsm workplan',raise_exception=True)
+@permission_required('myuhp.delete_gsm workplan',raise_exception=True)
 def delete_lowest(request,pk):
     gsmWp=GsmWorkplan.objects.get(id=pk)
     gsmWp.delete()
@@ -1379,7 +1398,7 @@ def delete_lowest(request,pk):
 
 # CREATE VIEWS FOR SUB ACTIVITY fROM OPERATIONNAL WORKPLAN------------------------------------
 # Method for load sub activity
-@permission_required('Myuhp.view_operworkplan',raise_exception=True)
+@permission_required('myuhp.view_operworkplan',raise_exception=False)
 def sub_activity_view(request):
     form_unit = SelectUnitForm(request.GET or None)
     by_unit =  request.GET.get('by_unit')
@@ -1440,7 +1459,7 @@ class workplansView(ListView):
         return context
 
 # Method for add new sub activity
-@permission_required('Myuhp.add_operworkplan', raise_exception=True)
+@permission_required('myuhp.add_operworkplan', raise_exception=False)
 def add_new_workplan_view(request):
     if request.method == "POST":
         form = WorkplanForm(request.POST)
@@ -1462,7 +1481,7 @@ def add_new_workplan_view(request):
     return render(request, 'pages/forms/workplans/add_workplan_modal.html', context)
 
 # Method-1 for edit sub activity
-@permission_required('Myuhp.change_operworkplan', raise_exception=True)
+@permission_required('myuhp.change_operworkplan', raise_exception=True)
 def edit_workplan_view(request, pk):
     countries=Country.objects.get(pk=pk)
     operworkplan = Operworkplan.objects.get(pk=pk)
@@ -1501,7 +1520,7 @@ def edit_op_wp(request, pk):
     return render(request, 'pages/forms/workplans/workplans.html', {'form': form})
 
 # Method for delete sub activity
-@permission_required('Myuhp.delete_operworkplan', raise_exception=True)
+@permission_required('myuhp.delete_operworkplan', raise_exception=True)
 def delete_workplan_view(request,pk):
     data=Operworkplan.objects.filter(id=pk)
     data.delete()
@@ -1543,14 +1562,17 @@ def fiche_workplan(request):
 
 # Method for list all UNIT that submitted sub activity
 #@user_passes_test(is_visitors)
-@permission_required('Myuhp.view_operworkplan', raise_exception=True)
+#@permission_required('Myuhp.view_operworkplan', raise_exception=True)
+#@permission_required('myuhp.view_operworkplan')
+#@group_required('Administrative Assistance')
+@login_required
+@group_required('Technical officer')
 def sub_activity_report(request, *args, **kwargs):
     
   # units = Units.objects.filter(unit_code__istartswith='VID').prefetch_related('units_kpi','units_gsmWorkplan')
     units = Units.objects.prefetch_related('units_kpi','units_toptask').distinct()
    # units = Units.objects.prefetch_related('units_kpi','units_gsmWorkplan')\
    #     .filter(units_kpi__kpi_code='AFR KPI 1.1.1.a')
-
     
    # operworkplans = Operworkplan.objects.select_related('gsmWorkplan','country','statut_name')
     operworkplans = Operworkplan.objects.only( 'completion_date','gsmWorkplan__toptask__top_task_description').select_related('units_toptask').distinct()
@@ -1574,8 +1596,13 @@ def sub_activity_report(request, *args, **kwargs):
  #   gsmWorkplans = GsmWorkplan.objects.filter(unit_id=unit_id).all()
             
     data={'operworkplans': operworkplans, 'paginator':paginator,'gsmWorkplans':gsmWorkplans,  'units': units}
-    
+   # if request.user.groups.filter(name='Technical officer').exists():
+   # if request.user.has_perm('Myuhp.view_operworkplan'):
     return render(request, 'pages/forms/workplans/sub_activity_report.html', data)
+   # else:
+       # return render(request, 'pages/examples/403.html')
+   #     return HttpResponse('<h4> You don\'t have access to the operational plan </h4>')
+        
 
 # Method for view single Sub activityI page
 
@@ -1599,7 +1626,7 @@ def single_sub_activity_page(request,unit_code):
 # CREATE VIEW FOR INDIVIDUAL ANNUAL REPORT-----------------------------
 
 # Method for list all Individual annual report submitted
-@permission_required('Myuhp.view_individual report', raise_exception=True)
+@permission_required('myuhp.view_individualreport', raise_exception=True)
 def individual_report(request):
     individualReports = IndividualReport.objects.all().order_by("staff_name") 
     page = request.GET.get('page')
@@ -1621,7 +1648,7 @@ def individual_report(request):
     return render(request, 'pages/forms/individual_report/index_individual_report.html', data)
 
 # Method for add Individual annual report
-@permission_required('Myuhp.add_individual report', raise_exception=True)
+@permission_required('myuhp.add_individualreport', raise_exception=True)
 def add_indivReport(request):
      if request.method == 'POST':
         form = IndivReportForm(request.POST)
@@ -1648,7 +1675,7 @@ def single_report_page(request, name):
     return render(request,'pages/forms/individual_report/single_report_page.html',data)
 
 # Method for edit Individual annual report
-@permission_required('Myuhp.change_individual report', raise_exception=True)
+@permission_required('myuhp.change_individualreport', raise_exception=True)
 def edit_indivReport(request, pk): 
     individualReport = IndividualReport.objects.get(id=pk)
     form = IndivReportForm(instance=individualReport)   
@@ -1673,7 +1700,7 @@ def events_cluster(request):
               
 # Method to add new data into the SuverDataset
 #@lockdown
-@permission_required('Myuhp.add_survey project', raise_exception=True)
+@permission_required('myuhp.add_surveyproject', raise_exception=True)
 def survey_add_project(request):
     context={}
     form = SurveyProjectForm()
@@ -1731,7 +1758,7 @@ def survey_add_project(request):
 
 # Method for import and export Table SurveyDataset
 @lockdown()
-@permission_required('Myuhp.add_survey dataset', raise_exception=True)
+@permission_required('myuhp.add_surveydataset', raise_exception=True)
 def simple_upload(request):
     if request.method =='POST':
         survey_resource = SurveyResource()
@@ -1758,8 +1785,11 @@ def simple_upload(request):
     return render(request, 'pages/survey/upload.html')
               
 # Method to add new data into the SuverDataset
-@permission_required('Myuhp.add_survey dataset',raise_exception=True)
+@permission_required('myuhp.view_surveydataset')
 def survey_add_data(request):
+  #  ct=ContentType.objects.get_for_model(SurveyDataset)
+  #  if request.user.permissions.filter(codename="viw_surveydataset", contentype=ct).exists():
+        
     context={}
     form_survey_title = SelectSurveyForm(request.GET or None)
     by_survey =  request.GET.get('by_survey')
@@ -1775,7 +1805,6 @@ def survey_add_data(request):
         if by_survey!=None:
             surveyDatasets = SurveyDataset.objects.filter(Q(surveyProject__id__icontains=by_survey)& Q(surveyProject__end_date__lte=end_day)).order_by("quest_code")
             
-    
     #page = request.GET.get('page')
     #num_of_items = 10
   
@@ -1823,10 +1852,13 @@ def survey_add_data(request):
     context['by_survey'] = by_survey
     context['end_day'] = end_day
    
+ #   if request.user.has_perm('myuhp.view_surveydataset'):
     return render(request, 'pages/survey/survey_dataset.html', context)
+   # else:
+   #     return HttpResponse("Not allowed")
 
 # Method for list all Survey dataset submitted
-@permission_required('Myuhp.view_survey dataset',raise_exception=True)
+@permission_required('myuhp.view_surveydataset',raise_exception=True)
 def survey_report(request):
     surveyProjects = SurveyProject.objects.all().order_by("title_surv") 
     if request.method=='GET':
@@ -1894,7 +1926,7 @@ def single_survey_page(request, pk):
     
 # Method for upload document or image
 @lockdown()
-@permission_required('Myuhp.add_doc save',raise_exception=True)
+@permission_required('myuhp.add_docsave',raise_exception=True)
 def docSave_upload(request):
     form =None
     if request.method == "POST":
@@ -1912,7 +1944,7 @@ def docSave_upload(request):
     return render(request,'pages/docSave/doc_upload.html', {'form': form, 'img_obj_all':img_obj_all})
 
 # CREATE VIEWS FOR SUBSCRIBERS -------------------------- 
-#@lockdown
+@lockdown()
 def subscribers_views(request, *args, **kwargs):
     subscribers = Subscribers.objects.all()
     page = request.GET.get('page')
@@ -2312,7 +2344,7 @@ def CHE_pdf_activities(request):
 
 # Method for upload pdf document or report in pdf format
 @lockdown()
-@permission_required('Myuhp.add_report save',raise_exception=True)
+@permission_required('myuhp.add_reportsave',raise_exception=True)
 def report_upload(request):
     form =None
     if request.method == "POST":
@@ -2357,7 +2389,8 @@ def views_report(request):
     return render(request, 'pages/docSave/report_list.html', data)
 
 # Method to put  into the table all reports upload in the system
-#@login_required
+@login_required
+@permission_required('myuhp.view_reportsave',raise_exception=True)
 def index_report(request):
     reportSaves = ReportSave.objects.all().order_by("title_rep") 
     if request.method=='GET':
@@ -2465,7 +2498,7 @@ def unit_sub_activity_view(request):
             #4. DATASET 04
             dt_pie_status= dt_fig_unit.values('statut_name','total_planned','until_thisDay_planned','select_day_planned').aggregate(        
                 planed_notStart=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='Not Started')),
-                planed_issue=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='Started Behind Issues')),
+                planed_issue=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='Stalled')),
                 planed_onTrack=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='On Track')),
                 planed_completed=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='Completed')),
                 one_month_ago_activity=Sum('until_thisDay_planned', filter=Q(statut_name__isnull=False)),
@@ -2489,7 +2522,7 @@ def unit_sub_activity_view(request):
                 total_completed = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Completed') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
                 total_OnTrack = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='On Track') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
                 total_Not_Started = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Not Started') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
-                total_Issues = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Started Behind Issues') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False))
+                total_Issues = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Stalled') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False))
                 ).values('unit_code','total_lowest','total_planned','total_completed','total_OnTrack','total_Not_Started','total_Issues').distinct()
         
             
@@ -2738,8 +2771,9 @@ def TNR_pdf_activities(request):
     return response
 
 # Method to add Meeting project
-
-@permission_required('Myuhp.add_meeting project', raise_exception=True)
+@login_required
+@group_required('Administrative Assistance')
+#@permission_required('myuhp.add_meetingproject', raise_exception=True)
 def meeting_add_project(request):
     context={}
     form = MeetingProjectForm()
@@ -2795,9 +2829,13 @@ def meeting_add_project(request):
     return render(request, 'pages/meeting/meeting_project.html', context)
              
 # Method to add Meeting Discussion 
-@permission_required('Myuhp.add_survey dataset',raise_exception=True)
+#@permission_required('myuhp.add_surveydataset',raise_exception=True)
+@login_required
+@group_required('Administrative Assistance')
 def meeting_add_data(request):
     context={}
+    by_name_meeting={}
+    end_date={}
     form_meeting = SelectMeetingForm(request.GET or None)
     form = MeetingDiscussionForm()
     meetingDiscussions = MeetingDiscussion.objects.all()
@@ -2829,9 +2867,10 @@ def meeting_add_data(request):
             
     context['meetingDiscussions'] = meetingDiscussions
 #    context['paginator']=paginator
-    context['form']=form
+    #context['form']=form
     context['title'] ='home'
     if request.method == 'POST':
+        
         if 'save' in request.POST:
             pk = request.POST.get('save')
             if not pk:
@@ -2847,13 +2886,12 @@ def meeting_add_data(request):
             meetingDiscussion = MeetingDiscussion.objects.get(id = pk)
             meetingDiscussion.delete()
             messages.success(request, 'Meeting discussion deleted successfully')
-           
-            
+       
         elif 'edit' in request.POST:
             pk = request.POST.get('edit')
             meetingDiscussion = MeetingDiscussion.objects.get(id = pk)
             form = MeetingDiscussionForm(instance = meetingDiscussion)
-          
+
     context['form'] = form
     context['form_meeting'] = form_meeting
     context['by_name_meeting'] = by_name_meeting
@@ -2903,7 +2941,9 @@ def export_meeting_to_excel(request):
     return response
 
  ## METHOD TO DISPLAY ALL MEETING REPORT SUBMITTED
-@permission_required('Myuhp.view_meeting project',raise_exception=True)
+#@permission_required('myuhp.view_meetingproject',raise_exception=True)
+@login_required
+@group_required('Administrative Assistance')
 def meeting_report(request):
     meetingProjects = MeetingProject.objects.all().order_by("date_meeting") 
     if request.method=='GET':
@@ -3032,6 +3072,8 @@ def export_meeting_page(request,pk):
 
 
 # METHODE TO EXPORT MEETING REPORT TO WORD FILE
+@login_required
+@group_required('Administrative Assistance')
 def meeting_doc_report(request, pk):   
    # document.add_picture('static/img/logos.png', width=Inches(1.25))
     meetingProject=MeetingProject.objects.get(id=pk)
@@ -3172,7 +3214,10 @@ def pdf(request):
 
 # METHOD TO CREATE BRIEFING PROJECT
 
-@permission_required('Myuhp.add_briefing project', raise_exception=True)
+
+#@permission_required('myuhp.add_briefingproject', raise_exception=True)
+@login_required
+@group_required('Administrative Assistance')
 def briefing_add_project(request):
     context={}
     form = BriefingProjectForm()
@@ -3229,7 +3274,9 @@ def briefing_add_project(request):
 
 
 # METHOD TO CREATE BACKGROUND FOR BRIEFING
-@permission_required('Myuhp.add_briefing background',raise_exception=True)
+#@permission_required('myuhp.add_briefingbackground',raise_exception=True)
+@login_required
+@group_required('Administrative Assistance')
 def briefing_add_data(request):
     context={}
     form = BriefingBackgroundForm()
@@ -3327,7 +3374,9 @@ def export_briefingNote_to_excel(request):
     return response
 
 ## METHOD TO DISPLAY ALL BRIEFING NOTES SUBMITTED
-@permission_required('Myuhp.view_brefing project',raise_exception=True)
+#@permission_required('myuhp.view_brefingproject',raise_exception=True)
+@login_required
+@group_required('Administrative Assistance')
 def briefing_report(request):
     briefingProjects = BriefingProject.objects.all().order_by("reporting_date") 
     if request.method=='GET':
@@ -3393,6 +3442,8 @@ def single_briefing_page(request, pk):
     return render(request,'pages/briefing/single_briefing_note.html',data)
 
 #METHOD TO EXPORT MEETING REPORT AND DETAILS TO EXCEL FILE 
+@login_required
+@group_required('Administrative Assistance')
 def export_briefing_page(request,pk):
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="briefing_report.xls"'
@@ -3452,6 +3503,8 @@ def export_briefing_page(request,pk):
 
 
 # METHODE TO EXPORT MEETING REPORT TO WORD FILE
+@login_required
+@group_required('Administrative Assistance')
 def briefing_doc_report(request, pk):   
    # document.add_picture('static/img/logos.png', width=Inches(1.25))
     briefingProject=BriefingProject.objects.get(id=pk)
@@ -3594,7 +3647,9 @@ def briefing_doc_report(request, pk):
 
 
 # METHOD TO CREATE RISK REGISTER 
-@permission_required('Myuhp.add_risk identification', raise_exception=True)
+#@permission_required('myuhp.add_riskidentification', raise_exception=True)
+@login_required
+@group_required('Team Leader')
 def risk_identification_add(request):
     context={}
     form_unit = SelectUnitForm(request.GET or None)
@@ -3722,7 +3777,9 @@ def export_risk_to_excel(request):
     return response
 
 
-@permission_required('Myuhp.view_risk identification',raise_exception=True)
+#@permission_required('myuhp.view_riskidentification',raise_exception=True)
+@login_required
+@group_required('Team Leader')
 def risk_report(request):
     units = Units.objects.all().order_by("unit_code") 
     if request.method=='GET':
@@ -3994,7 +4051,9 @@ def riskRegister_doc_report(request, pk):
      
 
 # METHOD TO CREATE SUB ACTIVITIES IN THE SYSTEM
-@permission_required('Myuhp.add_operworkplan', raise_exception=True)
+#@permission_required('myuhp.add_operworkplan', raise_exception=True)
+@login_required
+@group_required('Team Leader')
 def wpkl_subActivities_add(request):
     context={}
     form_unit = SelectUnitForm(request.GET or None)
@@ -4257,7 +4316,7 @@ def download_monitoring_progress(request):
             #4. DATASET 04
             dt_pie_status= dt_fig_unit.values('statut_name','total_planned','until_thisDay_planned','select_day_planned').aggregate(        
                 planed_notStart=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='Not Started')),
-                planed_issue=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='Started Behind Issues')),
+                planed_issue=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='Stalled')),
                 planed_onTrack=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='On Track')),
                 planed_completed=Sum('total_planned', filter=Q(statut_name__isnull=False) & Q(statut_name__icontains='Completed')),
                 one_month_ago_activity=Sum('until_thisDay_planned', filter=Q(statut_name__isnull=False)),
@@ -4273,7 +4332,7 @@ def download_monitoring_progress(request):
                 total_subactivity_completed = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Completed'))),
                 total_subactivity_onTrack = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='On Track'))),
                 total_subactivity_notStart = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Not Started'))),
-                total_subactivity_issue = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Started Behind Issues')))
+                total_subactivity_issue = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Stalled')))
                 ).values('unit_code','total_output','total_kpi','total_TopTask','total_lowest','total_subactivities','total_subactivity_completed','total_subactivity_onTrack','total_subactivity_notStart','total_subactivity_issue').distinct()
         
             total_subactivities_period= dta_NumberTask.values('total_subactivities','total_subactivity_completed','total_subactivity_onTrack','total_subactivity_notStart','total_subactivity_issue').aggregate(       
@@ -4297,7 +4356,7 @@ def download_monitoring_progress(request):
                 total_completed = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Completed') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
                 total_OnTrack = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='On Track') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
                 total_Not_Started = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Not Started') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
-                total_Issues = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Started Behind Issues') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False))
+                total_Issues = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Stalled') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False))
                 ).values('unit_code','total_lowest','total_planned','total_completed','total_OnTrack','total_Not_Started','total_Issues').distinct()
           
             completedByCountries= Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__isnull=False) &  Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains=by_unit)& Q(statuts_operwork__completion_date__lte=end_date) & Q(statut_name__icontains='Completed')).annotate(nb_sub_activity=Count('statuts_operwork__sub_activity')).values(
@@ -4359,7 +4418,7 @@ def download_monitoring_progress(request):
                 nb_Completed=Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Completed'))),
                 nb_On_Track = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='On Track'))),
                 nb_Not_Started = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Not Started'))),
-                nb_Started_Behind_Issues = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Started Behind Issues')))           
+                nb_Started_Behind_Issues = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=(Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False) & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Stalled')))           
             ).values('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__completion_date__month','nb_Completed','nb_On_Track','nb_Not_Started','nb_Started_Behind_Issues').order_by('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__completion_date')
             
             month_completion__max=max(list(dt_fig_status_compl.values_list('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__completion_date__month')))
@@ -4465,7 +4524,7 @@ def download_monitoring_progress(request):
                             NumbeOfSubActivityNotStat= document.add_paragraph('Number of sub-activities not start: ' , style='ListBullet')
                             NumbeOfSubActivityNotStat.add_run(str(dta_NumberTask[s]['total_subactivity_notStart'])).bold = True
                             
-                            NumbeOfSubActivityIssu= document.add_paragraph('Number of sub-activities Started Behind Issues ' , style='ListBullet')
+                            NumbeOfSubActivityIssu= document.add_paragraph('Number of sub-activities Stalled ' , style='ListBullet')
                             NumbeOfSubActivityIssu.add_run(str(dta_NumberTask[s]['total_subactivity_issue'])).bold = True
                             
                             # str(dta_NumberTask[s]['percent_completed'])
@@ -4570,7 +4629,7 @@ def download_monitoring_progress(request):
                             'Completed': np.array(dt_fig_status_compl.values_list('nb_Completed', flat=True)),
                             'On Track': np.array(dt_fig_status_compl.values_list('nb_On_Track', flat=True)),
                             'Not Started': np.array(dt_fig_status_compl.values_list('nb_Not_Started', flat=True)),
-                            'Started Behind Issues': np.array(dt_fig_status_compl.values_list('nb_Started_Behind_Issues', flat=True))
+                            'Stalled': np.array(dt_fig_status_compl.values_list('nb_Started_Behind_Issues', flat=True))
                         }
                         width = 0.6  # the width of the bars: can also be len(x) sequence
 
@@ -5198,7 +5257,6 @@ def export_to_excel_kpiResults(request,by_unit,end_date):
     return response
 
 
-
 # METHOD TO EXPORT RISK REGISTER FOR EACH UNIT IN EXCEL FORMAT
 def export_to_excel_riskRegister(request,by_unit,end_date):
          
@@ -5378,8 +5436,6 @@ def export_to_excel_riskRegister(request,by_unit,end_date):
     #              cell.number_format = numbers.FORMAT_NUMBER_COMMA_SEPARATED1
     workbook.save(response)
     return response
-
-
 
 
 # METHOD TO EXPORT SURVEY DATASET FOR EACH UNIT IN EXCEL FORMAT

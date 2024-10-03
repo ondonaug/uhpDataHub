@@ -73,10 +73,12 @@
 			<li>5. The data</li>
 			{% endcomment %}
 			<div class="button">
-				
-				<a href="/index_kpi" target="_blank" class="btn">Edit KPI</a>
+				<a href="/signout" class="btn btn-default btn-flat">Sign out</a>
+				{% comment "" %}
+				<a href="/index_kpi" class="btn">Edit KPI</a>
 				<a href="/project_meeting" target="_blank" class="btn">Submitting Meeting report</a>
 				<a href="/project_briefing" target="_blank" class="btn">Submitting Birefing note</a>
+				{% endcomment %}
 			</div>
 		</ul>
 		<!-- Header Area -->
@@ -153,13 +155,9 @@
 													<li><a href="{% url 'tnr_lowestTask_view'%}">Status for TNR</a></li>
 													<li><a href="{% url 'uhu_lowestTask_view'%}">Status for UHU</a></li>
 													<li><a href="{% url 'vid_lowestTask_view'%}">Status for VID</a></li>
-												
-													
-													
 													{% comment "" %}
 													<li><a href="{% url 'download_monitoring'%}">Download report</a></li>
 													{% endcomment %}
-
 												</ul>
 											</li>
 											<li><a href="#">Indicators<i class="icofont-rounded-down"></i> </a>
@@ -169,7 +167,6 @@
 													<li><a href="{% url 'render_pdf_view'%}">Overview of KPI results by Unit</a></li>
 													<li><a href="{% url 'reporting_indicator'%}">Dashboard of other indicators</a></li>
 												  </ul>
-											
 											</li>
 											<li><a href="#">Survey <i class="icofont-rounded-down"></i></a>
 												<ul class="dropdown">
@@ -189,8 +186,6 @@
 													<li><a href="{% url 'briefing_report'%}">Display List of Briefing note</a></li>
 												</ul>
 											</li>
-
-											
 										</ul>
 									</nav>
 								</div>
@@ -227,7 +222,6 @@
 									<li><a href="https://www.facebook.com/WHOAFRO"><i class="icofont-facebook"></i></a></li>
 									<li><a href="#"><i class="icofont-twitter"></i></a></li>
 									{% comment "" %}<li><a href="#"><i class="icofont-google-plus"></i></a></li>
-									
 									<li><a href="#"><i class="icofont-vimeo"></i></a></li>
 									<li><a href="#"><i class="icofont-pinterest"></i></a></li>
 									{% endcomment %}
@@ -263,7 +257,6 @@
 									<li class="day">Saturday <span>9.00-18.30</span></li>
 									<li class="day">Monday - Thusday <span>9.00-15.00</span></li>
 								</ul>
-								
 							</div>
 						</div>
 						{% endcomment %}
@@ -284,14 +277,9 @@
 										<button type="submit" class="button"><i class="icofont icofont-paper-plane"></i></button>
 									</div>
 								</form>
-
-
 							</div>
 						</div>
 						{% endcomment %}
-						
-
-
 					</div>
 				</div>
 			</div>

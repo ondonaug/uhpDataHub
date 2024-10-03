@@ -17,9 +17,9 @@
 
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-8">
-                            <h3 class="news-title">
+                            <h4 class="news-title">
                                 <b> List of submitted <code>meeting reports</code> whose document is saved</b> 
-                            </h3>
+                            </h4>
                         </div>
                         <div class="col-lg-4 col-md-4 col-4">
                             <ul class="bread-list">
@@ -37,12 +37,12 @@
                                 <article class="blog-item box box-solid box-success">
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <h4> 
+                                            <h5> 
                                                 <a href="single_meeting_page/{{meetingProject.pk}}">
                                                 <b>{{ meetingProject.name_meeting }}</b>  
-                                                <img src="{% static 'images/demo/afro.png' %}" height="60%" width="60%" alt="...">
+                                                <img src="{% static 'images/demo/afro.png' %}" height="40%" width="50%" alt="...">
                                                 </a>
-                                            </h4>
+                                            </h5>
                                         </div>
                                         <div class="col-md-8">
                                             <p>
@@ -52,11 +52,11 @@
                                                <code><time>{{ meetingProject.chair_name }}<time></code> 
                                                 <a href="export_meeting_page/{{meetingProject.pk}}">Export to Excel</a>
                                             </p>
-                                            <h3>
+                                            <h6>
                                                 <b><a href="single_meeting_page/{{meetingProject.pk}}">{{ meetingProject.objective_meeting }}</a></b>
-                                            </h3>
-                                            <h4><small>Type:</small>  {{ meetingProject.type_meeting }} <small>Taking place:</small> {{ meetingProject.taking_place }}</h4>
-                                            <h4><small>Note taker:</small>  {{ meetingProject.note_taker }} <small>Participants:</small> {{ meetingProject.participants_list }}</h4>
+                                            </h6>
+                                            <h6><small>Type:</small>  {{ meetingProject.type_meeting }} <small>Taking place:</small> {{ meetingProject.taking_place }}</h6>
+                                            <h6><small>Note taker:</small>  {{ meetingProject.note_taker }} <small>Participants:</small> {{ meetingProject.participants_list }}</h6>
                                             <button class="btn btn-sm btn-primary"><a href="meeting_doc_report/{{meetingProject.pk}}" style="color:#ffffff;">Generate document <i class="fa fa-download"></i></a></button>
                                         </div>
                                     </div>

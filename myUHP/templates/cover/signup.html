@@ -22,15 +22,22 @@
 					<div class="col-lg-12">
 						<div class="contact-us-form">
 							<h2>Register Here</h2>
-							<p>If you have any questions please fell free to contact with us.</p>
+							<p>If you have any questions please fell free to contact with us: <b>ondona@who.int</b></p>
 							<!-- Form -->
+							{% for message in messages %}
+							<div class="alert alert-danger {{ message.tags }}">
+								<p><strong>{{message}}</strong></p>  
+							</div>
+					     	{% endfor %}
 							<form class="form" method="POST" action="/signup">
 								{% csrf_token %}
-                {% for message in messages  %}
-                <div class="alert alert-{{message.tags}} alert-dismissible fade showo" role="alert">
-                  <p><strong>Message:</strong>Hello {{user.username}},{{message}}</p>
-                </div>
-                {% endfor %}
+								{% comment "" %}
+									{% for message in messages  %}
+									<div class="alert alert-{{message.tags}} alert-dismissible fade showo" role="alert">
+										<p><strong>Message:</strong>{{message}}</p>
+									</div>
+									{% endfor %}
+									{% endcomment %}
 								<div class="row">
 									<div class="col-lg-6">
 										<div class="form-group">
@@ -83,6 +90,7 @@
 					</div>
 				</div>
 			</div>
+			{% comment "" %}
 			<div class="contact-info">
 				<div class="row">
 					<!-- single-info -->
@@ -120,6 +128,7 @@
 					<!--/End single-info -->
 				</div>
 			</div>
+			{% endcomment %}
 		</div>
 	</section>
 
