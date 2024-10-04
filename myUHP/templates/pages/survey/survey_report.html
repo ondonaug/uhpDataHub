@@ -24,11 +24,13 @@
                             </h3>
                         </div>
                         <div class="col-lg-4 col-md-4 col-4">
+                            {% if user.is_authenticated %}
                             <ul class="bread-list">
-                                <li><a href="/dashboard"><i class="fa fa-dashboard" aria-hidden="true"></i> Dashboard</a></li>
+                                <li><a href="/"><i class="fa fa-dashboard" aria-hidden="true"></i> Home</a></li>
                                 <li><a href="/index_survey"><i class="fa fa-edit" aria-hidden="true"></i> Edited data</a></li>
                                 <li class="active"><i class="fa fa-table" aria-hidden="true"></i> Survey list</li>
                             </ul>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="container">

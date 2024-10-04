@@ -380,7 +380,7 @@ def mail_letter(request):
     return render(request, 'cover/contact.html', context)
 
 # CREATE VIEWS FOR DASHBOARD -------------------------
-
+@user_passes_test(is_visitors)
 def dashboard(request, *args, **kwargs):
     operworkplan=Operworkplan.objects.all()
     
@@ -1155,7 +1155,9 @@ def load_kpi(request):
     return render(request,'pages/forms/droplists/kpi_options.html', data )
 
 #@permission_required('Myuhp.delete_KpiAchieve', raise_exception=False)
-@permission_required('myuhp.view_kpi achieve',raise_exception=True)
+#@permission_required('myuhp.view_kpi achieve',raise_exception=True)
+@login_required
+@group_required('Technical officer')
 def kpi_achieve_index(request):
     context={}
     form_unit = SelectUnitForm(request.GET or None)
@@ -1222,7 +1224,9 @@ def kpi_achieve_index(request):
     return render(request, 'pages/forms/kpi/kpi_achieve_index.html', context)
 
 # Method for list all KPI submitted
-@permission_required('myuhp.change_kpi achieve',raise_exception=True)
+#@permission_required('myuhp.change_kpi achieve',raise_exception=True)
+@login_required
+@group_required('Technical officer')
 def kpi_report(request):
     kpis = Kpi.objects.all().order_by("kpi_code") 
     if request.method=='GET':
@@ -1256,6 +1260,8 @@ def kpi_report(request):
     return render(request, 'pages/forms/kpi/kpi_report.html', data)
 
 # Method for view single KPI page
+@login_required
+@group_required('Technical officer')
 def single_kpi_page(request, pk):
     
     try:
@@ -1302,7 +1308,7 @@ def single_kpi_page(request, pk):
 # CREATE VIEWS FOR TOP TASK fROM GSM WORKPLAN-------------------------------------
 
 # Method for add new Top task
-#@permission_required('Myuhp.add_gsm workplan',raise_exception=True)
+@permission_required('myuhp.add_gsmworkplan',raise_exception=True)
 def add_toptask(request):
     options_kpi = Kpi.objects.all()
     
@@ -1322,7 +1328,7 @@ def add_toptask(request):
     return render(request, 'pages/forms/toptask/toptask_add.html', context)
 
 # Method for update Top task 
-#@permission_required('Myuhp.change_gsm workplan',raise_exception=True)
+@permission_required('myuhp.change_gsmworkplan',raise_exception=True)
 def edit_toptask(request, pk):
     topTasks=Toptask.objects.get(pk=pk)
    
@@ -1341,7 +1347,7 @@ def edit_toptask(request, pk):
         } )
         
 # Method for delete lowest task
-#@permission_required('Myuhp.delete_gsm workplan',raise_exception=True)
+@permission_required('myuhp.delete_gsmworkplan',raise_exception=True)
 def delete_toptask(request,pk):
     topTasks=Toptask.objects.get(id=pk)
     topTasks.delete()
@@ -1459,7 +1465,9 @@ class workplansView(ListView):
         return context
 
 # Method for add new sub activity
-@permission_required('myuhp.add_operworkplan', raise_exception=False)
+#@permission_required('myuhp.add_operworkplan', raise_exception=False)
+@login_required
+@group_required('Technical officer')
 def add_new_workplan_view(request):
     if request.method == "POST":
         form = WorkplanForm(request.POST)
@@ -1481,7 +1489,9 @@ def add_new_workplan_view(request):
     return render(request, 'pages/forms/workplans/add_workplan_modal.html', context)
 
 # Method-1 for edit sub activity
-@permission_required('myuhp.change_operworkplan', raise_exception=True)
+#@permission_required('myuhp.change_operworkplan', raise_exception=True)
+@login_required
+@group_required('Technical officer')
 def edit_workplan_view(request, pk):
     countries=Country.objects.get(pk=pk)
     operworkplan = Operworkplan.objects.get(pk=pk)
@@ -1502,6 +1512,8 @@ def edit_workplan_view(request, pk):
     return render(request, 'pages/forms/workplans/edit_workplan_modal.html', {'form': form, 'countries':countries})
           
 # Method-2 for edit sub activity
+@login_required
+@group_required('Technical officer')
 def edit_op_wp(request, pk): 
     operworkplan = Operworkplan.objects.get(id=pk)
     form = WorkplanForm(instance=operworkplan)
@@ -1529,6 +1541,8 @@ def delete_workplan_view(request,pk):
     return redirect('workplans')
 
 # Fiche synthese workplan
+@login_required
+@group_required('Technical officer')
 def fiche_workplan(request):
     selected = "operworkplans"
     workplan_list = Operworkplan.objects.all()
@@ -1605,7 +1619,8 @@ def sub_activity_report(request, *args, **kwargs):
         
 
 # Method for view single Sub activityI page
-
+@login_required
+@group_required('Technical officer')
 def single_sub_activity_page(request,unit_code):
     try:
 
@@ -1700,7 +1715,9 @@ def events_cluster(request):
               
 # Method to add new data into the SuverDataset
 #@lockdown
-@permission_required('myuhp.add_surveyproject', raise_exception=True)
+#@permission_required('myuhp.add_surveyproject', raise_exception=True)
+@login_required
+@group_required('Technical officer')
 def survey_add_project(request):
     context={}
     form = SurveyProjectForm()
@@ -1785,7 +1802,8 @@ def simple_upload(request):
     return render(request, 'pages/survey/upload.html')
               
 # Method to add new data into the SuverDataset
-@permission_required('myuhp.view_surveydataset')
+#@login_required
+#@group_required('Technical officer')
 def survey_add_data(request):
   #  ct=ContentType.objects.get_for_model(SurveyDataset)
   #  if request.user.permissions.filter(codename="viw_surveydataset", contentype=ct).exists():
@@ -1823,34 +1841,43 @@ def survey_add_data(request):
     context['surveyDatasets'] = surveyDatasets
    # context['paginator']=paginator
     context['title'] ='home'
-    if request.method == 'POST':
-        if 'save' in request.POST:
-            pk = request.POST.get('save')
-            if not pk:
-                form=SurveyDatasetForm(request.POST)
-            else:
-                surveyDataset = SurveyDataset.objects.get(id = pk)
-                form = SurveyDatasetForm(request.POST ,instance = surveyDataset) 
-            form.save()
-            form = SurveyDatasetForm()
-            messages.success(request, 'Survey dataset saved or updated successfully')
-        elif 'delete' in request.POST:
-            pk = request.POST.get('delete')
-            surveyDataset = SurveyDataset.objects.get(id = pk)
-            surveyDataset.delete()
-            messages.success(request, 'Survey dataset deleted successfully')
-           
-            
-        elif 'edit' in request.POST:
-            pk = request.POST.get('edit')
-            surveyDataset = SurveyDataset.objects.get(id = pk)
-            form = SurveyDatasetForm(instance = surveyDataset)
-          
-    context['form'] = form
+    if request.user.groups.filter(name='Technical officer').exists():
     
-    context['form_survey_title'] = form_survey_title 
-    context['by_survey'] = by_survey
-    context['end_day'] = end_day
+        if request.method == 'POST':
+            if 'save' in request.POST:
+                pk = request.POST.get('save')
+                if not pk:
+                    form=SurveyDatasetForm(request.POST)
+                else:
+                    surveyDataset = SurveyDataset.objects.get(id = pk)
+                    form = SurveyDatasetForm(request.POST ,instance = surveyDataset) 
+                form.save()
+                form = SurveyDatasetForm()
+                messages.success(request, 'Survey dataset saved or updated successfully')
+            elif 'delete' in request.POST:
+                pk = request.POST.get('delete')
+                surveyDataset = SurveyDataset.objects.get(id = pk)
+                surveyDataset.delete()
+                messages.success(request, 'Survey dataset deleted successfully')
+            
+                
+            elif 'edit' in request.POST:
+                pk = request.POST.get('edit')
+                surveyDataset = SurveyDataset.objects.get(id = pk)
+                form = SurveyDatasetForm(instance = surveyDataset)
+            
+        context['form'] = form
+        
+        context['form_survey_title'] = form_survey_title 
+        context['by_survey'] = by_survey
+        context['end_day'] = end_day
+    else:
+        context['form'] = form
+        
+        context['form_survey_title'] = form_survey_title 
+        context['by_survey'] = by_survey
+        context['end_day'] = end_day
+        return render(request, 'pages/survey/survey_dataset.html', context)
    
  #   if request.user.has_perm('myuhp.view_surveydataset'):
     return render(request, 'pages/survey/survey_dataset.html', context)
@@ -1858,7 +1885,8 @@ def survey_add_data(request):
    #     return HttpResponse("Not allowed")
 
 # Method for list all Survey dataset submitted
-@permission_required('myuhp.view_surveydataset',raise_exception=True)
+#@permission_required('myuhp.view_surveydataset',raise_exception=True)
+
 def survey_report(request):
     surveyProjects = SurveyProject.objects.all().order_by("title_surv") 
     if request.method=='GET':
@@ -1885,6 +1913,7 @@ def survey_report(request):
     return render(request, 'pages/survey/survey_report.html', data)
 
 # Method for view single Survey DataSet page
+
 def single_survey_page(request, pk):
     try:
         surveyProject=SurveyProject.objects.get(id=pk) 
@@ -2417,6 +2446,8 @@ def index_report(request):
     return render(request, 'pages/docSave/report_index.html', data)
 
 # Edit report thad added in the system
+@login_required
+@permission_required('myuhp.add_reportsave',raise_exception=True)
 def editReport(request, pk):
     reportSaves = ReportSave.objects.get(id=pk)
     form = ReportSaveForm(instance=reportSaves)
@@ -2485,7 +2516,6 @@ def unit_sub_activity_view(request):
            #             default=Value("0"),
            #             ), 
             ).values('statuts_operwork__gsmWorkplan__toptask__unit__unit_code','statut_name','statuts_operwork__completion_date','total_planned', 'until_thisDay_planned','select_day_planned').order_by('statuts_operwork__completion_date')
-            
 
            #2. DATASET 02
             date_completion__max=max(list(dt_fig_unit.values_list('statuts_operwork__completion_date')))
@@ -2504,9 +2534,6 @@ def unit_sub_activity_view(request):
                 one_month_ago_activity=Sum('until_thisDay_planned', filter=Q(statut_name__isnull=False)),
                 this_period=Sum('select_day_planned', filter=Q(statut_name__isnull=False))
             )
- 
-            
-            
             dta_NumberTask = Units.objects.exclude(units_toptask__toptask_gsmWorkplan__lowest_task_short__isnull=True).filter(unit_code__icontains=by_unit).annotate(
                 total_output = Count('units_toptask__output__output_code',distinct=('units_toptask__output__output_code'), filter=Q(units_toptask__output__isnull=False)),
                 total_kpi = Count('units_toptask__kpi',distinct=('units_toptask__kpi'), filter=Q(units_toptask__kpi__isnull=False)),
@@ -2515,7 +2542,6 @@ def unit_sub_activity_view(request):
                 total_subactivities = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False))
                 ).values('unit_code','total_output','total_kpi','total_TopTask','total_lowest','total_subactivities').distinct()
         
-  
             tables_subactivities = Units.objects.exclude(units_toptask__toptask_gsmWorkplan__lowest_task_short__isnull=True).filter(unit_code__icontains=by_unit).annotate(  
                 total_lowest = Count('units_toptask__toptask_gsmWorkplan__lowest_task_short', filter=Q(units_toptask__toptask_gsmWorkplan__lowest_task_short__isnull=False)),
                 total_planned = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
@@ -2524,9 +2550,6 @@ def unit_sub_activity_view(request):
                 total_Not_Started = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Not Started') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)),
                 total_Issues = Count('units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity', filter=Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__statut_name__statut_name__icontains='Stalled') & Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False)& Q(units_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__sub_activity__isnull=False))
                 ).values('unit_code','total_lowest','total_planned','total_completed','total_OnTrack','total_Not_Started','total_Issues').distinct()
-        
-            
-            
             
             completedByCountries= Statutworkplan.objects.filter(Q(statuts_operwork__sub_activity__isnull=False) & Q(statut_name__isnull=False) &  Q(statuts_operwork__gsmWorkplan__toptask__unit__unit_code__icontains=by_unit)& Q(statuts_operwork__completion_date__lte=end_date) & Q(statut_name__icontains='Completed')).annotate(nb_sub_activity=Count('statuts_operwork__sub_activity')).values(
                # 'statut_name',
@@ -2543,7 +2566,6 @@ def unit_sub_activity_view(request):
                # 'statut_name',
                 'statuts_operwork__country__country_name'
                 ).annotate(nb_sub_activity=Count('statuts_operwork__sub_activity'))
-    
       
             notStartedByCountries = pd.DataFrame(notStartedByCountries)
             # parsing the DataFrame in json format. 
@@ -2579,9 +2601,7 @@ def unit_sub_activity_view(request):
                     'dataset_byUnit':dataset_byUnit,
                     'notStartedByCountries':notStartedByCountries,
                     'df_subActByCountries':df_subActByCountries
-                    
                     } 
-    
         except:
                  messages.success(request, 'Please select UNIT')
                     
@@ -2597,7 +2617,6 @@ def unit_sub_activity_view(request):
                         'dataset_byUnit':dataset_byUnit,
                         'notStartedByCountries':notStartedByCountries,
                         'df_subActByCountries':df_subActByCountries
-                        
                         } 
                     
         return render(request,'pages/forms/workplans/sub_activity_level.html',data)
@@ -2970,7 +2989,8 @@ def meeting_report(request):
     return render(request, 'pages/meeting/meeting_report.html', data)
 
 #METHOD TO VIEW SINGLE PAGE FOR  MEETING REPORT  
-
+@login_required
+@group_required('Administrative Assistance')
 def single_meeting_page(request, pk):
     try:
         meetingProject=MeetingProject.objects.get(id=pk) 
@@ -3016,6 +3036,8 @@ def single_meeting_page(request, pk):
     return render(request,'pages/meeting/single_report_page.html',data)
 
 #METHOD TO EXPORT MEETING REPORT AND DETAILS TO EXCEL FILE 
+@login_required
+@group_required('Administrative Assistance')
 def export_meeting_page(request,pk):
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="meeting_report.xls"'
@@ -3217,7 +3239,7 @@ def pdf(request):
 
 #@permission_required('myuhp.add_briefingproject', raise_exception=True)
 @login_required
-@group_required('Administrative Assistance')
+@group_required('Technical officer')
 def briefing_add_project(request):
     context={}
     form = BriefingProjectForm()
@@ -3276,7 +3298,7 @@ def briefing_add_project(request):
 # METHOD TO CREATE BACKGROUND FOR BRIEFING
 #@permission_required('myuhp.add_briefingbackground',raise_exception=True)
 @login_required
-@group_required('Administrative Assistance')
+@group_required('Technical officer')
 def briefing_add_data(request):
     context={}
     form = BriefingBackgroundForm()
@@ -3332,6 +3354,8 @@ def briefing_add_data(request):
 
 
 #METHOD TO EXPORT BRIEFING DATASET ALL DATA ON EXCEL FILE
+@login_required
+@group_required('Technical officer')
 def export_briefingNote_to_excel(request):
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="briefingNote.xlsx"'
@@ -3376,7 +3400,7 @@ def export_briefingNote_to_excel(request):
 ## METHOD TO DISPLAY ALL BRIEFING NOTES SUBMITTED
 #@permission_required('myuhp.view_brefingproject',raise_exception=True)
 @login_required
-@group_required('Administrative Assistance')
+@group_required('Technical officer')
 def briefing_report(request):
     briefingProjects = BriefingProject.objects.all().order_by("reporting_date") 
     if request.method=='GET':
@@ -3402,6 +3426,8 @@ def briefing_report(request):
     
     return render(request, 'pages/briefing/briefing_report.html', data)
 
+@login_required
+@group_required('Technical officer')
 def single_briefing_page(request, pk):
     try:
         briefingProject = BriefingProject.objects.get(id=pk) 
@@ -3443,7 +3469,7 @@ def single_briefing_page(request, pk):
 
 #METHOD TO EXPORT MEETING REPORT AND DETAILS TO EXCEL FILE 
 @login_required
-@group_required('Administrative Assistance')
+@group_required('Technical officer')
 def export_briefing_page(request,pk):
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="briefing_report.xls"'
@@ -3504,7 +3530,7 @@ def export_briefing_page(request,pk):
 
 # METHODE TO EXPORT MEETING REPORT TO WORD FILE
 @login_required
-@group_required('Administrative Assistance')
+@group_required('Technical officer')
 def briefing_doc_report(request, pk):   
    # document.add_picture('static/img/logos.png', width=Inches(1.25))
     briefingProject=BriefingProject.objects.get(id=pk)
@@ -3807,6 +3833,8 @@ def risk_report(request):
 
 
 #METHOD TO VIEW SINGLE PAGE FOR  MEETING REPORT  
+@login_required
+@group_required('Team Leader')
 def unit_risk_page(request, pk):
     try:
         unit=Units.objects.get(id=pk) 
@@ -3855,6 +3883,8 @@ def unit_risk_page(request, pk):
 
 
 #METHOD TO EXPORT UNIT RISK EGISTER TO EXCEL FILE 
+@login_required
+@group_required('Team Leader')
 def export_unit_risk(request,pk):
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="unit_riskRegister.xls"'
@@ -3929,6 +3959,8 @@ def export_unit_risk(request,pk):
 
 
 # METHODE TO EXPORT MEETING REPORT TO WORD FILE
+@login_required
+@group_required('Team Leader')
 def riskRegister_doc_report(request, pk):   
    # document.add_picture('static/img/logos.png', width=Inches(1.25))
     unit=Units.objects.get(id=pk)
@@ -4117,7 +4149,8 @@ def wpkl_subActivities_add(request):
 
     return render(request, 'pages/forms/workplans/sub_activity_workplan.html', context)
 
-
+@login_required
+@group_required('Technical officer')
 def subActivities_doc_report(request, unit_code): 
     
     data_unit =list(Units.objects.prefetch_related('units_toptask').filter(Q(unit_code__icontains=unit_code)& Q(units_toptask__toptask_gsmWorkplan__lowest_task_description__isnull=False)).distinct())
@@ -4260,6 +4293,8 @@ def subActivities_doc_report(request, unit_code):
       
 
 # DOWNLOAD MONITORING PERFORMANCE OF WORKPLAN BY UNIT AND BUY COMPLETION DATE 
+@login_required
+@group_required('Technical officer')
 def download_monitoring_progress(request):
     #initialisation des nom
         units={} # Liste des unités
@@ -4997,6 +5032,8 @@ def download_kpi_result(request, pk):
         return HttpResponse("Failed to Download Kpi result") 
 
 # METHOD TO EXPORT WORKPLAN FOR EACH UNIT IN EXCEL FORMAT
+@login_required
+@group_required('Technical officer')
 def export_to_excel_workplan(request,by_unit,end_date ):
 
     data_outputs = Outputworkplan.objects.exclude(outputs_toptask__unit__unit_code__isnull=True).filter(Q(outputs_toptask__unit__unit_code__icontains=by_unit) & Q(outputs_toptask__toptask_gsmWorkplan__gsmWorkplan_operw__completion_date__lte=end_date)).prefetch_related('outputs_toptask').distinct().order_by("outputs_toptask__output__output_code").values(
@@ -5118,6 +5155,8 @@ def export_to_excel_workplan(request,by_unit,end_date ):
 
 
 # METHOD TO EXPORT KPI RESULTS FOR EACH UNIT IN EXCEL FORMAT
+@login_required
+@group_required('Technical officer')
 def export_to_excel_kpiResults(request,by_unit,end_date):
     
     data_kpi_results = Kpi.objects.exclude(unit__unit_code__isnull=True).filter(Q(unit__unit_code__icontains=by_unit)).prefetch_related('kpis_kpiAchive').order_by("kpis_kpiAchive__report_date").values(
@@ -5258,6 +5297,8 @@ def export_to_excel_kpiResults(request,by_unit,end_date):
 
 
 # METHOD TO EXPORT RISK REGISTER FOR EACH UNIT IN EXCEL FORMAT
+@login_required
+@group_required('Team Leader')
 def export_to_excel_riskRegister(request,by_unit,end_date):
          
     data_risk_register = RiskIdentification.objects.all().filter(Q(unit__unit_code__icontains=by_unit)& Q(response_date__lte=end_date)).values(

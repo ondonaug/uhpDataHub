@@ -27,8 +27,15 @@ SECRET_KEY = 'django-insecure-yp@yq=yq8^s3uu^nrgq47_jgtckb4i4^rps66)8bi0%_3&#5yc
 DEBUG = False
 
 ALLOWED_HOSTS = ['*'] # For local 
+
 #CSRF_TRUSTED_ORIGINS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net']
 #ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net'] # For deployement
+CSRF_TRUSTED_ORIGINS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net']
+
+#ALLOWED_HOSTS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net'] # For deployement
+#CSRF_TRUSTED_ORIGINS = ['https://uhpcdb-d5exeph6b4hhfge7.westeurope-01.azurewebsites.net']
+# security.W016
+#CSRF_COOKIE_SECURE = False
 
 
 # Application definition
@@ -41,7 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
    # 'django_static_jquery',
+
+    'django_static_jquery',
+
     'myUHP.apps.MyuhpConfig',
     'crispy_bootstrap4',
     'crispy_forms',
@@ -86,25 +97,39 @@ TEMPLATES = [
 WSGI_APPLICATION = 'uhpDataBase.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
     #    'ENGINE': 'django.db.backends.sqlite3',
      #   'NAME': BASE_DIR / 'db.sqlite3',
          'ENGINE': 'django.db.backends.mysql',
+       # 'NAME': 'ylpmjzzgdo$uhpcdb-database',
          'NAME': 'uhpdatabase',
-         'USER':'root',
-         'PASSWORD':'afrouhp2024',
+         'USER':'ylpmjzzgdo',
+         'PASSWORD':'$cGy4BjroDQMMmPn',
+         'HOST':'uhpcdb-server.mysql.database.azure.com',
          'PORT':3306,
-         'POST':'127.0.0.1',
+         'OPTION':{
+                'init_command':"SET sql_mode=STICT_TRANS_TABLES"
+           }
     }
 }
 
+# Database
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+#DATABASES = { ## FOR LOCAL APP
+#    'default': {
+#    'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'uhpdatabase',
+#         'USER':'root',
+#         'PASSWORD':'afrouhp2024',
+#         'PORT':3306,
+#         'POST':'127.0.0.1',
+#    }   
+#}
 
 
-#DATABASES = {
+#DATABASES = { # FOR AZURE
  #   'default': {
 
  #        'ENGINE': 'django.db.backends.mysql',

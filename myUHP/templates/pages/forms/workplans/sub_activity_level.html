@@ -1,11 +1,12 @@
 
-{% extends "base.html" %}
+{% extends "cover/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
 {% load crispy_forms_field %}
 
 {% block content %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
 
        <main>
             <div class="container">
@@ -22,14 +23,40 @@
                             {% endfor %}
                     </h3>                           
                 </div><!-- /.col -->
-                <div>
-                    <div> 
-                        <form method="GET" action="{% url 'sub_activity_level' %}">
-                            {{form.as_p}}
-                            <button class="btn btn-primary btn-sm">Generate document <i class="fa fa-download"></i></a></button>
-                        </form> 
-                    </div>  
+                <div class="row">
+                  
+                    <form method="GET" action="{% url 'sub_activity_level' %}">
+                      {% csrf_token %}
+                            <div class="form-group col-md-3 mb-0">
+                                  <div class="input-group">
+                                        <div class="input-group-addon">
+                                          Please select<code><b> unit: </b></code>
+                                        </div>
+                                    {% render_field form.by_unit class+="form-control" placeholder=form.by_unit.label %}
+                                  </div><!-- /.input group -->
+                                
+                              </div>
+                            <div class="form-group col-md-5 mb-0">
+                              <!-- Date dd/mm/yyyy -->
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            Completion date:<code><b>(mm/dd/yyyy)</b></code>
+                                        </div>
+                                        <input type="date" name="end" id="end" class="form-control" data-inputmask="'alias': 'mm/dd/yyyy'" data-mask required/>
+                                    </div><!-- /.input group -->
+                            </div> <!-- /.form group -->
+                      {% comment "" %}
+                        {{form_unit.as_p}}
+                          {% endcomment %}
+                              <div class="form-group col-md-4 mb-0">
+                                  <button class="btn btn-success">Filter the unit's workplan <i class="fa fa-download"></i></a></button>
+                              </div>
+                    </form>
+                   
                    <!-- <a href="/sub_activity_level" class="btn btn-primary btn-sm refresh-btn"><i class="fa fa-refresh"></i></a>--> 
+                   <div class="alert alert-info">
+                    <h4><strong>{{units}}</strong></h4> 
+                  </div> 
                 </div>  
                 {% comment "" %}
                             {% for unit in units.all %}
@@ -47,16 +74,12 @@
                                     </aside>
                             {% endfor %}
                             
-                            
-
-                        
-                                 
+                      
                             {% endfor %}
                               {% endcomment %}
+                             
                           
-                            <div class="alert alert-info">
-                                <h4><strong>{{units}}</strong></h4> 
-                            </div>       
+                                 
                           
                             <table class="table">
                                 <tr>

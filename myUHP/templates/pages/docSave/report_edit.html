@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "cover/base.html" %}
 
 {% block content %}
 <div class="container" id="my-workplans-table-container" style="width: 140rem;">
@@ -12,7 +12,7 @@
 {% endif %}
 <div class="box box-primary">
     <div class="box-header">
-        <h3 class="box-title">Edit the Report Uploadded</h3>
+        <h4 class="box-title">Edit <b>downloaded report</b></h4>
     </div><!-- /.box-header -->
     <!-- form start -->
     <form role="form"  action="/edit_report/{{reportSave.pk}}" method="POST" enctype="multipart/form-data">

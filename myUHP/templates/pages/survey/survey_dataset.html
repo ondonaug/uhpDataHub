@@ -33,7 +33,9 @@
 
     <!-- Right side column. Contains the navbar and content of the page -->
     <aside class="right-side">
+        {% comment "" %}
         {% if user.is_authenticated %}
+        {% endcomment %}
    <div class="container tbl-container" id="my-workplans-table-container" style="width: 185rem;">
        
         <div class="row">
@@ -131,14 +133,18 @@
                             <th>Second geographic area</th>
                         </tr>
                         {% if not form.instance.id %}
+                        {% if user.is_authenticated %}
                         <tr> 
                             {% include 'pages/survey/survey_dataset_save.html' %}
                         </tr>
                         {% endif %}
+                        {% endif %}
                     {% for surveyDataset in surveyDatasets %}
                         <tr>
                             {% if form.instance.id == surveyDataset.id %}
+                            {% if user.is_authenticated %}
                             {% include 'pages/survey/survey_dataset_save.html' %}
+                            {% endif %}
                             {% else %} 
                             <td>{{surveyDataset.surveyProject.title_surv}}</td>
                             <td>{{surveyDataset.quest_code}}</td>
@@ -147,8 +153,10 @@
                             <td>{{surveyDataset.response_num}}</td>
                             <td>{{surveyDataset.level_1}}</td>
                             <td>{{surveyDataset.level_2}}</td>
+                            {% if user.is_authenticated %}
                             <td><button formnovalidate name="edit" value="{{surveyDataset.id}}" class="btn btn-primary btn-sm">Edit</button></td>
                             <td><button formnovalidate name="delete" value="{{surveyDataset.id}}" class="btn btn-warning btn-sm">delete</button></td>
+                            {% endif %}
                             {% endif %}
                         </tr>
                     {% endfor %} 
@@ -196,6 +204,7 @@
 
 
     </div>
+    {% comment "" %}
     {% else %}
     <section>
         <p style="position: center;">
@@ -204,6 +213,7 @@
         </p>
     </section>   
     {% endif %}
+    {% endcomment %}
 </aside><!-- /.right-side -->
 </div>
 
