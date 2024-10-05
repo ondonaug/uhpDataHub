@@ -114,32 +114,32 @@ WSGI_APPLICATION = 'uhpDataBase.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = { ## FOR LOCAL APP
-    'default': {
-    'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'uhpdatabase',
-         'USER':'root',
-         'PASSWORD':'afrouhp2024',
-         'PORT':3306,
-         'POST':'127.0.0.1',
-    }   
-}
-
-
-#DATABASES = { # FOR AZURE
- #   'default': {
-
- #        'ENGINE': 'django.db.backends.mysql',
- #        'NAME': 'uhpdatabase',
- #        'USER':'ylpmjzzgdo',
- #        'PASSWORD':'$cGy4BjroDQMMmPn',
- #        'HOST':'uhpcdb-server.mysql.database.azure.com',
- #        'PORT':3306,
- #        'OPTION':{
- #               'init_command':"SET sql_mode=STICT_TRANS_TABLES"
- #          }
- #   }
+#DATABASES = { ## FOR LOCAL APP
+#    'default': {
+#    'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'uhpdatabase',
+#         'USER':'root',
+#         'PASSWORD':'afrouhp2024',
+#         'PORT':3306,
+#         'POST':'127.0.0.1',
+#    }   
 #}
+
+
+DATABASES = { # FOR AZURE
+    'default': {
+
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': 'uhpdatabase',
+         'USER':'ylpmjzzgdo',
+         'PASSWORD':'$cGy4BjroDQMMmPn',
+         'HOST':'uhpcdb-server.mysql.database.azure.com',
+         'PORT':3306,
+         'OPTION':{
+                'init_command':"SET sql_mode=STICT_TRANS_TABLES"
+           }
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
