@@ -97,33 +97,33 @@ TEMPLATES = [
 WSGI_APPLICATION = 'uhpDataBase.wsgi.application'
 
 
-DATABASES = {
-    'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'uhpdatabase',
-         'USER':'ylpmjzzgdo',
-         'PASSWORD':'$cGy4BjroDQMMmPn',
-         'HOST':'uhpcdb-server.mysql.database.azure.com',
-         'PORT':3306,
-         'OPTION':{
-                'init_command':"SET sql_mode=STICT_TRANS_TABLES"
-           }
-    }
-}
+#DATABASES = {
+#    'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'uhpdatabase',
+#         'USER':'ylpmjzzgdo',
+#         'PASSWORD':'$cGy4BjroDQMMmPn',
+#         'HOST':'uhpcdb-server.mysql.database.azure.com',
+#         'PORT':3306,
+#         'OPTION':{
+#                'init_command':"SET sql_mode=STICT_TRANS_TABLES"
+#           }
+#    }
+#}
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#DATABASES = { ## FOR LOCAL APP
-#    'default': {
-#    'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'uhpdatabase',
-#         'USER':'root',
-#         'PASSWORD':'afrouhp2024',
-#         'PORT':3306,
-#         'POST':'127.0.0.1',
-#    }   
-#}
+DATABASES = { ## FOR LOCAL APP
+    'default': {
+    'ENGINE': 'django.db.backends.mysql',
+         'NAME': 'uhpdatabase',
+         'USER':'root',
+         'PASSWORD':'afrouhp2024',
+         'PORT':3306,
+         'POST':'127.0.0.1',
+    }   
+}
 
 
 #DATABASES = { # FOR AZURE
@@ -179,9 +179,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')] # for deploy use staticfiles
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') # for deploy use static
+STATIC_URL = '/static/'
+#MEDIA_URL='/media/'
+
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # for deploy use staticfiles
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static') # for deploy use static
+
+
+#MEDIA_ROOT = [os.path.join(BASE_DIR, 'media')] # for deploy use staticfiles
 
 
 AUTO_LOGOUT = {'IDLE_TIME': 1200, 'REDIRECT_TO_LOGIN_IMMEDIATELY': True,
