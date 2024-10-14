@@ -147,7 +147,13 @@
 											</li>
 											<li><a href="#">Monitoring<i class="icofont-rounded-down"></i> </a>
 												<ul class="dropdown">
+
+													
+													<li><a href="{% url 'operworkplan_list'%}">Update activity</a></li>
+													{% comment "" %}
 													<li><a href="{% url 'workplans'%}">Update activity</a></li>
+													<li><a href="{% url 'sub_activity_wkpl'%}">Edit workplan</a></li>
+													{% endcomment %}
 													<li><a href="{% url 'sub_activity_wkpl'%}">Edit workplan</a></li>
 													<li><a href="{% url 'sub_activity_report'%}">Work plan overview</a></li>
 													<li><a href="{% url 'dashboard'%}">Dashboard</a></li>
@@ -210,6 +216,7 @@
 		<!-- End Header Area -->
             <!---Block content (ROOT)--> 
             {% block content %}{% endblock content %}
+			
 		<!-- Footer Area -->
 		<footer id="footer" class="footer ">
 			<!-- Footer Top -->

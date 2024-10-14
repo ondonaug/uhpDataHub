@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from .import views
 
@@ -234,6 +235,16 @@ urlpatterns = [
     # METHOD TO EXPORT SURVEY DATASET FOR EACH UNIT IN EXCEL FORMAT
     path('export_to_excel_survey_dataset/<str:by_survey>/<str:end_day>', views.export_to_excel_survey_dataset, name='export_to_excel_survey_dataset'),
     
+    # METHOD TO CREATE NEW VIEWS HERE FOR OPERATIONAL WORKPLAN 
+   # path('/', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('operworkplan_list', views.operworkplan_list, name = 'operworkplan_list'),
+    path('operworkplan_create/', views.operworkplan_create, name = 'operworkplan_create'),
+    path('operworkplan_update/<int:pk>', views.operworkplan_update, name = 'operworkplan_update'),
+    path('operworkplan_delete/<int:pk>', views.operworkplan_delete, name = 'operworkplan_delete'),
+   
+  
+  
+
     
 ]
 

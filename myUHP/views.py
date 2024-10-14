@@ -1139,7 +1139,9 @@ def edit_kpi(request, pk):
         } )
 
 # Method to delete kpi
-@permission_required('myuhp.delete_kpi',raise_exception=True)
+#permission_required('myuhp.delete_kpi',raise_exception=True)
+@login_required
+@group_required('Manager and delete')
 def delete_kpi(request,pk):
     Kpi=Kpi.objects.get(id=pk)
     Kpi.delete()
@@ -1347,7 +1349,9 @@ def edit_toptask(request, pk):
         } )
         
 # Method for delete lowest task
-@permission_required('myuhp.delete_gsmworkplan',raise_exception=True)
+#@permission_required('myuhp.delete_gsmworkplan',raise_exception=True)
+@login_required
+@group_required('Manager and delete')
 def delete_toptask(request,pk):
     topTasks=Toptask.objects.get(id=pk)
     topTasks.delete()
@@ -1358,7 +1362,9 @@ def delete_toptask(request,pk):
 # CREATE VIEWS FOR LOWEST TASK fROM GSM WORKPLAN-------------------------------------
 
 # Method for add new lowest task
-@permission_required('myuhp.add_gsmworkplan',raise_exception=True)
+#@permission_required('myuhp.add_gsmworkplan',raise_exception=True)
+@login_required
+@group_required('Technical officer')
 def add_lowest(request):
     options_kpi = Kpi.objects.all()
     if request.method == 'POST':
@@ -1377,7 +1383,9 @@ def add_lowest(request):
     return render(request, 'pages/forms/gsm/lowest_add.html', context)
 
 # Method for update lowest task 
-@permission_required('myuhp.change_gsmworkplan',raise_exception=True)
+#@permission_required('myuhp.change_gsmworkplan',raise_exception=True)
+@login_required
+@group_required('Technical officer')
 def edit_lowest(request, pk):
     gsmWp=GsmWorkplan.objects.get(pk=pk)
     #output = get_object_or_404(Outputworkplan, id = pk)
@@ -1395,7 +1403,10 @@ def edit_lowest(request, pk):
     } )
     
 # Method for delete lowest task
-@permission_required('myuhp.delete_gsm workplan',raise_exception=True)
+#@permission_required('myuhp.delete_gsm workplan',raise_exception=True)
+
+@login_required
+@group_required('Manager and delete')
 def delete_lowest(request,pk):
     gsmWp=GsmWorkplan.objects.get(id=pk)
     gsmWp.delete()
@@ -1404,7 +1415,9 @@ def delete_lowest(request,pk):
 
 # CREATE VIEWS FOR SUB ACTIVITY fROM OPERATIONNAL WORKPLAN------------------------------------
 # Method for load sub activity
-@permission_required('myuhp.view_operworkplan',raise_exception=False)
+#@permission_required('myuhp.view_operworkplan',raise_exception=False)
+@login_required
+@group_required('Technical officer')
 def sub_activity_view(request):
     form_unit = SelectUnitForm(request.GET or None)
     by_unit =  request.GET.get('by_unit')
@@ -1532,7 +1545,9 @@ def edit_op_wp(request, pk):
     return render(request, 'pages/forms/workplans/workplans.html', {'form': form})
 
 # Method for delete sub activity
-@permission_required('myuhp.delete_operworkplan', raise_exception=True)
+#@permission_required('myuhp.delete_operworkplan', raise_exception=True)
+@login_required
+@group_required('Manager and delete')
 def delete_workplan_view(request,pk):
     data=Operworkplan.objects.filter(id=pk)
     data.delete()
@@ -1758,10 +1773,13 @@ def survey_add_project(request):
             form = SurveyProjectForm()
             messages.success(request, 'Survey project saved or updated successfully')
         elif 'delete' in request.POST:
-            pk = request.POST.get('delete')
-            surveyProject = SurveyProject.objects.get(id = pk)
-            surveyProject.delete()
-            messages.success(request, 'Survey project deleted successfully')
+            if request.user.groups.filter(name='Manager and delete').exists(): ## Condition security
+                pk = request.POST.get('delete')
+                surveyProject = SurveyProject.objects.get(id = pk)
+                surveyProject.delete()
+                messages.success(request, 'Survey project deleted successfully')
+            else:
+                return render(request, 'pages/examples/403.html')
            
             
         elif 'edit' in request.POST:
@@ -1854,11 +1872,16 @@ def survey_add_data(request):
                 form.save()
                 form = SurveyDatasetForm()
                 messages.success(request, 'Survey dataset saved or updated successfully')
+      
+   
             elif 'delete' in request.POST:
-                pk = request.POST.get('delete')
-                surveyDataset = SurveyDataset.objects.get(id = pk)
-                surveyDataset.delete()
-                messages.success(request, 'Survey dataset deleted successfully')
+                if request.user.groups.filter(name='Manager and delete').exists():
+                    pk = request.POST.get('delete')
+                    surveyDataset = SurveyDataset.objects.get(id = pk)
+                    surveyDataset.delete()
+                    messages.success(request, 'Survey dataset deleted successfully')
+                else:
+                    return render(request, 'pages/examples/403.html')
             
                 
             elif 'edit' in request.POST:
@@ -2025,6 +2048,8 @@ def edit_subscribers(request, pk):
     return render(request, 'pages/forms/subscribers/subscribers_edit.html', {'form': form})
 
 # Method for delete subscribers
+@login_required
+@group_required('Manager and delete')
 def delete_subscribers(request,pk):
     data=Subscribers.objects.filter(id=pk)
     data.delete()
@@ -2832,10 +2857,13 @@ def meeting_add_project(request):
             form = MeetingProjectForm()
             messages.success(request, 'Meeting project saved or updated successfully')
         elif 'delete' in request.POST:
-            pk = request.POST.get('delete')
-            meetingProject = MeetingProject.objects.get(id = pk)
-            meetingProject.delete()
-            messages.success(request, 'Meeting project deleted successfully')
+            if request.user.groups.filter(name='Manager and delete').exists(): ## Condition security
+                pk = request.POST.get('delete')
+                meetingProject = MeetingProject.objects.get(id = pk)
+                meetingProject.delete()
+                messages.success(request, 'Meeting project deleted successfully')
+            else:
+                return render(request, 'pages/examples/403.html')
            
             
         elif 'edit' in request.POST:
@@ -2901,10 +2929,14 @@ def meeting_add_data(request):
             form = MeetingDiscussionForm()
             messages.success(request, 'Meeting discussion saved or updated successfully')
         elif 'delete' in request.POST:
-            pk = request.POST.get('delete')
-            meetingDiscussion = MeetingDiscussion.objects.get(id = pk)
-            meetingDiscussion.delete()
-            messages.success(request, 'Meeting discussion deleted successfully')
+            if request.user.groups.filter(name='Manager and delete').exists(): ## Condition security
+                pk = request.POST.get('delete')
+                meetingDiscussion = MeetingDiscussion.objects.get(id = pk)
+                meetingDiscussion.delete()
+                messages.success(request, 'Meeting discussion deleted successfully')
+            else:
+                return render(request, 'pages/examples/403.html')
+                
        
         elif 'edit' in request.POST:
             pk = request.POST.get('edit')
@@ -3279,10 +3311,13 @@ def briefing_add_project(request):
             form = BriefingProjectForm()
             messages.success(request, 'Briefing project saved or updated successfully')
         elif 'delete' in request.POST:
-            pk = request.POST.get('delete')
-            briefingProject = BriefingProject.objects.get(id = pk)
-            briefingProject.delete()
-            messages.success(request, 'Briefing project deleted successfully')
+            if request.user.groups.filter(name='Manager and delete').exists(): ## Condition security
+                pk = request.POST.get('delete')
+                briefingProject = BriefingProject.objects.get(id = pk)
+                briefingProject.delete()
+                messages.success(request, 'Briefing project deleted successfully')
+            else:
+                return render(request, 'pages/examples/403.html')
            
             
         elif 'edit' in request.POST:
@@ -3339,10 +3374,13 @@ def briefing_add_data(request):
             form = BriefingBackgroundForm()
             messages.success(request, 'Brefing background saved or updated successfully')
         elif 'delete' in request.POST:
-            pk = request.POST.get('delete')
-            briefingBackground = BriefingBackground.objects.get(id = pk)
-            briefingBackground.delete()
-            messages.success(request, 'Brefing background deleted successfully')
+            if request.user.groups.filter(name='Manager and delete').exists(): ## Condition security
+                pk = request.POST.get('delete')
+                briefingBackground = BriefingBackground.objects.get(id = pk)
+                briefingBackground.delete()
+                messages.success(request, 'Brefing background deleted successfully')
+            else:
+                return render(request, 'pages/examples/403.html')
         elif 'edit' in request.POST:
             pk = request.POST.get('edit')
             briefingBackground = BriefingBackground.objects.get(id = pk)
@@ -5638,3 +5676,91 @@ def export_to_excel_survey_dataset(request,by_survey,end_day):
     #              cell.number_format = numbers.FORMAT_NUMBER_COMMA_SEPARATED1
     workbook.save(response)
     return response
+
+
+# METHOD TO CREATE NEW VIEWS HERE FOR OPERATIONAL WORKPLAN 
+@login_required
+@group_required('Technical officer')
+def operworkplan_list(request):
+    context={}
+    form_unit = SelectUnitForm(request.GET or None)
+    by_unit =  request.GET.get('by_unit')
+    end_date =  request.GET.get('end')
+   
+    operworkplans = Operworkplan.objects.all()
+    
+    if request.method=='GET':
+        st=request.GET.get('sub_activity')
+        if st!=None:
+            operworkplans= Operworkplan.objects.filter(sub_activity__icontains=st)
+            
+        if by_unit!=None:
+            operworkplans = Operworkplan.objects.all().filter(Q(gsmWorkplan__toptask__unit__unit_code__icontains=by_unit)& Q(completion_date__lte=end_date)).order_by("gsmWorkplan")
+
+    context['operworkplans'] = operworkplans
+    context['title'] ='home'
+   
+    context['form_unit'] = form_unit 
+    context['by_unit'] = by_unit
+    context['end_date'] = end_date
+    #operworkplans = Operworkplan.objects.all()
+    return render(request, 'pages/forms/workplans/workplan_list.html', context)
+     
+
+def save_operworkplan_form(request, form, template_name):
+    data = dict()
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            operworkplans = Operworkplan.objects.all()
+            data['html_book_list'] = render_to_string('pages/forms/workplans/partial_workplan_list.html', {
+                'operworkplans':operworkplans
+            })
+        else:
+            data['form_is_valid'] = False
+    context = {'form': form}
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+@login_required
+@group_required('Technical officer')
+def operworkplan_create(request):
+    if request.method == 'POST':
+        form = WorkplanForm(request.POST)
+        messages.success(request, 'Sub activity saved or updated successfully')
+    else:
+        form = WorkplanForm()
+    return save_operworkplan_form(request, form, 'pages/forms/workplans/partial_workplan_create.html')
+
+@login_required
+@group_required('Technical officer')
+def operworkplan_update(request, pk):
+    #operworkplan=Operworkplan.objects.get(pk=pk)
+    operworkplan = get_object_or_404(Operworkplan, pk=pk)
+    if request.method == 'POST':
+        form = WorkplanForm(request.POST, instance=operworkplan)
+        messages.success(request, 'Sub activity saved or updated successfully')
+    else:
+        form = WorkplanForm(instance=operworkplan)
+       # return render(request,'pages/forms/workplans/partial_workplan_update.html',{'form': form} )
+    return save_operworkplan_form(request, form, 'pages/forms/workplans/partial_workplan_update.html')
+
+@login_required
+@group_required('Manager and delete')
+def operworkplan_delete(request, pk):
+    operworkplan = get_object_or_404(Operworkplan, pk=pk)
+    data = dict()
+    if request.method == 'POST':
+        operworkplan.delete()
+        data['form_is_valid'] = True
+        operworkplans = Operworkplan.objects.all()
+        data['html_book_list'] = render_to_string('pages/forms/workplans/partial_workplan_list.html', {
+            'operworkplans': operworkplans
+        })
+        messages.success(request, 'Sub activity deleted successfully')
+        return redirect('operworkplan_list')
+    else:
+        context = {'operworkplan': operworkplan}
+        data['html_form'] = render_to_string('pages/forms/workplans/partial_workplan_delete.html', context, request=request)
+    return JsonResponse(data)
