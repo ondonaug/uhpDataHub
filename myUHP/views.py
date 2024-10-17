@@ -5687,19 +5687,19 @@ def operworkplan_list(request):
     by_unit =  request.GET.get('by_unit')
     end_date =  request.GET.get('end')
    
-    operworkplans = Operworkplan.objects.all()
+    operworkplans = Operworkplan.objects.all()#.filter(Q(gsmWorkplan__toptask__unit__unit_code__icontains='TNR'))
     
     if request.method=='GET':
         st=request.GET.get('sub_activity')
         if st!=None:
-            operworkplans= Operworkplan.objects.filter(sub_activity__icontains=st)
+            operworkplans= Operworkplan.objects.filter(Q(sub_activity__icontains=st))
             
         if by_unit!=None:
             operworkplans = Operworkplan.objects.all().filter(Q(gsmWorkplan__toptask__unit__unit_code__icontains=by_unit)& Q(completion_date__lte=end_date)).order_by("gsmWorkplan")
 
     context['operworkplans'] = operworkplans
     context['title'] ='home'
-   
+    
     context['form_unit'] = form_unit 
     context['by_unit'] = by_unit
     context['end_date'] = end_date
@@ -5736,7 +5736,7 @@ def operworkplan_create(request):
 @login_required
 @group_required('Technical officer')
 def operworkplan_update(request, pk):
-    #operworkplan=Operworkplan.objects.get(pk=pk)
+    
     operworkplan = get_object_or_404(Operworkplan, pk=pk)
     if request.method == 'POST':
         form = WorkplanForm(request.POST, instance=operworkplan)

@@ -1,0 +1,45 @@
+{% for operworkplan in operworkplans %}
+  <tr>
+    <td>{{ operworkplan.sub_activity }}</td>
+    <td>{% for countryList in operworkplan.country.all %}{{ countryList }} {% endfor %}</td>
+    <td>{{ operworkplan.consultants}}</td>
+    <td>{{ operworkplan.responsable }}</td>
+    <td>{{ operworkplan.coworkers }}</td>
+    <td>{{ operworkplan.expected_result }}</td>
+    <td>{{ operworkplan.indicator_measuring }}</td>
+    <td>{{ operworkplan.completion_date }}</td>
+    <td>{{ operworkplan.statut_name }}</td>
+    <td>{{ operworkplan.comments }}</td>
+    <td>{{ operworkplan.gsmWorkplan.toptask.unit.unit_code }}</td>
+    
+    {% comment "" %}
+    <td><a href="{% url 'workplan_update' operworkplan.id %}">Edit</a> </td>
+    {% endcomment %}
+    <td>
+      
+      <button type="button"
+              class="btn btn-warning btn-sm js-update-book"
+              data-url="{% url 'operworkplan_update' operworkplan.pk %}">
+        <span class="glyphicon glyphicon-pencil"></span> Edit
+      </button>
+     
+    </td>
+    <td>
+      
+     
+      <button type="button"
+              class="btn btn-danger btn-sm js-delete-book"
+              data-url="{% url 'operworkplan_delete' operworkplan.id %}">
+        <span class="glyphicon glyphicon-trash"></span> Delete
+      </button>
+    </td>
+    
+  </tr>
+  {% include 'pages/forms/workplans/partial_workplan_form.html' %}
+  
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No Sub activity</td>
+  </tr>
+
+{% endfor %}
